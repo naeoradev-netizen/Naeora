@@ -252,12 +252,21 @@ body{font-family:'Raleway',sans-serif;background:#000;color:var(--tx);height:100
   transition: filter .2s;
 }
 .mr-hold-zone.pressing {
-  animation: holdPulse .6s ease-in-out infinite;
+  animation: holdPulse .7s ease-in-out infinite;
 }
 @keyframes holdPulse {
-  0%   { filter: brightness(1.1) drop-shadow(0 0 10px rgba(212,175,55,.5)); transform: scale(1); }
-  50%  { filter: brightness(1.5) drop-shadow(0 0 28px rgba(212,175,55,.95)); transform: scale(1.03); }
-  100% { filter: brightness(1.1) drop-shadow(0 0 10px rgba(212,175,55,.5)); transform: scale(1); }
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.04); }
+  100% { transform: scale(1); }
+}
+/* Anneau lumineux qui tourne pendant l appui */
+.mr-hold-ring {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  border: 4px solid rgba(212,175,55,.8);
+  opacity: 0;
+  pointer-events: none;
 }
 /* Bouton ancrer — apparaît après validation */
 .mr-anchor {
@@ -636,19 +645,45 @@ function maStartRitual() {
 var maHoldTimer = null, maHoldOn = false, MA_HOLD_MS = 7000;
 function maInitHold() {
   var zone = document.getElementById('mr-hold-zone');
+  var ring = document.getElementById('mr-hold-ring');
   if (!zone) return;
   maHoldOn = false;
-  if (maHoldTimer) { clearTimeout(maHoldTimer); maHoldTimer=null; }
+  if (maHoldTimer) { clearTimeout(maHoldTimer); maHoldTimer = null; }
+
+  // Animation JS pure - plus fiable sur mobile
+  var animFrame = null;
+  var animStart = null;
+
+  function animLoop(ts) {
+    if (!maHoldOn) return;
+    if (!animStart) animStart = ts;
+    var elapsed = ts - animStart;
+    // Pulse toutes les 600ms
+    var cycle = (elapsed % 600) / 600;
+    var intensity = Math.sin(cycle * Math.PI);
+    var scale = 1 + intensity * 0.05;
+    var glow = Math.round(intensity * 20);
+    var opacity = 0.4 + intensity * 0.6;
+    zone.style.transform = 'scale(' + scale + ')';
+    if (ring) {
+      ring.style.opacity = opacity;
+      ring.style.boxShadow = '0 0 ' + glow + 'px rgba(212,175,55,' + opacity + '), 0 0 ' + (glow*2) + 'px rgba(212,175,55,' + (opacity*0.5) + ')';
+    }
+    animFrame = requestAnimationFrame(animLoop);
+  }
 
   function onStart(e) {
     e.preventDefault();
     if (maHoldOn) return;
     maHoldOn = true;
-    zone.classList.add('pressing');
+    animStart = null;
+    animFrame = requestAnimationFrame(animLoop);
     maHoldTimer = setTimeout(function() {
       if (!maHoldOn) return;
+      cancelAnimationFrame(animFrame);
+      zone.style.transform = '';
+      if (ring) { ring.style.opacity = '0'; ring.style.boxShadow = ''; }
       if (navigator.vibrate) navigator.vibrate([100, 50, 150]);
-      zone.classList.remove('pressing');
       maRevealFree();
     }, MA_HOLD_MS);
   }
@@ -656,13 +691,15 @@ function maInitHold() {
   function onStop() {
     if (maHoldOn) {
       maHoldOn = false;
-      if (maHoldTimer) { clearTimeout(maHoldTimer); maHoldTimer=null; }
-      zone.classList.remove('pressing');
+      if (maHoldTimer) { clearTimeout(maHoldTimer); maHoldTimer = null; }
+      if (animFrame) { cancelAnimationFrame(animFrame); animFrame = null; }
+      zone.style.transform = '';
+      if (ring) { ring.style.opacity = '0'; ring.style.boxShadow = ''; }
     }
   }
 
   zone.addEventListener('mousedown', onStart);
-  zone.addEventListener('touchstart', onStart, {passive:false});
+  zone.addEventListener('touchstart', onStart, {passive: false});
   zone.addEventListener('mouseup', onStop);
   zone.addEventListener('mouseleave', onStop);
   zone.addEventListener('touchend', onStop);
@@ -791,7 +828,10 @@ function om(id) {
     <!-- Phrase affichée AVANT l appui, sans fond, dans la zone entre le tiret et le cercle -->
     <div class="mr-phrase-zone" id="mr-phrase-zone"></div>
     <!-- Zone invisible cliquable superposée sur le cercle -->
-    <div class="mr-hold-zone" id="mr-hold-zone"></div>
+    <div class="mr-hold-zone" id="mr-hold-zone">
+      <!-- Anneau lumineux visible pendant l appui -->
+      <div class="mr-hold-ring" id="mr-hold-ring"></div>
+    </div>
     <!-- Bouton ancrer qui apparaît APRÈS la validation -->
     <button class="mr-anchor" id="mr-anchor-free" onclick="maAnchorFree()">✦ Ancrer pour la journée</button>
   </div>
