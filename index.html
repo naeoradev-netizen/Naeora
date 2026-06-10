@@ -1430,7 +1430,7 @@ body{font-family:'Raleway',sans-serif;background:#000;color:var(--tx);height:100
 /* Bouton ajouter gratitude */
 .soir-open-btn {
   position:absolute; z-index:3;
-  bottom:1.5rem; left:50%; transform:translateX(-50%);
+  bottom:8%; left:50%; transform:translateX(-50%);
   padding:.75rem 2rem;
   background:rgba(0,0,0,.7);
   border:1px solid rgba(212,175,55,.5);
@@ -1506,6 +1506,28 @@ body{font-family:'Raleway',sans-serif;background:#000;color:var(--tx);height:100
   animation:fi .3s ease;
   display:none;
 }
+
+
+
+/* Bouton retour universel doré */
+.back-home {
+  position: absolute;
+  bottom: 1.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  background: transparent;
+  border: none;
+  color: rgba(212,175,55,.45);
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: .5rem 1.2rem;
+  letter-spacing: .1em;
+  font-family: 'Cinzel', serif;
+  transition: color .2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.back-home:active { color: rgba(212,175,55,.9); }
 
 </style>
 </head>
@@ -3102,7 +3124,7 @@ function soirLaunchStars(count) {
     for(var i=0; i<stars.length; i++) {
       var s = stars[i];
       if(elapsed < s.delay) { allDone = false; continue; }
-      s.progress = Math.min(1, s.progress + 0.012);
+      s.progress = Math.min(1, s.progress + 0.006);
       if(s.progress < 1) allDone = false;
 
       /* Easing */
@@ -3243,6 +3265,52 @@ function soirShowMsg(txt) {
   setTimeout(function() {
     t.style.display = 'none';
   }, 3500);
+}
+
+
+
+/* ═══ forgeOpen PRINCIPAL ═══ */
+function forgeOpen(domain) {
+  var sess = localStorage.getItem('naeoraSession');
+  var isPrem = false;
+  try { if(sess) isPrem = JSON.parse(sess).premium||false; } catch(e) {}
+
+  var isFree = FORGE_GRATUIT.indexOf(domain) !== -1;
+  if (!isPrem && !isFree) {
+    document.getElementById('forge-premium-modal').classList.add('open');
+    return;
+  }
+
+  var st = forgeGetState();
+  var maxEx = isPrem ? 2 : 1;
+
+  if (st.count >= maxEx) {
+    var title = document.getElementById('flm-title');
+    var msg   = document.getElementById('flm-msg');
+    if(isPrem) {
+      if(title) title.textContent = 'Tes 2 exercices ont bien infuse.';
+      if(msg)   msg.textContent   = 'Ton esprit a recu ses impulsions du jour. Reviens demain.';
+    } else {
+      if(title) title.textContent = 'Ton exercice a bien infuse.';
+      if(msg)   msg.textContent   = 'Laisse cette energie infuser. Reviens demain pour une nouvelle liberation.';
+    }
+    go('forge-lock-msg');
+    return;
+  }
+
+  if (!isPrem && st.domains.length > 0 && st.domains.indexOf(domain) === -1) {
+    var title2 = document.getElementById('flm-title');
+    var msg2   = document.getElementById('flm-msg');
+    if(title2) title2.textContent = 'Un seul espace par jour.';
+    if(msg2)   msg2.textContent   = 'Reviens demain pour explorer un autre domaine.';
+    go('forge-lock-msg');
+    return;
+  }
+
+  st.count += 1;
+  if (st.domains.indexOf(domain) === -1) st.domains.push(domain);
+  forgeSetState(st);
+  forgeOpenExpl(domain);
 }
 
 </script>
@@ -3398,6 +3466,7 @@ function soirShowMsg(txt) {
     <button class="pr-logout" onclick="prLogout()">Se déconnecter</button>
     <button class="pr-back" onclick="go('dash')">← Retour à l'accueil</button>
   </div>
+  <button class="back-home" onclick="go('dash')">↑ Accueil</button>
 </div>
 
 
@@ -3426,6 +3495,7 @@ function soirShowMsg(txt) {
     </button>
   </div>
   <button class="forge-back" onclick="go('dash')">← Retour</button>
+  <button class="back-home" onclick="go('dash')">↑ Accueil</button>
 </div>
 
 <!-- ═══ FORGE EXERCICE ═══ -->
@@ -3447,6 +3517,7 @@ function soirShowMsg(txt) {
   <div class="flm-title" id="flm-title">Ton exercice a bien infusé.</div>
   <div class="flm-msg" id="flm-msg">Laisse cette énergie travailler en toi. Reviens demain pour une nouvelle libération.</div>
   <button class="flm-back" onclick="go('dash')">← Retour à l'accueil</button>
+  <button class="back-home" onclick="go('forge')">↑ Accueil</button>
 </div>
 
 <!-- ═══ MODALE PREMIUM ═══ -->
@@ -3482,6 +3553,7 @@ function soirShowMsg(txt) {
     <div class="fex-text" id="fex-comment"></div>
     <button class="fex-btn" onclick="forgeStartEx()">✦ Commencer l'exercice</button>
   </div>
+  <button class="back-home" onclick="go('forge')">↑ Accueil</button>
 </div>
 
 <!-- ═══ EFT ÉCRAN ═══ -->
@@ -3500,6 +3572,7 @@ function soirShowMsg(txt) {
     <div class="eft-hint">Tapotez le point illuminé en répétant la phrase à haute voix.</div>
     <button class="eft-next-btn"  id="eft-next-btn" onclick="eftNext()">→ Point suivant</button>
   </div>
+  <button class="back-home" onclick="go('dash')">↑ Accueil</button>
 </div>
 
 <!-- ═══ MUDRA ═══ -->
@@ -3511,6 +3584,7 @@ function soirShowMsg(txt) {
     <div class="mud-timer-label">MIN</div>
   </div>
   <button class="mud-done-btn" id="mud-done-btn" onclick="forgeExDone()">✦ Exercice terminé</button>
+  <button class="back-home" onclick="go('dash')">↑ Accueil</button>
 </div>
 
 <!-- ═══ ÉCRITURE LIBÉRATRICE ═══ -->
@@ -3522,6 +3596,7 @@ function soirShowMsg(txt) {
     <textarea class="ecr-area" id="ecr-area" placeholder="Commence à écrire ici..."></textarea>
     <button class="ecr-btn" onclick="ecrBrule()">✦ Brûler et libérer</button>
   </div>
+  <button class="back-home" onclick="go('dash')">↑ Accueil</button>
 </div>
 
 <!-- Canvas feu -->
@@ -3543,6 +3618,7 @@ function soirShowMsg(txt) {
   <div class="done-title">Ton exercice est accompli.</div>
   <div class="done-msg">Laisse cette énergie transformer en profondeur.<br>Reviens demain pour une nouvelle libération. 🌿</div>
   <button class="done-back" onclick="go('dash')">← Retour au sanctuaire</button>
+  <button class="back-home" onclick="go('dash')">↑ Accueil</button>
 </div>
 
 
@@ -3574,6 +3650,7 @@ function soirShowMsg(txt) {
   <button class="douche-done-btn" id="douche-done-btn" onclick="forgeExDone()">✦ Exercice terminé</button>
   <!-- Phrase -->
   <div class="douche-phrase">Fermez les yeux et laissez la fréquence sacrée réaligner vos cellules.</div>
+  <button class="back-home" onclick="doucheStop();go('dash')">↑ Accueil</button>
 </div>
 
 
@@ -3632,6 +3709,7 @@ function soirShowMsg(txt) {
   <button class="grab-key-btn" id="grab-key-◇"
     style="left:calc(78.0% - 14.0vw);top:calc(89.4% - 3.2vw);width:28.0vw;height:6.4vw;"
     onclick="grabKey('')"></button>
+  <button class="back-home" onclick="go('dash')">↑ Accueil</button>
 </div>
 
 <!-- ═══ GRABOVOI SUCCÈS ═══ -->
@@ -3644,6 +3722,7 @@ function soirShowMsg(txt) {
     </div>
   </div>
   <button class="grab-success-btn" onclick="grabAnchor()">✦ Ancrer et terminer</button>
+  <button class="back-home" onclick="go('dash')">↑ Accueil</button>
 </div>
 
 
@@ -3672,6 +3751,7 @@ function soirShowMsg(txt) {
   </div>
   <div class="coh-phrase" id="coh-phrase"></div>
   <button class="coh-done-btn" id="coh-done-btn" onclick="forgeExDone()">✦ Integrer les bienfaits</button>
+  <button class="back-home" onclick="cohStop();go('dash')">↑ Accueil</button>
 </div>
 
 
@@ -3694,6 +3774,7 @@ function soirShowMsg(txt) {
   </div>
   <div class="hop-phrase-bas">Répétez chaque mot en conscience pour libérer les mémoires du passé.</div>
   <div class="hop-step-dots" id="hop-step-dots"></div>
+  <button class="back-home" onclick="go('dash')">↑ Accueil</button>
 </div>
 
 
@@ -3707,6 +3788,7 @@ function soirShowMsg(txt) {
   <canvas id="coup-canvas"></canvas>
   <div class="coup-msg" id="coup-msg">Frottez chaque ligne avec votre doigt pour effacer les liens un à un et libérer votre énergie.</div>
   <button class="coup-done-btn" id="coup-done-btn" onclick="forgeExDone()">✦ Acter le détachement</button>
+  <button class="back-home" onclick="coupStop();go('dash')">↑ Accueil</button>
 </div>
 
 
@@ -3721,6 +3803,7 @@ function soirShowMsg(txt) {
   <div class="soir-counter" id="soir-counter">✦ 0 / 50</div>
   <button class="soir-open-btn" id="soir-open-btn" onclick="soirOpenModal()">✦ Ajouter une gratitude</button>
   <button class="soir-share-btn" id="soir-share-btn" onclick="soirShare()">✦ Partager ma Constellation</button>
+  <button class="back-home" onclick="go('dash')">↑ Accueil</button>
 </div>
 
 <!-- Modale gratitude -->
