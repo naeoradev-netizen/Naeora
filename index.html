@@ -1489,6 +1489,24 @@ body{font-family:'Raleway',sans-serif;background:#000;color:var(--tx);height:100
   color:rgba(255,255,255,.3); cursor:pointer; letter-spacing:.08em;
 }
 
+
+
+/* Message soir doux */
+.soir-toast {
+  position:fixed; z-index:50;
+  bottom:12%; left:50%; transform:translateX(-50%);
+  background:rgba(5,5,20,.92);
+  border:1px solid rgba(212,175,55,.4);
+  border-radius:14px; padding:1rem 1.3rem;
+  max-width:320px; width:90%;
+  text-align:center;
+  font-family:'Cinzel',serif; font-size:.76rem;
+  color:#D4AF37; line-height:1.7;
+  box-shadow:0 0 20px rgba(212,175,55,.2);
+  animation:fi .3s ease;
+  display:none;
+}
+
 </style>
 </head>
 <body>
@@ -2994,7 +3012,7 @@ function soirOpenModal() {
   /* Vérifier si déjà fait aujourd'hui */
   var todayDone = localStorage.getItem(soirTodayKey());
   if(todayDone) {
-    alert('Tu as déjà envoyé tes gratitudes ce soir. Reviens demain !');
+    soirShowMsg('Tes gratitudes ont déjà rejoint le ciel ce soir. Reviens demain pour en ajouter de nouvelles. ✦');
     return;
   }
 
@@ -3215,6 +3233,18 @@ function soirShare() {
   link.click();
 }
 
+
+
+function soirShowMsg(txt) {
+  var t = document.getElementById('soir-toast');
+  if(!t) return;
+  t.textContent = txt;
+  t.style.display = 'block';
+  setTimeout(function() {
+    t.style.display = 'none';
+  }, 3500);
+}
+
 </script>
 
 <!-- DASHBOARD -->
@@ -3223,10 +3253,10 @@ function soirShare() {
   <div class="dov"></div>
   <div class="dav" id="dav" onclick="lo()">✦</div>
   <div class="dn">
-    <button class="nb" onclick="om('matin')"  style="left:calc(15.1% - 11vw);top:calc(78.5% - 11vw);width:22vw;height:22vw"></button>
-    <button class="nb" onclick="om('forge')"  style="left:calc(38.1% - 11vw);top:calc(78.5% - 11vw);width:22vw;height:22vw"></button>
-    <button class="nb" onclick="om('soir')"   style="left:calc(60.6% - 11vw);top:calc(78.5% - 11vw);width:22vw;height:22vw"></button>
-    <button class="nb" onclick="om('profil')" style="left:calc(83.6% - 11vw);top:calc(78.5% - 11vw);width:22vw;height:22vw"></button>
+    <button class="nb" onclick="om('matin')"  style="left:calc(13.0% - 11vw);top:calc(87.0% - 11vw);width:22vw;height:22vw"></button>
+    <button class="nb" onclick="om('forge')"  style="left:calc(37.0% - 11vw);top:calc(87.0% - 11vw);width:22vw;height:22vw"></button>
+    <button class="nb" onclick="om('soir')"   style="left:calc(62.0% - 11vw);top:calc(87.0% - 11vw);width:22vw;height:22vw"></button>
+    <button class="nb" onclick="om('profil')" style="left:calc(86.0% - 11vw);top:calc(87.0% - 11vw);width:22vw;height:22vw"></button>
   </div>
 </div>
 
@@ -3706,5 +3736,7 @@ function soirShare() {
   </div>
 </div>
 
+
+<div class="soir-toast" id="soir-toast"></div>
 </body>
 </html>
