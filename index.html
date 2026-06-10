@@ -2273,6 +2273,7 @@ function doucheStop() {
   douchePlaying = false;
   if(doucheTimer) { clearInterval(doucheTimer); doucheTimer=null; }
   if(doucheAudio) { doucheAudio.pause(); doucheAudio.currentTime=0; }
+  naeResumeAmbient();
 }
 
 function doucheUpdateUI() {
@@ -2434,6 +2435,7 @@ function cohStart(domain) {
   if(doneBtn) doneBtn.style.display='none';
   if(bg) { bg.style.transition='none'; bg.style.transform='scale(1)'; }
 
+  naePauseAmbient();
   var music = document.getElementById('coh-music');
   if(music) { music.currentTime=0; music.volume=0.45; music.play().catch(function(){}); }
 
@@ -2495,6 +2497,7 @@ function cohStop() {
   if(cohTimer){ clearInterval(cohTimer); cohTimer=null; }
   var music=document.getElementById('coh-music');
   if(music){ music.pause(); music.currentTime=0; }
+  naeResumeAmbient();
   var bg=document.getElementById('coh-bg');
   if(bg){ bg.style.transition='none'; bg.style.transform='scale(1)'; }
 }
@@ -2812,6 +2815,7 @@ function coupBindTouch() {
           coupState[i].erased = true;
           coupState[i].opacity = 0;
           if(navigator.vibrate) navigator.vibrate([40,20,80]);
+          naeSFXCrackle();
           coupCheckDone();
         }
       }
@@ -3312,6 +3316,191 @@ function forgeOpen(domain) {
   forgeSetState(st);
   forgeOpenExpl(domain);
 }
+
+
+
+/* ═══════════════════════════════════
+   SYSTÈME AUDIO NAÉORA
+   ═══════════════════════════════════ */
+
+var naeAudioCtx = null;
+var naeAmbientGain = null;
+var naeAmbientSource = null;
+var naeAmbientBuffer = null;
+var naeAmbientPlaying = false;
+var naeFadeTimer = null;
+var NAE_AMBIENT_VOL = 0.28;
+
+/* Initialiser le contexte audio (nécessite un geste utilisateur) */
+function naeInitAudio() {
+  if (naeAudioCtx) return;
+  try {
+    naeAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    naeAmbientGain = naeAudioCtx.createGain();
+    naeAmbientGain.gain.value = 0;
+    naeAmbientGain.connect(naeAudioCtx.destination);
+    naeGenerateAmbient();
+  } catch(e) { console.log('Audio non disponible'); }
+}
+
+/* ── Générer nappe ambiante synthétique ── */
+function naeGenerateAmbient() {
+  if(!naeAudioCtx) return;
+  /* Durée 30 secondes de nappe */
+  var duration = 30;
+  var sr = naeAudioCtx.sampleRate;
+  var buf = naeAudioCtx.createBuffer(2, sr*duration, sr);
+
+  /* Fréquences harmoniques douces : 174Hz + harmoniques */
+  var freqs = [174, 261, 348, 522, 696];
+  var amps  = [0.18, 0.12, 0.08, 0.05, 0.03];
+
+  for(var ch=0; ch<2; ch++) {
+    var data = buf.getChannelData(ch);
+    for(var i=0; i<data.length; i++) {
+      var t = i/sr;
+      var sample = 0;
+      for(var f=0; f<freqs.length; f++) {
+        /* Légère modulation LFO pour effet pad vivant */
+        var lfo = 1 + 0.02*Math.sin(2*Math.PI*0.1*t + f);
+        sample += amps[f] * Math.sin(2*Math.PI*freqs[f]*lfo*t);
+      }
+      /* Enveloppe douce sur les bords */
+      var env = Math.min(1, Math.min(t/2, (duration-t)/2));
+      /* Légère variation stéréo */
+      var stereo = ch===0 ? 1 : (1 + 0.005*Math.sin(2*Math.PI*0.07*t));
+      data[i] = sample * env * stereo;
+    }
+  }
+  naeAmbientBuffer = buf;
+  console.log('Nappe ambiante générée');
+}
+
+/* ── Démarrer la musique d ambiance ── */
+function naeAmbientStart() {
+  if(!naeAudioCtx || !naeAmbientBuffer || naeAmbientPlaying) return;
+  try {
+    if(naeAudioCtx.state === 'suspended') naeAudioCtx.resume();
+    naeAmbientSource = naeAudioCtx.createBufferSource();
+    naeAmbientSource.buffer = naeAmbientBuffer;
+    naeAmbientSource.loop = true;
+    naeAmbientSource.connect(naeAmbientGain);
+    naeAmbientSource.start(0);
+    naeAmbientPlaying = true;
+    naeAmbientFadeIn();
+  } catch(e) {}
+}
+
+/* ── Arrêter la musique d ambiance ── */
+function naeAmbientStop(immediate) {
+  if(!naeAmbientPlaying) return;
+  if(immediate) {
+    naeAmbientFadeOut(0.1, function() {
+      if(naeAmbientSource) { try { naeAmbientSource.stop(); } catch(e){} naeAmbientSource=null; }
+      naeAmbientPlaying = false;
+    });
+  } else {
+    naeAmbientFadeOut(1.5, function() {
+      if(naeAmbientSource) { try { naeAmbientSource.stop(); } catch(e){} naeAmbientSource=null; }
+      naeAmbientPlaying = false;
+    });
+  }
+}
+
+/* ── Fade In ── */
+function naeAmbientFadeIn() {
+  if(!naeAmbientGain) return;
+  if(naeFadeTimer) clearInterval(naeFadeTimer);
+  var target = NAE_AMBIENT_VOL;
+  var step = target / 30; /* 30 étapes ~1.5s */
+  naeFadeTimer = setInterval(function() {
+    var cur = naeAmbientGain.gain.value;
+    if(cur >= target - 0.01) {
+      naeAmbientGain.gain.value = target;
+      clearInterval(naeFadeTimer); naeFadeTimer=null;
+    } else {
+      naeAmbientGain.gain.value = Math.min(target, cur + step);
+    }
+  }, 50);
+}
+
+/* ── Fade Out ── */
+function naeAmbientFadeOut(duration, callback) {
+  if(!naeAmbientGain) return;
+  if(naeFadeTimer) clearInterval(naeFadeTimer);
+  var steps = Math.round(duration * 20); /* 20fps */
+  var step = naeAmbientGain.gain.value / steps;
+  var count = 0;
+  naeFadeTimer = setInterval(function() {
+    count++;
+    naeAmbientGain.gain.value = Math.max(0, naeAmbientGain.gain.value - step);
+    if(count >= steps) {
+      naeAmbientGain.gain.value = 0;
+      clearInterval(naeFadeTimer); naeFadeTimer=null;
+      if(callback) callback();
+    }
+  }, 50);
+}
+
+/* ── API publique : pause/reprise pour exercices audio ── */
+function naePauseAmbient() {
+  /* Appelé quand un exercice avec son propre audio démarre */
+  naeAmbientFadeOut(0.8, function() {
+    if(naeAmbientSource) {
+      try { naeAmbientSource.suspend ? naeAudioCtx.suspend() : null; } catch(e) {}
+    }
+  });
+}
+
+function naeResumeAmbient() {
+  /* Appelé quand l exercice audio se termine */
+  if(!naeAmbientPlaying) {
+    naeAmbientStart();
+  } else {
+    naeAmbientFadeIn();
+  }
+}
+
+/* ── SFX Crépitement électrique (Coupure de liens) ── */
+function naeSFXCrackle() {
+  if(!naeAudioCtx) return;
+  try {
+    var duration = 0.18;
+    var sr = naeAudioCtx.sampleRate;
+    var buf = naeAudioCtx.createBuffer(1, sr*duration, sr);
+    var data = buf.getChannelData(0);
+    for(var i=0; i<data.length; i++) {
+      var t = i/sr;
+      /* Bruit blanc filtré + ton électrique */
+      var noise = (Math.random()*2-1) * Math.exp(-t*18);
+      var buzz  = Math.sin(2*Math.PI*120*t) * Math.exp(-t*12) * 0.3;
+      var crackle = Math.sin(2*Math.PI*800*t) * Math.exp(-t*25) * 0.4;
+      data[i] = (noise + buzz + crackle) * 0.7;
+    }
+    var sfxGain = naeAudioCtx.createGain();
+    sfxGain.gain.value = 0.6;
+    sfxGain.connect(naeAudioCtx.destination);
+    var src = naeAudioCtx.createBufferSource();
+    src.buffer = buf;
+    src.connect(sfxGain);
+    src.start(0);
+  } catch(e) {}
+}
+
+/* ── Initialisation au premier clic ── */
+document.addEventListener('click', function() {
+  if(!naeAudioCtx) {
+    naeInitAudio();
+    setTimeout(function() { naeAmbientStart(); }, 500);
+  }
+}, {once:true});
+
+document.addEventListener('touchstart', function() {
+  if(!naeAudioCtx) {
+    naeInitAudio();
+    setTimeout(function() { naeAmbientStart(); }, 500);
+  }
+}, {once:true, passive:true});
 
 </script>
 
