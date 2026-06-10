@@ -3319,9 +3319,8 @@ function forgeOpen(domain) {
 
 
 
-/* ═══════════════════════════════════
-   SYSTÈME AUDIO NAÉORA
-   ═══════════════════════════════════ */
+
+/* ═══ SYSTÈME AUDIO NAÉORA - Version Lumineuse ═══ */
 
 var naeAudioCtx = null;
 var naeAmbientGain = null;
@@ -3329,9 +3328,8 @@ var naeAmbientSource = null;
 var naeAmbientBuffer = null;
 var naeAmbientPlaying = false;
 var naeFadeTimer = null;
-var NAE_AMBIENT_VOL = 0.28;
+var NAE_AMBIENT_VOL = 0.22;
 
-/* Initialiser le contexte audio (nécessite un geste utilisateur) */
 function naeInitAudio() {
   if (naeAudioCtx) return;
   try {
@@ -3340,43 +3338,79 @@ function naeInitAudio() {
     naeAmbientGain.gain.value = 0;
     naeAmbientGain.connect(naeAudioCtx.destination);
     naeGenerateAmbient();
-  } catch(e) { console.log('Audio non disponible'); }
+  } catch(e) {}
 }
 
-/* ── Générer nappe ambiante synthétique ── */
 function naeGenerateAmbient() {
   if(!naeAudioCtx) return;
-  /* Durée 30 secondes de nappe */
-  var duration = 30;
+  var duration = 32;
   var sr = naeAudioCtx.sampleRate;
   var buf = naeAudioCtx.createBuffer(2, sr*duration, sr);
 
-  /* Fréquences harmoniques douces : 174Hz + harmoniques */
-  var freqs = [174, 261, 348, 522, 696];
-  var amps  = [0.18, 0.12, 0.08, 0.05, 0.03];
+  /* ── Fréquences chaudes et lumineuses ──
+     528 Hz  = Do de l'amour/joie (fréquence Solfège)
+     432 Hz  = accord universel doux
+     264 Hz  = octave basse de 528, chaleur
+     396 Hz  = libération douce
+     + harmoniques chantantes
+  */
+  var partials = [
+    /* freq,  amp,   phase */
+    {f:264,   a:0.10, p:0.0 },   /* basse douce */
+    {f:396,   a:0.07, p:0.3 },   /* mi bémol doux */
+    {f:432,   a:0.09, p:0.7 },   /* accord universel */
+    {f:528,   a:0.11, p:1.1 },   /* fréquence joie */
+    {f:594,   a:0.06, p:0.5 },   /* harmonique 3/2 */
+    {f:660,   a:0.05, p:1.8 },   /* harmonique chantant */
+    {f:792,   a:0.04, p:0.2 },   /* harmonique aigu doux */
+  ];
+
+  /* LFO lents pour "respiration" lumineuse */
+  var lfo1Speed = 0.07;   /* très lent */
+  var lfo2Speed = 0.11;
+  var lfo3Speed = 0.05;
 
   for(var ch=0; ch<2; ch++) {
     var data = buf.getChannelData(ch);
     for(var i=0; i<data.length; i++) {
-      var t = i/sr;
+      var t = i / sr;
       var sample = 0;
-      for(var f=0; f<freqs.length; f++) {
-        /* Légère modulation LFO pour effet pad vivant */
-        var lfo = 1 + 0.02*Math.sin(2*Math.PI*0.1*t + f);
-        sample += amps[f] * Math.sin(2*Math.PI*freqs[f]*lfo*t);
+
+      /* Modulation douce (respiration) */
+      var breath = 0.85 + 0.15 * Math.sin(2*Math.PI*lfo1Speed*t);
+      var shimmer = 1.0 + 0.03 * Math.sin(2*Math.PI*lfo2Speed*t + 1.2);
+      var warmth  = 1.0 + 0.02 * Math.sin(2*Math.PI*lfo3Speed*t + 0.5);
+
+      for(var k=0; k<partials.length; k++) {
+        var p = partials[k];
+        /* Légère variation de fréquence (vibrato très doux) */
+        var vib = 1.0 + 0.001*Math.sin(2*Math.PI*5.5*t + p.p);
+        /* Forme d onde douce: mélange sinus + triangle arrondi */
+        var phase = 2*Math.PI*p.f*vib*t + p.p;
+        var sine = Math.sin(phase);
+        /* Triangle adouci */
+        var tri = Math.asin(Math.sin(phase * 0.5)) / (Math.PI*0.5) * 0.3;
+        sample += p.a * (sine * 0.7 + tri * 0.3) * breath * shimmer;
       }
-      /* Enveloppe douce sur les bords */
-      var env = Math.min(1, Math.min(t/2, (duration-t)/2));
-      /* Légère variation stéréo */
-      var stereo = ch===0 ? 1 : (1 + 0.005*Math.sin(2*Math.PI*0.07*t));
-      data[i] = sample * env * stereo;
+
+      /* Légère différence stéréo L/R pour chaleur */
+      if(ch === 1) {
+        sample *= (warmth * 0.98 + 0.02*Math.sin(2*Math.PI*0.03*t));
+      }
+
+      /* Enveloppe: fondu entrée/sortie très doux */
+      var env = 1.0;
+      if(t < 3) env = t/3;
+      else if(t > duration-3) env = (duration-t)/3;
+
+      data[i] = sample * env * 0.55;
     }
   }
+
+  /* Filtre passe-bas pour adoucir encore */
   naeAmbientBuffer = buf;
-  console.log('Nappe ambiante générée');
 }
 
-/* ── Démarrer la musique d ambiance ── */
 function naeAmbientStart() {
   if(!naeAudioCtx || !naeAmbientBuffer || naeAmbientPlaying) return;
   try {
@@ -3391,44 +3425,37 @@ function naeAmbientStart() {
   } catch(e) {}
 }
 
-/* ── Arrêter la musique d ambiance ── */
 function naeAmbientStop(immediate) {
   if(!naeAmbientPlaying) return;
-  if(immediate) {
-    naeAmbientFadeOut(0.1, function() {
-      if(naeAmbientSource) { try { naeAmbientSource.stop(); } catch(e){} naeAmbientSource=null; }
-      naeAmbientPlaying = false;
-    });
-  } else {
-    naeAmbientFadeOut(1.5, function() {
-      if(naeAmbientSource) { try { naeAmbientSource.stop(); } catch(e){} naeAmbientSource=null; }
-      naeAmbientPlaying = false;
-    });
-  }
+  var dur = immediate ? 0.1 : 1.5;
+  naeAmbientFadeOut(dur, function() {
+    if(naeAmbientSource) { try{ naeAmbientSource.stop(); }catch(e){} naeAmbientSource=null; }
+    naeAmbientPlaying = false;
+  });
 }
 
-/* ── Fade In ── */
 function naeAmbientFadeIn() {
   if(!naeAmbientGain) return;
   if(naeFadeTimer) clearInterval(naeFadeTimer);
   var target = NAE_AMBIENT_VOL;
-  var step = target / 30; /* 30 étapes ~1.5s */
+  var cur = naeAmbientGain.gain.value;
+  var steps = 40;
+  var step = (target - cur) / steps;
   naeFadeTimer = setInterval(function() {
-    var cur = naeAmbientGain.gain.value;
-    if(cur >= target - 0.01) {
+    var v = naeAmbientGain.gain.value;
+    if(v >= target - 0.005) {
       naeAmbientGain.gain.value = target;
       clearInterval(naeFadeTimer); naeFadeTimer=null;
     } else {
-      naeAmbientGain.gain.value = Math.min(target, cur + step);
+      naeAmbientGain.gain.value = Math.min(target, v + step);
     }
-  }, 50);
+  }, 55);
 }
 
-/* ── Fade Out ── */
 function naeAmbientFadeOut(duration, callback) {
-  if(!naeAmbientGain) return;
+  if(!naeAmbientGain) { if(callback) callback(); return; }
   if(naeFadeTimer) clearInterval(naeFadeTimer);
-  var steps = Math.round(duration * 20); /* 20fps */
+  var steps = Math.max(1, Math.round(duration * 18));
   var step = naeAmbientGain.gain.value / steps;
   var count = 0;
   naeFadeTimer = setInterval(function() {
@@ -3439,68 +3466,60 @@ function naeAmbientFadeOut(duration, callback) {
       clearInterval(naeFadeTimer); naeFadeTimer=null;
       if(callback) callback();
     }
-  }, 50);
+  }, 55);
 }
 
-/* ── API publique : pause/reprise pour exercices audio ── */
 function naePauseAmbient() {
-  /* Appelé quand un exercice avec son propre audio démarre */
-  naeAmbientFadeOut(0.8, function() {
-    if(naeAmbientSource) {
-      try { naeAmbientSource.suspend ? naeAudioCtx.suspend() : null; } catch(e) {}
-    }
-  });
+  naeAmbientFadeOut(1.2, null);
 }
 
 function naeResumeAmbient() {
-  /* Appelé quand l exercice audio se termine */
   if(!naeAmbientPlaying) {
     naeAmbientStart();
   } else {
+    if(naeAudioCtx && naeAudioCtx.state === 'suspended') naeAudioCtx.resume();
     naeAmbientFadeIn();
   }
 }
 
-/* ── SFX Crépitement électrique (Coupure de liens) ── */
+/* ── SFX : coupure de lien (doux + lumineux, pas effrayant) ── */
 function naeSFXCrackle() {
   if(!naeAudioCtx) return;
   try {
-    var duration = 0.18;
+    /* Son de "ting" cristallin + petite étincelle douce */
     var sr = naeAudioCtx.sampleRate;
+    var duration = 0.35;
     var buf = naeAudioCtx.createBuffer(1, sr*duration, sr);
     var data = buf.getChannelData(0);
     for(var i=0; i<data.length; i++) {
       var t = i/sr;
-      /* Bruit blanc filtré + ton électrique */
-      var noise = (Math.random()*2-1) * Math.exp(-t*18);
-      var buzz  = Math.sin(2*Math.PI*120*t) * Math.exp(-t*12) * 0.3;
-      var crackle = Math.sin(2*Math.PI*800*t) * Math.exp(-t*25) * 0.4;
-      data[i] = (noise + buzz + crackle) * 0.7;
+      /* Ting cristallin à 1047Hz (Do aigu) */
+      var ting  = Math.sin(2*Math.PI*1047*t) * Math.exp(-t*9) * 0.5;
+      /* Harmonique douce */
+      var harm  = Math.sin(2*Math.PI*2094*t) * Math.exp(-t*14) * 0.2;
+      /* Scintillement court */
+      var sparkle = Math.sin(2*Math.PI*3136*t) * Math.exp(-t*22) * 0.1;
+      data[i] = (ting + harm + sparkle);
     }
-    var sfxGain = naeAudioCtx.createGain();
-    sfxGain.gain.value = 0.6;
-    sfxGain.connect(naeAudioCtx.destination);
+    var g = naeAudioCtx.createGain();
+    g.gain.value = 0.55;
+    g.connect(naeAudioCtx.destination);
     var src = naeAudioCtx.createBufferSource();
     src.buffer = buf;
-    src.connect(sfxGain);
+    src.connect(g);
     src.start(0);
   } catch(e) {}
 }
 
-/* ── Initialisation au premier clic ── */
-document.addEventListener('click', function() {
+/* ── Premier geste utilisateur ── */
+function naeStartOnGesture() {
   if(!naeAudioCtx) {
     naeInitAudio();
-    setTimeout(function() { naeAmbientStart(); }, 500);
+    setTimeout(naeAmbientStart, 600);
   }
-}, {once:true});
-
-document.addEventListener('touchstart', function() {
-  if(!naeAudioCtx) {
-    naeInitAudio();
-    setTimeout(function() { naeAmbientStart(); }, 500);
-  }
-}, {once:true, passive:true});
+}
+document.addEventListener('click',      naeStartOnGesture, {once:true});
+document.addEventListener('touchstart', naeStartOnGesture, {once:true, passive:true});
 
 </script>
 
