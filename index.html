@@ -2249,8 +2249,7 @@ function forgeStartEx() {
     eftStart(steps);
 
   } else if (type === 'coherence') {
-    var data = FORGE_DB.coherence[catKey] || FORGE_DB.coherence['Stress'];
-    cohStart(data);
+    cohStart(domain);
 
   } else if (type === 'mudra') {
     var imgKey = MUDRA_DOMAIN_MAP[domain] || 'stress';
@@ -3591,6 +3590,84 @@ document.addEventListener('visibilitychange', function() {
     }
   }
 });
+
+
+
+/* ═══ EFT ANIMÉ ═══ */
+var EFT_POINTS = [{"nom": "Sommet du crane", "x": 49.9, "y": 24.0}, {"nom": "Debut du sourcil", "x": 39.0, "y": 32.5}, {"nom": "Coin de l'oeil", "x": 61.0, "y": 34.5}, {"nom": "Sous l'oeil", "x": 57.5, "y": 37.5}, {"nom": "Sous le nez", "x": 49.5, "y": 39.5}, {"nom": "Menton", "x": 49.5, "y": 44.5}, {"nom": "Clavicule", "x": 39.5, "y": 52.5}, {"nom": "Sous le bras", "x": 70.5, "y": 61.5}];
+var eftSteps = [], eftCur = 0;
+var eftTapTimer = null;
+
+function eftStart(steps) {
+  eftSteps = steps;
+  eftCur = 0;
+  eftBuildDots();
+  eftShow();
+  go('ex-eft');
+}
+
+function eftBuildDots() {
+  var layer = document.getElementById('eft-dots-layer');
+  if(!layer) return;
+  layer.innerHTML = '';
+  for(var i=0; i<EFT_POINTS.length; i++) {
+    var dot = document.createElement('div');
+    dot.className = 'eft-point-dot';
+    dot.id = 'eft-dot-' + i;
+    dot.style.left = EFT_POINTS[i].x + '%';
+    dot.style.top  = EFT_POINTS[i].y + '%';
+    layer.appendChild(dot);
+  }
+}
+
+function eftShow() {
+  if(eftCur >= eftSteps.length) { forgeExDone(); return; }
+  var s = eftSteps[eftCur];
+  var bg    = document.getElementById('eft-bg');
+  var layer = document.getElementById('eft-dots-layer');
+  var fill  = document.getElementById('eft-prog-fill');
+  var ctr   = document.getElementById('eft-counter');
+  var pname = document.getElementById('eft-point-name');
+  var pbox  = document.getElementById('eft-phrase-box');
+  var btn   = document.getElementById('eft-next-btn');
+
+  if(fill)  fill.style.width = ((eftCur+1)/eftSteps.length*100) + '%';
+  if(ctr)   ctr.textContent  = 'Point ' + (eftCur+1) + ' / ' + eftSteps.length;
+  if(pname) pname.textContent = s.point;
+  if(pbox)  pbox.textContent  = s.phrase;
+  if(btn)   btn.textContent   = eftCur < eftSteps.length-1 ? '\u2192 Point suivant' : '\u2714 Terminer';
+
+  if(eftCur === 0) {
+    if(bg) {
+      var karImg = document.getElementById('eft-img-karate');
+      if(karImg) bg.src = karImg.src;
+    }
+    if(layer) layer.style.display = 'none';
+  } else {
+    if(bg) {
+      var corImg = document.getElementById('eft-img-corps');
+      if(corImg) bg.src = corImg.src;
+    }
+    if(layer) layer.style.display = 'block';
+    for(var i=0; i<EFT_POINTS.length; i++) {
+      var dot = document.getElementById('eft-dot-' + i);
+      if(dot) {
+        if(i === eftCur-1) dot.classList.add('active');
+        else dot.classList.remove('active');
+      }
+    }
+  }
+
+  if(eftTapTimer) { clearInterval(eftTapTimer); eftTapTimer=null; }
+  eftTapTimer = setInterval(function() {
+    if(navigator.vibrate) navigator.vibrate(30);
+  }, 2000);
+}
+
+function eftNext() {
+  eftCur++;
+  eftShow();
+}
 
 </script>
 
