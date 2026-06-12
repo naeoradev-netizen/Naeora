@@ -1411,37 +1411,39 @@ body{font-family:'Raleway',sans-serif;background:#000;color:var(--tx);height:100
   z-index:1;
   pointer-events:none;
 }
-/* Zone timer circulaire */
+/* Zone timer circulaire — centré sur l'écran */
 .mud-timer-wrap {
   position:absolute;
-  bottom:11%;
+  bottom:12%;
   left:50%;
   transform:translateX(-50%);
   z-index:3;
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:.4rem;
+  gap:.55rem;
+  width:90%;
+  max-width:340px;
 }
 .mud-svg-wrap {
   position:relative;
-  width:110px;
-  height:110px;
+  width:120px;
+  height:120px;
 }
 .mud-svg-wrap svg {
-  width:110px;
-  height:110px;
+  width:120px;
+  height:120px;
   transform:rotate(-90deg);
 }
 .mud-circle-track {
   fill:none;
   stroke:rgba(212,175,55,.2);
-  stroke-width:4;
+  stroke-width:5;
 }
 .mud-circle-prog {
   fill:none;
   stroke:#D4AF37;
-  stroke-width:4;
+  stroke-width:5;
   stroke-linecap:round;
   transition:stroke-dashoffset .9s linear;
 }
@@ -1452,29 +1454,33 @@ body{font-family:'Raleway',sans-serif;background:#000;color:var(--tx);height:100
   flex-direction:column;
   align-items:center;
   justify-content:center;
+  gap:.1rem;
 }
 .mud-timer-display {
   font-family:'Cinzel',serif;
-  font-size:1.4rem;
+  font-size:1.55rem;
   color:#D4AF37;
   letter-spacing:.05em;
   line-height:1;
 }
 .mud-timer-label {
   font-family:'Cinzel',serif;
-  font-size:.55rem;
-  color:rgba(212,175,55,.6);
-  letter-spacing:.2em;
+  font-size:.5rem;
+  color:rgba(212,175,55,.5);
+  letter-spacing:.22em;
 }
 /* Phrase du mudra */
 .mud-phrase {
-  font-size:.75rem;
-  color:rgba(212,175,55,.75);
+  font-size:.76rem;
+  color:rgba(212,175,55,.8);
   font-style:italic;
   text-align:center;
-  max-width:240px;
-  line-height:1.6;
-  padding:0 .5rem;
+  max-width:100%;
+  line-height:1.65;
+  padding:.6rem .8rem;
+  background:rgba(0,0,0,.5);
+  border:1px solid rgba(212,175,55,.18);
+  border-radius:12px;
 }
 /* Bouton terminer */
 .mud-done-btn {
@@ -3238,15 +3244,23 @@ function mudraStart(mudraData, imgSrc) {
   var doneBtn = document.getElementById('mud-done-btn');
   if(doneBtn) doneBtn.style.display = 'none';
 
-  /* Durée depuis les données ou fallback */
+  /* Durée strictement liée à ce mudra */
   var totalSecs = (mudraData && mudraData.duree_sec) ? mudraData.duree_sec : 120;
   var secs = totalSecs;
 
   /* Phrase du mudra */
   var phraseEl = document.getElementById('mud-phrase');
-  if(phraseEl && mudraData && mudraData.phrase) {
-    phraseEl.textContent = mudraData.phrase.replace(/"/g,'');
+  if(phraseEl) {
+    phraseEl.textContent = (mudraData && mudraData.phrase) ? mudraData.phrase.replace(/"/g,'') : '';
   }
+
+  /* Label dynamique : affiche la durée totale au départ */
+  var labelEl = document.getElementById('mud-timer-label');
+  function fmtLabel(s) {
+    var m = Math.floor(s/60), r = s%60;
+    return m > 0 ? m + 'min' + (r > 0 ? ' ' + r + 's' : '') : s + 's';
+  }
+  if(labelEl) labelEl.textContent = fmtLabel(totalSecs);
 
   /* Cercle SVG */
   var circleEl = document.getElementById('mud-circle-prog');
@@ -3262,7 +3276,7 @@ function mudraStart(mudraData, imgSrc) {
     if(circleEl) circleEl.style.strokeDashoffset = offset;
   }
 
-  /* Timer display */
+  /* Affichage initial */
   var timerEl = document.getElementById('mud-timer');
   if(timerEl) timerEl.textContent = fmt(secs);
   updateCircle(secs);
@@ -3272,12 +3286,20 @@ function mudraStart(mudraData, imgSrc) {
 
   go('ex-mudra');
 
-  /* Démarrer timer après transition */
+  /* Démarrer décompte après transition */
   setTimeout(function() {
     window.mudTimer = setInterval(function() {
       secs--;
       if(timerEl) timerEl.textContent = fmt(secs);
       updateCircle(secs);
+      /* Label : secondes restantes quand < 60s, sinon format min */
+      if(labelEl) {
+        if(secs > 0) {
+          labelEl.textContent = secs > 59 ? fmtLabel(secs) : secs + 's RESTANT';
+        } else {
+          labelEl.textContent = 'TERMINÉ ✦';
+        }
+      }
       if(secs <= 0) {
         clearInterval(window.mudTimer);
         window.mudTimer = null;
@@ -4133,7 +4155,7 @@ function eftNext() {
       </svg>
       <div class="mud-timer-center">
         <div class="mud-timer-display" id="mud-timer">3:00</div>
-        <div class="mud-timer-label">MIN</div>
+        <div class="mud-timer-label" id="mud-timer-label">RESTANT</div>
       </div>
     </div>
     <div class="mud-phrase" id="mud-phrase"></div>
