@@ -1512,6 +1512,48 @@ body{font-family:'Raleway',sans-serif;background:#000;color:var(--tx);height:100
 
 
 /* Bouton retour universel doré */
+/* ═══ EXERCICE TERMINÉ ═══ */
+#ex-done {
+  background: radial-gradient(ellipse at center, #001a0d 0%, #000 70%);
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  text-align: center;
+  padding: 2rem;
+}
+.done-icon {
+  font-size: 2.5rem;
+  color: #4FC3C8;
+  filter: drop-shadow(0 0 15px rgba(79,195,200,.8));
+}
+.done-title {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem;
+  color: #4FC3C8;
+  letter-spacing: .08em;
+}
+.done-msg {
+  font-size: .82rem;
+  color: #8A8070;
+  line-height: 1.85;
+  max-width: 290px;
+}
+.done-back {
+  background: transparent;
+  border: 1px solid rgba(79,195,200,.4);
+  border-radius: 11px;
+  color: #4FC3C8;
+  font-family: 'Cinzel', serif;
+  font-size: .75rem;
+  letter-spacing: .12em;
+  padding: .75rem 1.5rem;
+  cursor: pointer;
+  transition: background .2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.done-back:active { background: rgba(79,195,200,.1); }
+
 .back-home {
   position: absolute;
   bottom: 1.2rem;
@@ -3904,11 +3946,11 @@ function eftNext() {
     <div class="fex-badge" id="fex-badge">Exercice</div>
     <div class="fex-title" id="fex-title"></div>
     <div class="fex-sep"><span>✦</span></div>
-    <div class="fex-section">✦ Pourquoi ça marche</div>
+    <div class="fex-section">&#10022; Pourquoi &ccedil;a marche</div>
     <div class="fex-text" id="fex-pourquoi"></div>
-    <div class="fex-section">✦ Comment faire</div>
+    <div class="fex-section">&#10022; Comment faire</div>
     <div class="fex-text" id="fex-comment"></div>
-    <button class="fex-btn" onclick="forgeStartEx()">✦ Commencer l'exercice</button>
+    <button class="fex-btn" onclick="forgeStartEx()">&#10022; Commencer l'exercice</button>
   </div>
   <button class="back-home" onclick="go('forge')">↑ Accueil</button>
 </div>
@@ -3948,7 +3990,7 @@ function eftNext() {
 <div id="ex-ecriture" class="s">
   <button class="ex-back-top" onclick="go('dash')">←</button>
   <div class="ecr-wrap">
-    <div class="ecr-title">Écriture Libératrice</div>
+    <div class="ecr-title">&#201;criture Lib&eacute;ratrice</div>
     <div class="ecr-instruction">Écris librement et sans filtre tout ce que tu as sur le coeur. Ne relis pas, ne corrige pas. Laisse les mots couler.</div>
     <textarea class="ecr-area" id="ecr-area" placeholder="Commence à écrire ici..."></textarea>
     <button class="ecr-btn" onclick="ecrBrule()">✦ Brûler et libérer</button>
