@@ -2,2293 +2,482 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Naéora</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naéora — Accueil</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #07060e;
-    --bg2: #0d0b1a;
-    --violet: #7b5ea7;
-    --violet-light: #a07fd4;
-    --gold: #c9a96e;
-    --gold-light: #e8c98a;
-    --gold-pale: #f5e6c8;
-    --white: #f0ecff;
-    --white-soft: rgba(240,236,255,0.82);
-    --white-dim: rgba(240,236,255,0.45);
-    --white-faint: rgba(240,236,255,0.18);
-    --star: #e8d8a0;
-    --radius: 18px;
-    --radius-sm: 10px;
-    --transition: 0.45s cubic-bezier(0.4,0,0.2,1);
-  }
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;}
+#app{
+  width:390px;height:844px;margin:0 auto;
+  position:relative;overflow:hidden;
+  background:linear-gradient(170deg,#080514 0%,#0f0828 25%,#160c38 45%,#0e1428 70%,#090d1e 100%);
+  display:flex;flex-direction:column;
+}
+.nebula{position:absolute;inset:0;pointer-events:none;z-index:0;}
+.nebula::before{
+  content:'';position:absolute;
+  width:500px;height:500px;top:-80px;left:-60px;
+  background:radial-gradient(ellipse at 35% 25%,rgba(120,60,220,0.15) 0%,rgba(80,20,150,0.06) 45%,transparent 70%);
+  animation:drift1 14s ease-in-out infinite alternate;
+}
+.nebula::after{
+  content:'';position:absolute;
+  width:400px;height:400px;bottom:100px;right:-50px;
+  background:radial-gradient(ellipse at 65% 75%,rgba(200,130,20,0.1) 0%,rgba(160,60,10,0.05) 45%,transparent 70%);
+  animation:drift2 18s ease-in-out infinite alternate;
+}
+@keyframes drift1{from{transform:translate(0,0);}to{transform:translate(25px,18px);}}
+@keyframes drift2{from{transform:translate(0,0);}to{transform:translate(-18px,-25px);}}
+.stars{position:absolute;inset:0;pointer-events:none;z-index:0;}
+.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d,3s) ease-in-out infinite alternate;}
+@keyframes twinkle{from{opacity:0.1;}to{opacity:0.8;}}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+.content{position:relative;z-index:1;display:flex;flex-direction:column;height:100%;padding-bottom:72px;}
 
-  body {
-    font-family: 'Cormorant Garamond', Georgia, serif;
-    background: var(--bg);
-    color: var(--white);
-    height: 100dvh;
-    overflow: hidden;
-    position: relative;
-  }
+/* Header */
+.header{
+  padding:54px 24px 18px;
+  display:flex;align-items:flex-start;justify-content:space-between;
+}
+.greeting-time{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.22em;
+  color:rgba(212,168,60,0.65);text-transform:uppercase;margin-bottom:6px;
+}
+.greeting-name{
+  font-family:'Cinzel',serif;font-size:22px;font-weight:300;
+  letter-spacing:0.06em;color:#f0e8d8;
+  text-shadow:0 0 30px rgba(212,168,60,0.2);
+}
+.greeting-sub{
+  font-family:'Cormorant Garamond',serif;font-size:15px;
+  font-weight:300;font-style:italic;
+  color:rgba(200,185,160,0.7);margin-top:4px;
+}
+.avatar{
+  width:42px;height:42px;border-radius:50%;
+  background:rgba(212,168,60,0.08);
+  border:1px solid rgba(212,168,60,0.25);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:border-color 0.3s;flex-shrink:0;
+}
+.avatar:hover{border-color:rgba(212,168,60,0.6);}
+.avatar svg{width:18px;height:18px;stroke:rgba(212,168,60,0.7);fill:none;stroke-width:1.5;}
 
-  /* ── SCREENS ── */
-  .screen {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    opacity: 0; pointer-events: none;
-    transition: opacity var(--transition);
-    overflow: hidden;
-  }
-  .screen.active { opacity: 1; pointer-events: all; }
+/* Citation */
+.citation-section{padding:0 20px;}
+.citation-card{
+  background:rgba(255,255,255,0.04);
+  backdrop-filter:blur(24px);
+  border:1px solid rgba(212,168,60,0.12);
+  border-radius:22px;padding:22px 24px 20px;
+  position:relative;overflow:hidden;
+}
+.citation-card::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:120px;height:120px;
+  background:radial-gradient(circle,rgba(212,168,60,0.07) 0%,transparent 70%);
+  border-radius:50%;
+}
+.citation-date-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.2em;
+  color:rgba(212,168,60,0.55);text-transform:uppercase;
+  background:rgba(212,168,60,0.06);
+  border:1px solid rgba(212,168,60,0.12);
+  border-radius:20px;padding:3px 10px;
+  margin-bottom:14px;
+}
+.quote-mark{
+  font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:300;
+  color:rgba(212,168,60,0.22);line-height:0.7;margin-bottom:10px;display:block;
+}
+.citation-text{
+  font-family:'Cormorant Garamond',serif;font-size:17.5px;
+  font-weight:300;font-style:italic;line-height:1.65;
+  color:rgba(240,230,210,0.92);
+}
+.citation-footer{
+  display:flex;align-items:center;justify-content:space-between;margin-top:14px;
+}
+.citation-author{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.18em;
+  color:rgba(212,168,60,0.6);text-transform:uppercase;
+}
+.cite-thematique{
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:300;
+  color:rgba(212,168,60,0.5);letter-spacing:0.1em;text-transform:uppercase;
+  background:rgba(212,168,60,0.06);border:1px solid rgba(212,168,60,0.12);
+  border-radius:20px;padding:3px 10px;
+}
 
-  /* ── STARFIELD ── */
-  #starfield {
-    position: fixed; inset: 0; z-index: 0;
-    pointer-events: none; overflow: hidden;
-  }
-  .star-dot {
-    position: absolute; border-radius: 50%;
-    background: white;
-    animation: twinkle var(--d, 4s) ease-in-out infinite;
-    animation-delay: var(--delay, 0s);
-  }
-  @keyframes twinkle {
-    0%,100% { opacity: var(--op1, 0.15); transform: scale(1); }
-    50% { opacity: var(--op2, 0.6); transform: scale(1.3); }
-  }
+/* Rituels — lecture seule */
+.state-section{padding:18px 20px 0;}
+.section-label{
+  font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.2em;
+  color:rgba(180,165,140,0.45);text-transform:uppercase;margin-bottom:12px;
+}
+.state-row{display:flex;gap:10px;}
+.state-pill{
+  display:flex;align-items:center;gap:7px;
+  padding:9px 14px;border-radius:50px;
+  flex:1;justify-content:center;
+  cursor:default;transition:all 0.5s ease;
+}
+.state-pill.done{
+  border:1px solid rgba(212,168,60,0.3);
+  background:rgba(212,168,60,0.07);
+}
+.state-pill.pending{
+  border:1px solid rgba(255,255,255,0.07);
+  background:rgba(255,255,255,0.025);
+}
+.pill-icon{font-size:14px;}
+.pill-label{
+  font-family:'Inter',sans-serif;font-size:11px;font-weight:300;
+  color:rgba(180,168,150,0.5);
+}
+.state-pill.done .pill-label{color:rgba(212,168,60,0.8);}
+.check{
+  width:14px;height:14px;border-radius:50%;
+  background:rgba(212,168,60,0.15);
+  border:1px solid rgba(212,168,60,0.45);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.check svg{width:8px;height:8px;stroke:rgba(212,168,60,0.85);fill:none;stroke-width:2.5;}
+.state-note{
+  font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;
+  color:rgba(180,168,150,0.35);margin-top:8px;text-align:center;letter-spacing:0.03em;
+}
 
-  /* ── TYPOGRAPHY ── */
-  .cinzel { font-family: 'Cinzel', serif; }
-  .italic { font-style: italic; }
+/* Quick access */
+.quick-section{padding:18px 20px 0;flex:1;}
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.quick-card{
+  background:rgba(255,255,255,0.035);
+  backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,0.07);
+  border-radius:18px;padding:16px 15px 14px;
+  cursor:pointer;transition:all 0.3s ease;
+  display:flex;flex-direction:column;gap:9px;
+  position:relative;overflow:hidden;
+}
+.quick-card:hover{border-color:rgba(212,168,60,0.2);transform:translateY(-2px);}
+.quick-card.highlight{border-color:rgba(212,168,60,0.22);background:rgba(212,168,60,0.05);}
+.quick-card.done-card{border-color:rgba(212,168,60,0.15);opacity:0.7;}
+.card-icon{
+  width:34px;height:34px;border-radius:11px;
+  display:flex;align-items:center;justify-content:center;font-size:17px;
+}
+.card-title{
+  font-family:'Cinzel',serif;font-size:11.5px;font-weight:400;
+  letter-spacing:0.04em;color:rgba(230,220,200,0.9);line-height:1.4;
+}
+.card-sub{
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:300;
+  color:rgba(180,168,150,0.5);margin-top:1px;
+}
+.card-arrow{
+  position:absolute;bottom:13px;right:13px;
+  font-size:12px;color:rgba(212,168,60,0.4);
+}
+.card-done-mark{
+  position:absolute;bottom:11px;right:11px;
+  width:16px;height:16px;border-radius:50%;
+  background:rgba(212,168,60,0.12);
+  border:1px solid rgba(212,168,60,0.35);
+  display:flex;align-items:center;justify-content:center;
+}
+.card-done-mark svg{width:9px;height:9px;stroke:rgba(212,168,60,0.75);fill:none;stroke-width:2.5;}
+.premium-badge{
+  position:absolute;top:10px;right:10px;
+  font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.1em;
+  color:rgba(212,168,60,0.65);background:rgba(212,168,60,0.08);
+  border:1px solid rgba(212,168,60,0.18);border-radius:20px;padding:2px 7px;
+}
 
-  /* ── BUTTONS ── */
-  .btn {
-    font-family: 'Cinzel', serif;
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    border: none; cursor: pointer;
-    padding: 14px 32px;
-    border-radius: 50px;
-    transition: all 0.3s ease;
-    position: relative; overflow: hidden;
-  }
-  .btn-gold {
-    background: linear-gradient(135deg, var(--gold), var(--gold-light));
-    color: #1a1208;
-    box-shadow: 0 0 20px rgba(201,169,110,0.3);
-  }
-  .btn-gold:hover { box-shadow: 0 0 32px rgba(201,169,110,0.55); transform: translateY(-1px); }
-  .btn-ghost {
-    background: transparent;
-    color: var(--white-soft);
-    border: 1px solid rgba(201,169,110,0.3);
-  }
-  .btn-ghost:hover { border-color: var(--gold); color: var(--gold-pale); }
-  .btn-full { width: 100%; }
-
-  /* ── INPUT ── */
-  .input-wrap { width: 100%; position: relative; margin-bottom: 14px; }
-  .input-wrap label {
-    display: block;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    color: var(--white-dim);
-    margin-bottom: 5px;
-    font-family: 'Cinzel', serif;
-    text-transform: uppercase;
-  }
-  .nae-input {
-    width: 100%;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(201,169,110,0.25);
-    border-radius: var(--radius-sm);
-    padding: 13px 16px;
-    color: var(--white);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem;
-    outline: none;
-    transition: border-color 0.3s;
-  }
-  .nae-input:focus { border-color: var(--gold); }
-  .nae-input::placeholder { color: var(--white-faint); }
-
-  /* ── GLOW CIRCLE ── */
-  .glow {
-    position: absolute; border-radius: 50%;
-    pointer-events: none; z-index: 0;
-  }
-
-  /* ────────────────────────────────────────────
-     1. SPLASH
-  ──────────────────────────────────────────── */
-  #splash {
-    background: radial-gradient(ellipse at 50% 40%, #1a0f3a 0%, #07060e 70%);
-    z-index: 10;
-  }
-  #splash .glow {
-    width: 400px; height: 400px;
-    background: radial-gradient(circle, rgba(123,94,167,0.25) 0%, transparent 70%);
-    top: 50%; left: 50%; transform: translate(-50%, -55%);
-  }
-  .splash-logo {
-    position: relative; z-index: 1; text-align: center;
-    animation: fadeUp 1.2s ease forwards;
-  }
-  .splash-logo .wordmark {
-    font-family: 'Cinzel', serif;
-    font-size: 3.2rem;
-    font-weight: 300;
-    letter-spacing: 0.35em;
-    color: var(--gold-pale);
-    text-shadow: 0 0 40px rgba(201,169,110,0.4);
-  }
-  .splash-logo .tagline {
-    font-size: 0.85rem;
-    letter-spacing: 0.25em;
-    color: var(--white-dim);
-    margin-top: 8px;
-    font-style: italic;
-  }
-  .splash-ring {
-    position: absolute; z-index: 0;
-    width: 220px; height: 220px;
-    border-radius: 50%;
-    border: 1px solid rgba(201,169,110,0.15);
-    top: 50%; left: 50%; transform: translate(-50%, -55%);
-    animation: pulseRing 3s ease-in-out infinite;
-  }
-  .splash-ring:nth-child(2) { width: 300px; height: 300px; animation-delay: 0.5s; opacity: 0.5; }
-  @keyframes pulseRing {
-    0%,100% { transform: translate(-50%,-55%) scale(1); opacity: 0.3; }
-    50% { transform: translate(-50%,-55%) scale(1.05); opacity: 0.7; }
-  }
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ────────────────────────────────────────────
-     2. DISCLAIMER
-  ──────────────────────────────────────────── */
-  #disclaimer {
-    background: radial-gradient(ellipse at 50% 30%, #130d2a 0%, var(--bg) 75%);
-    padding: 32px 28px;
-    z-index: 9;
-  }
-  .disclaimer-inner {
-    max-width: 420px; width: 100%;
-    display: flex; flex-direction: column; gap: 24px;
-    position: relative; z-index: 1;
-  }
-  .disclaimer-title {
-    font-family: 'Cinzel', serif;
-    font-size: 1.1rem;
-    letter-spacing: 0.2em;
-    color: var(--gold);
-    text-align: center;
-  }
-  .disclaimer-text {
-    font-size: 0.98rem;
-    line-height: 1.75;
-    color: var(--white-soft);
-    text-align: center;
-  }
-  .disclaimer-text em { color: var(--gold-pale); font-style: italic; }
-  .check-wrap {
-    display: flex; align-items: center; gap: 12px;
-    cursor: pointer;
-    padding: 14px 18px;
-    border-radius: var(--radius-sm);
-    border: 1px solid rgba(201,169,110,0.2);
-    background: rgba(255,255,255,0.03);
-    transition: background 0.3s;
-  }
-  .check-wrap:hover { background: rgba(201,169,110,0.07); }
-  .check-wrap input { display: none; }
-  .check-box {
-    width: 20px; height: 20px; border-radius: 5px;
-    border: 1.5px solid var(--gold);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; transition: background 0.2s;
-  }
-  .check-box.checked { background: var(--gold); }
-  .check-box.checked::after { content: '✓'; color: #1a1208; font-size: 0.75rem; font-weight: bold; }
-  .check-label { font-size: 0.9rem; color: var(--white-soft); line-height: 1.5; }
-
-  /* ────────────────────────────────────────────
-     3. ONBOARDING
-  ──────────────────────────────────────────── */
-  #onboarding {
-    background: radial-gradient(ellipse at 50% 20%, #160e35 0%, var(--bg) 70%);
-    z-index: 9;
-    padding: 0;
-  }
-  .ob-slider {
-    width: 100%; height: 100%;
-    display: flex; overflow: hidden;
-    position: relative;
-  }
-  .ob-slides {
-    display: flex;
-    width: 400%; height: 100%;
-    transition: transform 0.55s cubic-bezier(0.4,0,0.2,1);
-  }
-  .ob-slide {
-    width: 25%; height: 100%;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 48px 36px;
-    text-align: center; position: relative;
-  }
-  .ob-icon {
-    font-size: 3rem; margin-bottom: 32px;
-    filter: drop-shadow(0 0 20px rgba(201,169,110,0.4));
-    animation: floatIcon 4s ease-in-out infinite;
-  }
-  @keyframes floatIcon { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
-  .ob-title {
-    font-family: 'Cinzel', serif;
-    font-size: 1.5rem; font-weight: 300;
-    letter-spacing: 0.08em;
-    color: var(--gold-pale);
-    margin-bottom: 20px;
-    line-height: 1.3;
-  }
-  .ob-text {
-    font-size: 1.05rem;
-    line-height: 1.8;
-    color: var(--white-soft);
-    max-width: 320px;
-  }
-  .ob-dots {
-    position: absolute; bottom: 120px; left: 0; right: 0;
-    display: flex; justify-content: center; gap: 8px;
-  }
-  .ob-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--white-faint);
-    transition: all 0.3s;
-  }
-  .ob-dot.active { background: var(--gold); width: 22px; border-radius: 3px; }
-  .ob-nav {
-    position: absolute; bottom: 48px; left: 0; right: 0;
-    display: flex; justify-content: center; gap: 16px; padding: 0 36px;
-  }
-
-  /* ────────────────────────────────────────────
-     4. AUTH (Login + Register)
-  ──────────────────────────────────────────── */
-  #auth {
-    background: radial-gradient(ellipse at 50% 25%, #130d2a 0%, var(--bg) 70%);
-    padding: 32px 28px;
-    z-index: 9;
-    overflow-y: auto;
-  }
-  .auth-inner {
-    max-width: 380px; width: 100%;
-    display: flex; flex-direction: column; gap: 20px;
-    position: relative; z-index: 1;
-  }
-  .auth-logo {
-    text-align: center; margin-bottom: 8px;
-    font-family: 'Cinzel', serif;
-    font-size: 1.6rem; letter-spacing: 0.3em;
-    color: var(--gold); font-weight: 300;
-  }
-  .auth-title {
-    font-family: 'Cinzel', serif;
-    font-size: 0.85rem; letter-spacing: 0.18em;
-    color: var(--white-dim); text-align: center;
-    text-transform: uppercase;
-  }
-  .auth-tabs {
-    display: flex; border-radius: var(--radius-sm);
-    overflow: hidden; border: 1px solid rgba(201,169,110,0.2);
-  }
-  .auth-tab {
-    flex: 1; padding: 11px;
-    background: transparent; border: none; cursor: pointer;
-    font-family: 'Cinzel', serif; font-size: 0.72rem;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    color: var(--white-dim); transition: all 0.3s;
-  }
-  .auth-tab.active { background: rgba(201,169,110,0.15); color: var(--gold); }
-  .auth-form { display: flex; flex-direction: column; }
-  .auth-form-panel { display: none; flex-direction: column; gap: 0; }
-  .auth-form-panel.active { display: flex; }
-  .auth-link {
-    text-align: center; font-size: 0.85rem;
-    color: var(--white-dim); margin-top: 8px;
-  }
-  .auth-link span { color: var(--gold); cursor: pointer; text-decoration: underline; }
-
-  /* ────────────────────────────────────────────
-     5. DASHBOARD
-  ──────────────────────────────────────────── */
-  #dashboard {
-    background: radial-gradient(ellipse at 50% 0%, #140d2e 0%, var(--bg) 60%);
-    z-index: 5;
-    justify-content: flex-start;
-    padding: 0;
-  }
-  .dash-content {
-    flex: 1; overflow-y: auto;
-    padding: 56px 28px 28px;
-    width: 100%; max-width: 480px;
-    margin: 0 auto;
-    display: flex; flex-direction: column; gap: 28px;
-  }
-  .dash-greeting {
-    text-align: center; padding-top: 8px;
-  }
-  .dash-time {
-    font-size: 0.72rem; letter-spacing: 0.2em;
-    color: var(--white-dim); text-transform: uppercase;
-    margin-bottom: 6px; font-family: 'Cinzel', serif;
-  }
-  .dash-name {
-    font-family: 'Cinzel', serif;
-    font-size: 1.5rem; font-weight: 300;
-    color: var(--gold-pale);
-    letter-spacing: 0.1em;
-  }
-  .dash-quote {
-    margin-top: 16px;
-    padding: 18px 24px;
-    background: rgba(255,255,255,0.035);
-    border-radius: var(--radius);
-    border: 1px solid rgba(201,169,110,0.12);
-    font-size: 1rem;
-    line-height: 1.7;
-    color: var(--white-soft);
-    text-align: center;
-    font-style: italic;
-  }
-  .dash-section-title {
-    font-family: 'Cinzel', serif;
-    font-size: 0.68rem;
-    letter-spacing: 0.2em;
-    color: var(--white-dim);
-    text-transform: uppercase;
-    margin-bottom: 2px;
-  }
-  .ritual-cards {
-    display: flex; flex-direction: column; gap: 14px;
-  }
-  .ritual-card {
-    display: flex; align-items: center; gap: 18px;
-    padding: 20px 22px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(201,169,110,0.14);
-    border-radius: var(--radius);
-    cursor: pointer;
-    transition: all 0.3s;
-    position: relative; overflow: hidden;
-  }
-  .ritual-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; bottom: 0; width: 3px;
-    background: linear-gradient(to bottom, var(--gold), transparent);
-    opacity: 0; transition: opacity 0.3s;
-  }
-  .ritual-card:hover { background: rgba(255,255,255,0.07); transform: translateX(2px); }
-  .ritual-card:hover::before { opacity: 1; }
-  .ritual-card .rc-icon { font-size: 1.6rem; flex-shrink: 0; }
-  .ritual-card .rc-body { flex: 1; }
-  .ritual-card .rc-title {
-    font-family: 'Cinzel', serif;
-    font-size: 0.88rem; letter-spacing: 0.1em;
-    color: var(--gold-pale);
-    margin-bottom: 3px;
-  }
-  .ritual-card .rc-desc {
-    font-size: 0.85rem; color: var(--white-dim);
-    line-height: 1.4;
-  }
-  .ritual-card .rc-arrow { color: var(--gold); opacity: 0.5; font-size: 1.1rem; }
-  .ritual-card.done { border-color: rgba(201,169,110,0.3); }
-  .ritual-card.done .rc-icon { filter: drop-shadow(0 0 8px rgba(201,169,110,0.5)); }
-
-  /* ── BOTTOM NAV ── */
-  .bottom-nav {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: rgba(7,6,14,0.92);
-    backdrop-filter: blur(20px);
-    border-top: 1px solid rgba(201,169,110,0.1);
-    display: flex;
-    z-index: 100;
-    padding-bottom: env(safe-area-inset-bottom);
-    transition: transform 0.3s;
-  }
-  .bottom-nav.hidden { transform: translateY(100%); }
-  .nav-btn {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    padding: 10px 4px;
-    background: none; border: none; cursor: pointer;
-    color: var(--white-dim);
-    transition: color 0.3s;
-    gap: 3px;
-  }
-  .nav-btn .nb-icon { font-size: 1.3rem; }
-  .nav-btn .nb-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.55rem; letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
-  .nav-btn.active { color: var(--gold); }
-  .nav-btn.active .nb-icon { filter: drop-shadow(0 0 6px rgba(201,169,110,0.6)); }
-
-  /* ────────────────────────────────────────────
-     MODULE SCREENS
-  ──────────────────────────────────────────── */
-  .module-screen {
-    background: radial-gradient(ellipse at 50% 20%, #130d2a 0%, var(--bg) 70%);
-    padding: 0;
-    z-index: 8;
-    justify-content: flex-start;
-  }
-  .module-header {
-    width: 100%; padding: 52px 24px 20px;
-    display: flex; align-items: center; gap: 14px;
-    position: relative; z-index: 1;
-    max-width: 480px; margin: 0 auto;
-  }
-  .back-btn {
-    background: none; border: none; cursor: pointer;
-    color: var(--gold); font-size: 1.2rem;
-    padding: 8px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.2s;
-  }
-  .back-btn:hover { background: rgba(201,169,110,0.1); }
-  .module-title {
-    font-family: 'Cinzel', serif;
-    font-size: 1rem; letter-spacing: 0.15em;
-    color: var(--gold-pale); font-weight: 300;
-  }
-  .module-body {
-    flex: 1; overflow-y: auto;
-    padding: 0 28px 120px;
-    width: 100%; max-width: 480px;
-    margin: 0 auto;
-    display: flex; flex-direction: column;
-    align-items: center; gap: 28px;
-  }
-
-  /* ── MATIN ── */
-  .matin-intro {
-    text-align: center; padding-top: 20px;
-    display: flex; flex-direction: column; gap: 24px;
-    align-items: center; width: 100%;
-  }
-  .matin-sun {
-    font-size: 3.5rem;
-    animation: floatIcon 5s ease-in-out infinite;
-    filter: drop-shadow(0 0 24px rgba(201,169,110,0.5));
-  }
-  .domain-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 10px 22px;
-    background: rgba(201,169,110,0.1);
-    border: 1px solid rgba(201,169,110,0.3);
-    border-radius: 50px;
-    font-family: 'Cinzel', serif;
-    font-size: 0.8rem; letter-spacing: 0.15em;
-    color: var(--gold);
-  }
-  .affirmation-card {
-    width: 100%;
-    padding: 32px 28px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(201,169,110,0.18);
-    border-radius: var(--radius);
-    text-align: center;
-    position: relative; overflow: hidden;
-  }
-  .affirmation-card::before {
-    content: '✦';
-    position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
-    color: rgba(201,169,110,0.2); font-size: 1.2rem;
-  }
-  .affirmation-text {
-    font-size: 1.15rem;
-    line-height: 1.8;
-    color: var(--white-soft);
-    font-style: italic;
-    padding-top: 8px;
-  }
-  .matin-message {
-    text-align: center;
-    font-size: 1rem;
-    color: var(--white-dim);
-    font-style: italic;
-    line-height: 1.7;
-  }
-
-  /* ── EXERCICES ── */
-  .exercise-grid {
-    display: flex; flex-direction: column; gap: 12px; width: 100%;
-  }
-  .ex-card {
-    display: flex; align-items: center; gap: 16px;
-    padding: 18px 20px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(201,169,110,0.12);
-    border-radius: var(--radius-sm);
-    cursor: pointer; transition: all 0.3s;
-  }
-  .ex-card:hover { background: rgba(255,255,255,0.08); border-color: rgba(201,169,110,0.3); }
-  .ex-icon { font-size: 1.5rem; flex-shrink: 0; }
-  .ex-name {
-    font-family: 'Cinzel', serif;
-    font-size: 0.82rem; letter-spacing: 0.1em;
-    color: var(--gold-pale);
-    margin-bottom: 2px;
-  }
-  .ex-desc { font-size: 0.82rem; color: var(--white-dim); }
-  .ex-arrow { color: var(--gold); opacity: 0.4; margin-left: auto; }
-
-  /* ── SOIR ── */
-  .soir-intro { text-align: center; display: flex; flex-direction: column; gap: 20px; align-items: center; width: 100%; }
-  .soir-moon { font-size: 3.2rem; animation: floatIcon 6s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(160,127,212,0.5)); }
-  .soir-prompt { font-size: 1.05rem; line-height: 1.75; color: var(--white-soft); font-style: italic; text-align: center; }
-  .gratitude-area {
-    width: 100%;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(201,169,110,0.18);
-    border-radius: var(--radius);
-    padding: 20px;
-    resize: none;
-    color: var(--white);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem;
-    line-height: 1.7;
-    min-height: 160px;
-    outline: none;
-    transition: border-color 0.3s;
-  }
-  .gratitude-area:focus { border-color: rgba(201,169,110,0.45); }
-  .gratitude-area::placeholder { color: var(--white-faint); font-style: italic; }
-  .star-animation {
-    display: none;
-    text-align: center; padding: 32px 0;
-    flex-direction: column; gap: 16px; align-items: center;
-  }
-  .star-animation.show { display: flex; }
-  .star-burst { font-size: 3.5rem; animation: starPulse 1.5s ease-in-out forwards; }
-  @keyframes starPulse {
-    0% { opacity: 0; transform: scale(0.3) rotate(-20deg); }
-    60% { opacity: 1; transform: scale(1.15) rotate(5deg); }
-    100% { opacity: 1; transform: scale(1) rotate(0deg); }
-  }
-
-  /* ── CONSTELLATION ── */
-  #constellation-view {
-    background: #04030d;
-  }
-  .constellation-canvas-wrap {
-    flex: 1; width: 100%; position: relative;
-    overflow: hidden;
-  }
-  #constellation-canvas {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-  }
-  .constellation-empty {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 16px; padding: 40px; text-align: center;
-    color: var(--white-dim);
-  }
-  .constellation-empty .ce-icon { font-size: 2.5rem; opacity: 0.4; }
-  .constellation-empty p { font-size: 0.95rem; font-style: italic; line-height: 1.7; }
-
-  /* ── PROFIL ── */
-  .profil-header {
-    text-align: center; padding: 16px 0 8px;
-    display: flex; flex-direction: column; gap: 6px;
-  }
-  .profil-avatar {
-    width: 72px; height: 72px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--violet), var(--gold));
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Cinzel', serif; font-size: 1.6rem;
-    color: #1a1208; margin: 0 auto 12px;
-  }
-  .profil-name {
-    font-family: 'Cinzel', serif;
-    font-size: 1.3rem; font-weight: 300;
-    color: var(--gold-pale); letter-spacing: 0.12em;
-  }
-  .profil-status {
-    display: inline-block;
-    padding: 4px 14px;
-    border-radius: 50px;
-    background: rgba(201,169,110,0.12);
-    border: 1px solid rgba(201,169,110,0.25);
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem; letter-spacing: 0.18em;
-    color: var(--gold); text-transform: uppercase;
-  }
-  .profil-section { width: 100%; }
-  .profil-section-title {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem; letter-spacing: 0.2em;
-    color: var(--white-dim); text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .profil-row {
-    display: flex; align-items: center;
-    padding: 16px 18px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(201,169,110,0.1);
-    border-radius: var(--radius-sm);
-    margin-bottom: 10px;
-    cursor: pointer; transition: background 0.2s;
-  }
-  .profil-row:hover { background: rgba(255,255,255,0.07); }
-  .profil-row .pr-icon { font-size: 1.1rem; margin-right: 14px; }
-  .profil-row .pr-label {
-    flex: 1; font-size: 0.95rem; color: var(--white-soft);
-  }
-  .profil-row .pr-arrow { color: var(--white-dim); font-size: 0.9rem; }
-
-  /* ── CHEMIN DE VIE ── */
-  .cdv-number {
-    font-family: 'Cinzel', serif;
-    font-size: 4.5rem; font-weight: 300;
-    color: var(--gold); letter-spacing: 0.05em;
-    text-align: center;
-    text-shadow: 0 0 40px rgba(201,169,110,0.3);
-  }
-  .cdv-label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.72rem; letter-spacing: 0.25em;
-    color: var(--white-dim); text-align: center;
-    text-transform: uppercase; margin-top: -8px;
-  }
-  .cdv-desc {
-    font-size: 1rem; line-height: 1.85;
-    color: var(--white-soft); text-align: center;
-    font-style: italic;
-    padding: 24px 8px;
-    border-top: 1px solid rgba(201,169,110,0.1);
-    border-bottom: 1px solid rgba(201,169,110,0.1);
-  }
-  .cdv-note {
-    font-size: 0.78rem; color: var(--white-dim);
-    text-align: center; line-height: 1.6; font-style: italic;
-  }
-
-  /* ── PARAMÈTRES ── */
-  .param-section { width: 100%; }
-  .param-section-title {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem; letter-spacing: 0.2em;
-    color: var(--white-dim); text-transform: uppercase;
-    margin-bottom: 10px;
-  }
-  .param-row {
-    display: flex; align-items: center;
-    padding: 16px 18px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(201,169,110,0.1);
-    border-radius: var(--radius-sm);
-    margin-bottom: 10px;
-  }
-  .param-row .pl { flex: 1; }
-  .param-row .pl-label { font-size: 0.95rem; color: var(--white-soft); }
-  .param-row .pl-sub { font-size: 0.8rem; color: var(--white-dim); margin-top: 2px; }
-  .toggle {
-    width: 44px; height: 24px; border-radius: 12px;
-    background: rgba(255,255,255,0.12);
-    position: relative; cursor: pointer;
-    transition: background 0.3s; flex-shrink: 0;
-    border: none;
-  }
-  .toggle::after {
-    content: ''; position: absolute;
-    width: 18px; height: 18px; border-radius: 50%;
-    background: white; top: 3px; left: 3px;
-    transition: transform 0.3s;
-  }
-  .toggle.on { background: var(--gold); }
-  .toggle.on::after { transform: translateX(20px); }
-
-  /* ── HORIZON ── */
-  .horizon-header {
-    text-align: center; padding: 16px 0;
-    display: flex; flex-direction: column; gap: 12px; align-items: center;
-  }
-  .horizon-icon { font-size: 3rem; }
-  .horizon-title {
-    font-family: 'Cinzel', serif;
-    font-size: 1.8rem; font-weight: 300;
-    color: var(--gold); letter-spacing: 0.2em;
-  }
-  .horizon-tagline { font-size: 1rem; color: var(--white-soft); font-style: italic; }
-  .horizon-price {
-    padding: 22px; border-radius: var(--radius);
-    background: linear-gradient(135deg, rgba(201,169,110,0.12), rgba(123,94,167,0.1));
-    border: 1px solid rgba(201,169,110,0.25);
-    text-align: center; width: 100%;
-  }
-  .horizon-price .amount {
-    font-family: 'Cinzel', serif; font-size: 2.4rem;
-    color: var(--gold-pale); letter-spacing: 0.05em;
-  }
-  .horizon-price .period {
-    font-size: 0.85rem; color: var(--white-dim); margin-top: 4px;
-  }
-  .horizon-benefits { width: 100%; display: flex; flex-direction: column; gap: 10px; }
-  .hb-item {
-    display: flex; align-items: flex-start; gap: 14px;
-    padding: 14px 18px;
-    background: rgba(255,255,255,0.04);
-    border-radius: var(--radius-sm);
-    border: 1px solid rgba(201,169,110,0.1);
-  }
-  .hb-item .hb-icon { font-size: 1.1rem; flex-shrink: 0; margin-top: 2px; }
-  .hb-item .hb-text { font-size: 0.9rem; color: var(--white-soft); line-height: 1.5; }
-  .horizon-note {
-    font-size: 0.8rem; color: var(--white-dim);
-    text-align: center; font-style: italic; line-height: 1.6;
-  }
-
-  /* ── EXERCISE SCREENS ── */
-  .ex-screen-body {
-    text-align: center; gap: 24px;
-    align-items: center;
-  }
-  .ex-big-icon { font-size: 4rem; animation: floatIcon 5s ease-in-out infinite; filter: drop-shadow(0 0 20px rgba(160,127,212,0.5)); }
-  .ex-intro-title { font-family: 'Cinzel', serif; font-size: 1.2rem; letter-spacing: 0.1em; color: var(--gold-pale); }
-  .ex-intro-text { font-size: 1rem; line-height: 1.75; color: var(--white-soft); font-style: italic; max-width: 340px; text-align: center; }
-  .breathing-circle-wrap { position: relative; display: flex; align-items: center; justify-content: center; }
-  .breathing-circle {
-    width: 160px; height: 160px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(123,94,167,0.3) 0%, rgba(123,94,167,0.05) 70%);
-    border: 2px solid rgba(160,127,212,0.4);
-    display: flex; align-items: center; justify-content: center;
-    font-family: 'Cinzel', serif; font-size: 0.85rem;
-    letter-spacing: 0.1em; color: var(--violet-light);
-  }
-  .breathing-circle.inhale { animation: expand 4s ease-in-out forwards; }
-  .breathing-circle.hold { animation: none; }
-  .breathing-circle.exhale { animation: contract 4s ease-in-out forwards; }
-  @keyframes expand {
-    from { transform: scale(1); }
-    to { transform: scale(1.35); }
-  }
-  @keyframes contract {
-    from { transform: scale(1.35); }
-    to { transform: scale(1); }
-  }
-  .hooponopono-phrases { display: flex; flex-direction: column; gap: 16px; width: 100%; }
-  .hp-phrase {
-    padding: 20px; border-radius: var(--radius);
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(201,169,110,0.1);
-    font-size: 1.2rem; color: var(--white-soft);
-    text-align: center; font-style: italic;
-    transition: all 0.5s; opacity: 0.4;
-  }
-  .hp-phrase.active { opacity: 1; border-color: rgba(201,169,110,0.35); color: var(--gold-pale); }
-  .grabovoi-input-wrap { width: 100%; }
-  .grabovoi-sequence {
-    font-family: 'Cinzel', serif; font-size: 2rem;
-    letter-spacing: 0.3em; color: var(--gold);
-    text-align: center; padding: 24px;
-    background: rgba(255,255,255,0.04);
-    border-radius: var(--radius);
-    border: 1px solid rgba(201,169,110,0.15);
-    margin-bottom: 16px;
-  }
-  .grabovoi-user-seq {
-    font-family: 'Cinzel', serif; font-size: 1.6rem;
-    letter-spacing: 0.2em; color: var(--white-soft);
-    text-align: center; padding: 20px;
-    background: rgba(255,255,255,0.04);
-    border-radius: var(--radius);
-    border: 1px solid rgba(201,169,110,0.15);
-    min-height: 70px;
-  }
-  .grabovoi-keys {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 12px;
-  }
-  .gk-btn {
-    padding: 16px; background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(201,169,110,0.15);
-    border-radius: var(--radius-sm);
-    color: var(--white-soft); font-family: 'Cinzel', serif;
-    font-size: 1.1rem; cursor: pointer; transition: all 0.2s;
-  }
-  .gk-btn:hover { background: rgba(201,169,110,0.15); border-color: var(--gold); }
-  .letter-textarea {
-    width: 100%; min-height: 200px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(201,169,110,0.18);
-    border-radius: var(--radius);
-    padding: 20px; resize: none;
-    color: var(--white); font-family: 'Cormorant Garamond', serif;
-    font-size: 1.05rem; line-height: 1.7;
-    outline: none; transition: border-color 0.3s;
-  }
-  .letter-textarea:focus { border-color: rgba(201,169,110,0.45); }
-  .letter-textarea::placeholder { color: var(--white-faint); font-style: italic; }
-  .flame-animation {
-    display: none; text-align: center; padding: 32px;
-    flex-direction: column; gap: 12px; align-items: center;
-  }
-  .flame-animation.show { display: flex; }
-  .flame { font-size: 4rem; animation: flamePulse 1s ease-in-out infinite; }
-  @keyframes flamePulse { 0%,100%{transform: scale(1) rotate(-3deg)} 50%{transform: scale(1.1) rotate(3deg)} }
-  .bonhomme-wrap {
-    display: flex; align-items: center; justify-content: center;
-    gap: 40px; padding: 20px; width: 100%;
-  }
-  .bonhomme-figure { text-align: center; }
-  .bonhomme-icon { font-size: 3rem; }
-  .bonhomme-label { font-size: 0.78rem; color: var(--white-dim); margin-top: 6px; font-style: italic; }
-  .bonhomme-links { display: flex; flex-direction: column; gap: 6px; }
-  .link-line {
-    width: 40px; height: 3px;
-    background: linear-gradient(to right, rgba(160,127,212,0.6), rgba(201,169,110,0.6));
-    border-radius: 2px; transition: all 1s;
-  }
-  .link-line.dissolved { opacity: 0; transform: scaleX(0); }
-  .mudra-display {
-    text-align: center; display: flex; flex-direction: column; gap: 12px; align-items: center;
-  }
-  .mudra-hands { font-size: 4rem; }
-  .mudra-name { font-family: 'Cinzel', serif; font-size: 1.1rem; color: var(--gold-pale); letter-spacing: 0.1em; }
-  .mudra-desc { font-size: 0.95rem; color: var(--white-soft); line-height: 1.7; font-style: italic; }
-  .mudra-timer-display { font-family: 'Cinzel', serif; font-size: 2.5rem; color: var(--gold); }
-  .douche-animation {
-    position: relative; width: 120px; height: 200px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .light-stream {
-    position: absolute; top: 0;
-    width: 4px; border-radius: 2px;
-    background: linear-gradient(to bottom, rgba(201,169,110,0.8), rgba(160,127,212,0.3));
-    animation: stream var(--d) ease-in-out infinite;
-    animation-delay: var(--dl);
-  }
-  @keyframes stream {
-    0% { height: 0; opacity: 0; top: 0; }
-    50% { opacity: 1; }
-    100% { height: 100%; opacity: 0; top: 0; }
-  }
-  .eft-points {
-    display: flex; flex-direction: column; gap: 10px; width: 100%;
-  }
-  .eft-point {
-    padding: 16px 18px;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(201,169,110,0.1);
-    border-radius: var(--radius-sm);
-    display: flex; align-items: center; gap: 14px;
-    transition: all 0.4s;
-  }
-  .eft-point.active { background: rgba(201,169,110,0.1); border-color: rgba(201,169,110,0.35); }
-  .eft-point .ep-num {
-    font-family: 'Cinzel', serif; font-size: 1rem;
-    color: var(--gold); min-width: 28px;
-  }
-  .eft-point .ep-text { font-size: 0.9rem; color: var(--white-soft); }
-
-  /* ── INTEGRATION MESSAGE ── */
-  .integration-msg {
-    text-align: center; padding: 24px;
-    background: rgba(201,169,110,0.06);
-    border-radius: var(--radius);
-    border: 1px solid rgba(201,169,110,0.15);
-    font-size: 1rem; line-height: 1.8;
-    color: var(--white-soft); font-style: italic;
-  }
-
-  /* ── TOAST ── */
-  .toast {
-    position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
-    background: rgba(201,169,110,0.15);
-    border: 1px solid rgba(201,169,110,0.3);
-    backdrop-filter: blur(20px);
-    padding: 12px 24px; border-radius: 50px;
-    font-family: 'Cinzel', serif; font-size: 0.72rem;
-    letter-spacing: 0.1em; color: var(--gold-pale);
-    opacity: 0; transition: all 0.4s; z-index: 200;
-    white-space: nowrap;
-  }
-  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  /* ── SCROLLBAR ── */
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: rgba(201,169,110,0.2); border-radius: 2px; }
+/* Bottom nav */
+.bottom-nav{
+  position:absolute;bottom:0;left:0;right:0;height:72px;
+  background:rgba(8,5,20,0.88);backdrop-filter:blur(20px);
+  border-top:1px solid rgba(212,168,60,0.07);
+  display:flex;align-items:center;justify-content:space-around;
+  padding:0 10px 10px;z-index:10;
+}
+.nav-item{
+  display:flex;flex-direction:column;align-items:center;gap:4px;
+  cursor:pointer;padding:8px 16px;border-radius:14px;transition:all 0.3s;min-width:70px;
+}
+.nav-item.active{background:rgba(212,168,60,0.08);}
+.nav-icon{font-size:19px;line-height:1;}
+.nav-label{
+  font-family:'Inter',sans-serif;font-size:10px;font-weight:300;
+  letter-spacing:0.05em;color:rgba(180,168,150,0.4);
+}
+.nav-item.active .nav-label{color:rgba(212,168,60,0.8);}
 </style>
 </head>
 <body>
+<div id="app">
+  <div class="nebula"></div>
+  <div class="stars" id="stars"></div>
 
-<!-- STARFIELD -->
-<div id="starfield"></div>
+  <div class="content">
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
-
-<!-- ══════════════════════════════════════════
-     1. SPLASH
-══════════════════════════════════════════ -->
-<div class="screen active" id="splash">
-  <div class="glow"></div>
-  <div class="splash-ring"></div>
-  <div class="splash-ring"></div>
-  <div class="splash-logo">
-    <div class="wordmark">Naéora</div>
-    <div class="tagline">ton espace intérieur</div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════
-     2. DISCLAIMER
-══════════════════════════════════════════ -->
-<div class="screen" id="disclaimer">
-  <div class="disclaimer-inner">
-    <div class="disclaimer-title">✦ Avant de commencer</div>
-    <p class="disclaimer-text">
-      Naéora est un compagnon de bien-être et de développement personnel.<br><br>
-      Cette application n'est <em>pas un service médical</em> et ne remplace en aucun cas un suivi thérapeutique professionnel.<br><br>
-      <em>« Nous conservons ton évolution, jamais tes confidences. »</em><br>
-      Tes textes et gratitudes ne sont jamais enregistrés.
-    </p>
-    <label class="check-wrap" id="disclaimer-check-wrap">
-      <div class="check-box" id="disclaimer-box"></div>
-      <span class="check-label">J'ai lu et compris les conditions d'utilisation de Naéora</span>
-    </label>
-    <button class="btn btn-gold btn-full" id="disclaimer-btn" disabled style="opacity:0.4">
-      Commencer
-    </button>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════
-     3. ONBOARDING
-══════════════════════════════════════════ -->
-<div class="screen" id="onboarding">
-  <div class="ob-slider">
-    <div class="ob-slides" id="ob-slides">
-
-      <div class="ob-slide">
-        <div class="ob-icon">🌌</div>
-        <h2 class="ob-title">Ouvre ton champ<br>des possibles</h2>
-        <p class="ob-text">Chaque matin, accueille une possibilité qui pourrait éclairer ta journée d'une lumière nouvelle.</p>
+    <!-- Header -->
+    <div class="header">
+      <div class="greeting-block">
+        <div class="greeting-time" id="timeLabel">Bonjour</div>
+        <div class="greeting-name" id="greetingName">Bonjour, Floriane ☀️</div>
+        <div class="greeting-sub" id="greetingSub">Prête à ouvrir le champ des possibles ?</div>
       </div>
-
-      <div class="ob-slide">
-        <div class="ob-icon">✨</div>
-        <h2 class="ob-title">Dépose ce qui<br>te pèse</h2>
-        <p class="ob-text">Explore des pratiques douces de transformation intérieure — EFT, méditation, cohérence cardiaque et bien d'autres.</p>
-      </div>
-
-      <div class="ob-slide">
-        <div class="ob-icon">🔒</div>
-        <h2 class="ob-title">Rien n'est<br>conservé</h2>
-        <p class="ob-text">Tes mots, tes gratitudes, tes confidences t'appartiennent. Ils disparaissent dès l'instant où tu les libères.</p>
-      </div>
-
-      <div class="ob-slide">
-        <div class="ob-icon">⭐</div>
-        <h2 class="ob-title">Crée ta<br>constellation</h2>
-        <p class="ob-text">Chaque soir, transforme un moment de gratitude en étoile. Ta lumière s'accumule, silencieusement, dans ton ciel personnel.</p>
-      </div>
-
-    </div>
-    <div class="ob-dots" id="ob-dots">
-      <div class="ob-dot active"></div>
-      <div class="ob-dot"></div>
-      <div class="ob-dot"></div>
-      <div class="ob-dot"></div>
-    </div>
-    <div class="ob-nav" id="ob-nav">
-      <button class="btn btn-ghost" id="ob-skip" onclick="goToAuth()">Passer</button>
-      <button class="btn btn-gold" id="ob-next" onclick="obNext()">Suivant</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════
-     4. AUTH
-══════════════════════════════════════════ -->
-<div class="screen" id="auth">
-  <div class="auth-inner">
-    <div class="auth-logo">Naéora</div>
-    <div class="auth-title">Ton espace intérieur</div>
-
-    <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchAuthTab('login')">Connexion</button>
-      <button class="auth-tab" onclick="switchAuthTab('register')">Créer un compte</button>
-    </div>
-
-    <div class="auth-form">
-      <!-- LOGIN -->
-      <div class="auth-form-panel active" id="auth-login">
-        <div class="input-wrap">
-          <label>Adresse e-mail</label>
-          <input class="nae-input" type="email" placeholder="ton@email.com" id="login-email">
-        </div>
-        <div class="input-wrap">
-          <label>Mot de passe</label>
-          <input class="nae-input" type="password" placeholder="••••••••" id="login-pwd">
-        </div>
-        <button class="btn btn-gold btn-full" onclick="doLogin()" style="margin-top:8px">
-          ✦ Se connecter
-        </button>
-        <p class="auth-link" style="margin-top:14px">
-          <span onclick="switchAuthTab('register')">Créer mon compte</span>
-        </p>
-      </div>
-
-      <!-- REGISTER -->
-      <div class="auth-form-panel" id="auth-register">
-        <div class="input-wrap">
-          <label>Prénom</label>
-          <input class="nae-input" type="text" placeholder="Ton prénom" id="reg-prenom">
-        </div>
-        <div class="input-wrap">
-          <label>Date de naissance</label>
-          <input class="nae-input" type="date" id="reg-ddn">
-        </div>
-        <div class="input-wrap">
-          <label>Adresse e-mail</label>
-          <input class="nae-input" type="email" placeholder="ton@email.com" id="reg-email">
-        </div>
-        <div class="input-wrap">
-          <label>Mot de passe</label>
-          <input class="nae-input" type="password" placeholder="••••••••" id="reg-pwd">
-        </div>
-        <button class="btn btn-gold btn-full" onclick="doRegister()" style="margin-top:8px">
-          ✦ Créer mon compte
-        </button>
-        <p class="auth-link" style="margin-top:14px">
-          <span onclick="switchAuthTab('login')">Déjà un compte ? Se connecter</span>
-        </p>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════
-     5. DASHBOARD
-══════════════════════════════════════════ -->
-<div class="screen" id="dashboard">
-  <div class="dash-content" id="dash-content">
-    <div class="dash-greeting">
-      <div class="dash-time" id="dash-time">Bonjour</div>
-      <div class="dash-name">Bienvenue, <span id="dash-prenom">…</span></div>
-      <div class="dash-quote" id="dash-quote">
-        <em>✦ Chaque instant est une porte ouverte sur ce qui peut être.</em>
+      <div class="avatar">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
       </div>
     </div>
 
-    <div>
-      <p class="dash-section-title">Tes rituels du jour</p>
-      <div class="ritual-cards">
-        <div class="ritual-card" onclick="goModule('matin')">
-          <span class="rc-icon">☀️</span>
-          <div class="rc-body">
-            <div class="rc-title">Rituel du Matin</div>
-            <div class="rc-desc">Ouvre ton champ des possibles</div>
-          </div>
-          <span class="rc-arrow">›</span>
+    <!-- Citation du jour — fixe toute la journée -->
+    <div class="citation-section">
+      <div class="citation-card">
+        <div class="citation-date-badge">
+          ✦ Citation du <span id="dateLabel"></span>
         </div>
-        <div class="ritual-card" onclick="goModule('exercices')">
-          <span class="rc-icon">✨</span>
-          <div class="rc-body">
-            <div class="rc-title">Exercices</div>
-            <div class="rc-desc">Explore une pratique de transformation</div>
-          </div>
-          <span class="rc-arrow">›</span>
-        </div>
-        <div class="ritual-card" onclick="goModule('soir')">
-          <span class="rc-icon">🌙</span>
-          <div class="rc-body">
-            <div class="rc-title">Rituel du Soir</div>
-            <div class="rc-desc">Transforme une gratitude en étoile</div>
-          </div>
-          <span class="rc-arrow">›</span>
+        <span class="quote-mark">"</span>
+        <p class="citation-text" id="citeText"></p>
+        <div class="citation-footer">
+          <span class="citation-author" id="citeAuthor"></span>
+          <span class="cite-thematique" id="citeTheme"></span>
         </div>
       </div>
     </div>
+
+    <!-- État rituels — lecture seule -->
+    <div class="state-section">
+      <div class="section-label">Rituels du jour</div>
+      <div class="state-row" id="pillsRow"></div>
+      <p class="state-note">Se mettent à jour automatiquement après chaque rituel</p>
+    </div>
+
+    <!-- Accès rapide -->
+    <div class="quick-section">
+      <div class="section-label">Commencer</div>
+      <div class="quick-grid" id="quickGrid"></div>
+    </div>
+
   </div>
+
+  <!-- Bottom Nav -->
+  <div class="bottom-nav">
+    <div class="nav-item active">
+      <div class="nav-icon">☀️</div>
+      <div class="nav-label">Accueil</div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon" style="font-size:17px;color:rgba(180,168,150,0.4);">✦</div>
+      <div class="nav-label">Exercices</div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">🌙</div>
+      <div class="nav-label">Soir</div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="rgba(180,168,150,0.4)" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </div>
+      <div class="nav-label">Profil</div>
+    </div>
+  </div>
+
 </div>
-
-<!-- ══════════════════════════════════════════
-     MODULE : MATIN
-══════════════════════════════════════════ -->
-<div class="screen module-screen" id="mod-matin">
-  <div class="module-header">
-    <button class="back-btn" onclick="backToDash()">‹</button>
-    <span class="module-title">Rituel du Matin</span>
-  </div>
-  <div class="module-body">
-    <!-- Step 1: intro -->
-    <div class="matin-intro" id="matin-s1">
-      <div class="matin-sun">☀️</div>
-      <div class="domain-badge" id="matin-domain-badge">✦ <span id="matin-domain-name">Relations</span></div>
-      <p class="matin-message">
-        Aujourd'hui, ton attention se tourne doucement vers…
-      </p>
-      <button class="btn btn-gold" onclick="matinReveal()">Découvrir ma possibilité ›</button>
-    </div>
-    <!-- Step 2: affirmation -->
-    <div class="matin-intro" id="matin-s2" style="display:none">
-      <div class="affirmation-card">
-        <p class="affirmation-text" id="matin-affirmation-text">
-          Une rencontre ou un échange inattendu pourrait aujourd'hui t'apporter un éclairage nouveau.
-        </p>
-      </div>
-      <p class="matin-message" style="margin-top:8px">Prends quelques instants pour laisser cette possibilité s'installer en toi.</p>
-      <button class="btn btn-gold" id="matin-accueille-btn" onclick="matinAccueille()">✦ J'accueille cette possibilité</button>
-    </div>
-    <!-- Step 3: done -->
-    <div class="matin-intro" id="matin-s3" style="display:none">
-      <div style="font-size:3rem; filter:drop-shadow(0 0 20px rgba(201,169,110,0.6))">✦</div>
-      <div class="affirmation-card">
-        <p class="affirmation-text">✨ Cette possibilité t'accompagne aujourd'hui.</p>
-      </div>
-      <p class="matin-message">Ta journée est ouverte. Reviens ce soir pour la clôturer en lumière.</p>
-      <button class="btn btn-ghost" onclick="backToDash()">Retour à l'accueil</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════
-     MODULE : EXERCICES
-══════════════════════════════════════════ -->
-<div class="screen module-screen" id="mod-exercices">
-  <div class="module-header">
-    <button class="back-btn" onclick="backToDash()">‹</button>
-    <span class="module-title">Exercices</span>
-  </div>
-  <div class="module-body">
-    <p style="font-size:0.9rem; color:var(--white-dim); font-style:italic; text-align:center">
-      Choisis ton exercice du jour. L'expérience t'appartient entièrement.
-    </p>
-    <div class="exercise-grid">
-      <div class="ex-card" onclick="startExercise('bonhomme')">
-        <span class="ex-icon">🧑‍🤝‍🧑</span>
-        <div><div class="ex-name">Bonhomme Allumette</div><div class="ex-desc">Libération des liens émotionnels</div></div>
-        <span class="ex-arrow">›</span>
-      </div>
-      <div class="ex-card" onclick="startExercise('douche')">
-        <span class="ex-icon">✨</span>
-        <div><div class="ex-name">Douche Énergétique</div><div class="ex-desc">Recentrage et nettoyage symbolique</div></div>
-        <span class="ex-arrow">›</span>
-      </div>
-      <div class="ex-card" onclick="startExercise('coherence')">
-        <span class="ex-icon">💜</span>
-        <div><div class="ex-name">Cohérence Cardiaque</div><div class="ex-desc">Apaisement et équilibre émotionnel</div></div>
-        <span class="ex-arrow">›</span>
-      </div>
-      <div class="ex-card" onclick="startExercise('eft')">
-        <span class="ex-icon">🖐️</span>
-        <div><div class="ex-name">EFT</div><div class="ex-desc">Libération émotionnelle par acupression</div></div>
-        <span class="ex-arrow">›</span>
-      </div>
-      <div class="ex-card" onclick="startExercise('grabovoi')">
-        <span class="ex-icon">🔢</span>
-        <div><div class="ex-name">Grabovoi</div><div class="ex-desc">Concentration et attention consciente</div></div>
-        <span class="ex-arrow">›</span>
-      </div>
-      <div class="ex-card" onclick="startExercise('mudra')">
-        <span class="ex-icon">🙏</span>
-        <div><div class="ex-name">Mudra</div><div class="ex-desc">Ancrage et présence par les mains</div></div>
-        <span class="ex-arrow">›</span>
-      </div>
-      <div class="ex-card" onclick="startExercise('hooponopono')">
-        <span class="ex-icon">🌺</span>
-        <div><div class="ex-name">Ho'oponopono</div><div class="ex-desc">Pardon, paix et relâchement</div></div>
-        <span class="ex-arrow">›</span>
-      </div>
-      <div class="ex-card" onclick="startExercise('lettre')">
-        <span class="ex-icon">📝</span>
-        <div><div class="ex-name">Lettre de Libération</div><div class="ex-desc">Expression libre d'un poids intérieur</div></div>
-        <span class="ex-arrow">›</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════
-     MODULE : SOIR
-══════════════════════════════════════════ -->
-<div class="screen module-screen" id="mod-soir">
-  <div class="module-header">
-    <button class="back-btn" onclick="backToDash()">‹</button>
-    <span class="module-title">Rituel du Soir</span>
-  </div>
-  <div class="module-body">
-    <div class="soir-intro">
-      <div class="soir-moon">🌙</div>
-      <p class="soir-prompt">Prends quelques instants pour reconnaître ce qui a apporté de la lumière à ta journée.</p>
-    </div>
-    <div id="soir-form" style="width:100%; display:flex; flex-direction:column; gap:16px">
-      <textarea class="gratitude-area" id="gratitude-text" placeholder="Ce soir, je suis reconnaissant(e) pour…"></textarea>
-      <button class="btn btn-gold btn-full" onclick="transformerEtoile()">✦ Transformer en étoile</button>
-    </div>
-    <div class="star-animation" id="star-anim">
-      <div class="star-burst">⭐</div>
-      <p style="font-family:'Cinzel',serif; font-size:0.85rem; letter-spacing:0.15em; color:var(--gold)">✨ Merci pour cette lumière.</p>
-      <p style="font-size:0.9rem; color:var(--white-dim); font-style:italic">Ton étoile a rejoint ta constellation.</p>
-      <button class="btn btn-ghost" onclick="backToDash()" style="margin-top:16px">Retour à l'accueil</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════
-     MODULE : CONSTELLATION
-══════════════════════════════════════════ -->
-<div class="screen module-screen" id="constellation-view">
-  <div class="module-header" style="position:absolute; top:0; left:0; right:0; z-index:10">
-    <button class="back-btn" onclick="backToProfile()">‹</button>
-    <span class="module-title">Ma Constellation</span>
-  </div>
-  <div class="constellation-canvas-wrap" style="margin-top:80px">
-    <canvas id="constellation-canvas"></canvas>
-    <div class="constellation-empty" id="constellation-empty" style="display:none">
-      <div class="ce-icon">✦</div>
-      <p>Ta constellation prendra vie dès ton premier rituel du soir.<br>Chaque gratitude transformée devient une étoile.</p>
-    </div>
-  </div>
-  <div style="padding:16px 28px 36px; position:absolute; bottom:0; left:0; right:0; z-index:10">
-    <button class="btn btn-ghost btn-full" onclick="shareConstellation()">✦ Partager ma constellation</button>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════
-     MODULE : PROFIL
-══════════════════════════════════════════ -->
-<div class="screen module-screen" id="mod-profil">
-  <div class="module-header">
-    <button class="back-btn" onclick="backToDash()">‹</button>
-    <span class="module-title">Mon Profil</span>
-  </div>
-  <div class="module-body">
-    <div class="profil-header">
-      <div class="profil-avatar" id="profil-avatar">N</div>
-      <div class="profil-name" id="profil-name">…</div>
-      <div class="profil-status" id="profil-status">Gratuit</div>
-    </div>
-
-    <div class="profil-section">
-      <div class="profil-section-title">Mon parcours</div>
-      <div class="profil-row" onclick="goModule('constellation')">
-        <span class="pr-icon">🌌</span>
-        <span class="pr-label">Ma Constellation</span>
-        <span class="pr-arrow">›</span>
-      </div>
-      <div class="profil-row" onclick="goModule('chemin-de-vie')">
-        <span class="pr-icon">✦</span>
-        <span class="pr-label">Mon Chemin de Vie</span>
-        <span class="pr-arrow">›</span>
-      </div>
-    </div>
-
-    <div class="profil-section">
-      <div class="profil-section-title">Abonnement</div>
-      <div class="profil-row" onclick="goModule('horizon')">
-        <span class="pr-icon">✨</span>
-        <span class="pr-label">Découvrir Horizon</span>
-        <span class="pr-arrow">›</span>
-      </div>
-    </div>
-
-    <div class="profil-section">
-      <div class="profil-section-title">Préférences</div>
-      <div class="profil-row" onclick="goModule('parametres')">
-        <span class="pr-icon">⚙️</span>
-        <span class="pr-label">Paramètres</span>
-        <span class="pr-arrow">›</span>
-      </div>
-    </div>
-
-    <div class="profil-section">
-      <div class="profil-row" onclick="doLogout()" style="border-color:rgba(255,100,100,0.15)">
-        <span class="pr-icon">↩️</span>
-        <span class="pr-label" style="color:rgba(255,180,180,0.7)">Se déconnecter</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════
-     MODULE : CHEMIN DE VIE
-══════════════════════════════════════════ -->
-<div class="screen module-screen" id="mod-chemin-de-vie">
-  <div class="module-header">
-    <button class="back-btn" onclick="goModule('profil')">‹</button>
-    <span class="module-title">Chemin de Vie</span>
-  </div>
-  <div class="module-body" style="text-align:center; gap:20px">
-    <div class="cdv-number" id="cdv-number">7</div>
-    <div class="cdv-label">Ton chemin de vie</div>
-    <p class="cdv-desc" id="cdv-desc">Chercheur de vérité et d'absolu, le Chemin 7 possède une âme sage…</p>
-    <p class="cdv-note">Le chemin de vie est une invitation à la réflexion, non une définition figée. Il t'appartient de l'interpréter avec ta propre lumière.</p>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════
-     MODULE : PARAMÈTRES
-══════════════════════════════════════════ -->
-<div class="screen module-screen" id="mod-parametres">
-  <div class="module-header">
-    <button class="back-btn" onclick="goModule('profil')">‹</button>
-    <span class="module-title">Paramètres</span>
-  </div>
-  <div class="module-body">
-    <div class="param-section">
-      <div class="param-section-title">Notifications</div>
-      <div class="param-row">
-        <div class="pl"><div class="pl-label">Activer les notifications</div></div>
-        <button class="toggle on" id="t-notifs" onclick="toggleParam(this)"></button>
-      </div>
-      <div class="param-row">
-        <div class="pl"><div class="pl-label">Rituel du matin</div><div class="pl-sub">08:00</div></div>
-        <button class="toggle on" id="t-matin" onclick="toggleParam(this)"></button>
-      </div>
-      <div class="param-row">
-        <div class="pl"><div class="pl-label">Rituel du soir</div><div class="pl-sub">21:00</div></div>
-        <button class="toggle on" id="t-soir" onclick="toggleParam(this)"></button>
-      </div>
-    </div>
-    <div class="param-section">
-      <div class="param-section-title">Expérience</div>
-      <div class="param-row">
-        <div class="pl"><div class="pl-label">Ambiance sonore</div></div>
-        <button class="toggle on" id="t-son" onclick="toggleParam(this)"></button>
-      </div>
-      <div class="param-row">
-        <div class="pl"><div class="pl-label">Statistiques anonymes</div><div class="pl-sub">Aide à améliorer Naéora</div></div>
-        <button class="toggle" id="t-stats" onclick="toggleParam(this)"></button>
-      </div>
-    </div>
-    <div class="param-section">
-      <div class="param-section-title">Compte</div>
-      <div class="profil-row" onclick="showToast('Fonctionnalité à venir…')">
-        <span class="pr-icon">✉️</span>
-        <span class="pr-label">Modifier l'adresse e-mail</span>
-        <span class="pr-arrow">›</span>
-      </div>
-      <div class="profil-row" onclick="showToast('Fonctionnalité à venir…')">
-        <span class="pr-icon">🔑</span>
-        <span class="pr-label">Modifier le mot de passe</span>
-        <span class="pr-arrow">›</span>
-      </div>
-      <div class="profil-row" onclick="confirmDeleteAccount()" style="border-color:rgba(255,100,100,0.2)">
-        <span class="pr-icon">🗑️</span>
-        <span class="pr-label" style="color:rgba(255,150,150,0.8)">Supprimer mon compte</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════
-     MODULE : HORIZON
-══════════════════════════════════════════ -->
-<div class="screen module-screen" id="mod-horizon">
-  <div class="module-header">
-    <button class="back-btn" onclick="goModule('profil')">‹</button>
-    <span class="module-title">Horizon</span>
-  </div>
-  <div class="module-body" style="gap:20px; align-items:center">
-    <div class="horizon-header">
-      <div class="horizon-icon">✨</div>
-      <div class="horizon-title">Horizon</div>
-      <p class="horizon-tagline">Davantage de liberté, davantage de toi.</p>
-    </div>
-    <div class="horizon-price">
-      <div class="amount">8,99 €</div>
-      <div class="period">par mois — sans engagement</div>
-    </div>
-    <div class="horizon-benefits">
-      <div class="hb-item"><span class="hb-icon">☀️</span><span class="hb-text">Choix libre du domaine dans le rituel du matin (Amour, Abondance, Santé, Relations, Évolution)</span></div>
-      <div class="hb-item"><span class="hb-icon">✨</span><span class="hb-text">2 exercices par jour au lieu d'un, avec choix de l'émotion à explorer en EFT</span></div>
-      <div class="hb-item"><span class="hb-icon">🌙</span><span class="hb-text">Jusqu'à 5 gratitudes par soir — 5 étoiles supplémentaires dans ta constellation</span></div>
-    </div>
-    <button class="btn btn-gold btn-full" onclick="showToast('Paiement disponible dans la version mobile')">
-      ✦ Passer à Horizon
-    </button>
-    <p class="horizon-note">L'expérience essentielle de Naéora reste toujours gratuite.<br>Horizon n'est pas indispensable, seulement plus libre.</p>
-  </div>
-</div>
-
-<!-- ══════════════════════════════════════════
-     EXERCICE SCREENS
-══════════════════════════════════════════ -->
-
-<!-- Bonhomme -->
-<div class="screen module-screen" id="ex-bonhomme">
-  <div class="module-header">
-    <button class="back-btn" onclick="goModule('exercices')">‹</button>
-    <span class="module-title">Bonhomme Allumette</span>
-  </div>
-  <div class="module-body ex-screen-body" id="ex-bonhomme-body">
-    <div class="ex-big-icon">🧑‍🤝‍🧑</div>
-    <div class="ex-intro-title">Libération des liens</div>
-    <p class="ex-intro-text">Visualise les liens qui te relient à une personne ou une situation. Observe-les. Puis laisse-les se dissoudre doucement.</p>
-    <div class="bonhomme-wrap" id="bonhomme-visual">
-      <div class="bonhomme-figure"><div class="bonhomme-icon">🧍</div><div class="bonhomme-label">Toi</div></div>
-      <div class="bonhomme-links">
-        <div class="link-line" id="bl1"></div>
-        <div class="link-line" id="bl2"></div>
-        <div class="link-line" id="bl3"></div>
-      </div>
-      <div class="bonhomme-figure"><div class="bonhomme-icon">🧍</div><div class="bonhomme-label">L'autre</div></div>
-    </div>
-    <button class="btn btn-gold" id="bonhomme-btn" onclick="bonhommeDissolve()">Libérer les liens ›</button>
-    <div class="integration-msg" id="bonhomme-msg" style="display:none">
-      ✨ Prends quelques instants pour accueillir ce que tu ressens. La libération est douce et progressive.
-    </div>
-    <button class="btn btn-ghost" id="bonhomme-back" style="display:none" onclick="backToDash()">Retour à l'accueil</button>
-  </div>
-</div>
-
-<!-- Douche Énergétique -->
-<div class="screen module-screen" id="ex-douche">
-  <div class="module-header">
-    <button class="back-btn" onclick="goModule('exercices')">‹</button>
-    <span class="module-title">Douche Énergétique</span>
-  </div>
-  <div class="module-body ex-screen-body" id="ex-douche-body">
-    <div class="ex-big-icon">✨</div>
-    <div class="ex-intro-title">Recentrage lumineux</div>
-    <p class="ex-intro-text">Imagine une pluie de lumière douce qui descend sur toi, emportant avec elle toute tension, tout poids accumulé.</p>
-    <div class="douche-animation" id="douche-visual" style="display:none">
-      <div class="light-stream" style="left:10%; --d:2.1s; --dl:0s; height:0"></div>
-      <div class="light-stream" style="left:25%; --d:1.8s; --dl:0.3s; height:0"></div>
-      <div class="light-stream" style="left:42%; --d:2.4s; --dl:0.1s; height:0"></div>
-      <div class="light-stream" style="left:58%; --d:1.9s; --dl:0.5s; height:0"></div>
-      <div class="light-stream" style="left:75%; --d:2.2s; --dl:0.2s; height:0"></div>
-      <div class="light-stream" style="left:88%; --d:1.7s; --dl:0.4s; height:0"></div>
-      <div style="position:absolute; bottom:-10px; font-size:2rem">🧘</div>
-    </div>
-    <button class="btn btn-gold" id="douche-btn" onclick="doucheStart()">Commencer la douche ›</button>
-    <div class="integration-msg" id="douche-msg" style="display:none">
-      ✨ Prends quelques instants pour accueillir cette légèreté. Tu es lavé(e) de lumière.
-    </div>
-    <button class="btn btn-ghost" id="douche-back" style="display:none" onclick="backToDash()">Retour à l'accueil</button>
-  </div>
-</div>
-
-<!-- Cohérence Cardiaque -->
-<div class="screen module-screen" id="ex-coherence">
-  <div class="module-header">
-    <button class="back-btn" onclick="goModule('exercices')">‹</button>
-    <span class="module-title">Cohérence Cardiaque</span>
-  </div>
-  <div class="module-body ex-screen-body">
-    <div class="ex-big-icon">💜</div>
-    <div class="ex-intro-title">5 minutes d'équilibre</div>
-    <p class="ex-intro-text">Suis le rythme de la respiration guidée. Inspire quand le cercle s'agrandit, expire quand il se rétrécit.</p>
-    <div class="breathing-circle-wrap">
-      <div class="breathing-circle" id="breath-circle">Inspire</div>
-    </div>
-    <div style="font-family:'Cinzel',serif; font-size:1.5rem; color:var(--gold)" id="breath-timer">5:00</div>
-    <button class="btn btn-gold" id="coherence-start-btn" onclick="startCoherence()">Commencer ›</button>
-    <div class="integration-msg" id="coherence-msg" style="display:none">
-      ✨ Prends quelques instants pour accueillir cet espace de paix. Ton cœur et ton souffle sont alignés.
-    </div>
-    <button class="btn btn-ghost" id="coherence-back" style="display:none" onclick="backToDash()">Retour à l'accueil</button>
-  </div>
-</div>
-
-<!-- EFT -->
-<div class="screen module-screen" id="ex-eft">
-  <div class="module-header">
-    <button class="back-btn" onclick="goModule('exercices')">‹</button>
-    <span class="module-title">EFT</span>
-  </div>
-  <div class="module-body ex-screen-body">
-    <div class="ex-big-icon">🖐️</div>
-    <div class="ex-intro-title">Libération par acupression</div>
-    <p class="ex-intro-text">Suis les points indiqués. Tapote doucement en respirant. Laisse la sensation se transformer d'elle-même.</p>
-    <div class="eft-points" id="eft-points">
-      <div class="eft-point active" data-idx="0"><span class="ep-num">1</span><span class="ep-text">Karaté — bord externe de la main</span></div>
-      <div class="eft-point" data-idx="1"><span class="ep-num">2</span><span class="ep-text">Sommet du crâne</span></div>
-      <div class="eft-point" data-idx="2"><span class="ep-num">3</span><span class="ep-text">Arcade sourcilière interne</span></div>
-      <div class="eft-point" data-idx="3"><span class="ep-num">4</span><span class="ep-text">Coin externe de l'œil</span></div>
-      <div class="eft-point" data-idx="4"><span class="ep-num">5</span><span class="ep-text">Sous l'œil</span></div>
-      <div class="eft-point" data-idx="5"><span class="ep-num">6</span><span class="ep-text">Sous le nez</span></div>
-      <div class="eft-point" data-idx="6"><span class="ep-num">7</span><span class="ep-text">Menton</span></div>
-      <div class="eft-point" data-idx="7"><span class="ep-num">8</span><span class="ep-text">Clavicule</span></div>
-    </div>
-    <button class="btn btn-gold" id="eft-btn" onclick="eftNext()">Point suivant ›</button>
-    <div class="integration-msg" id="eft-msg" style="display:none">
-      ✨ Prends quelques instants pour ressentir la légèreté. Tu as fait du bien à ton corps et à ton esprit.
-    </div>
-    <button class="btn btn-ghost" id="eft-back" style="display:none" onclick="backToDash()">Retour à l'accueil</button>
-  </div>
-</div>
-
-<!-- Grabovoi -->
-<div class="screen module-screen" id="ex-grabovoi">
-  <div class="module-header">
-    <button class="back-btn" onclick="goModule('exercices')">‹</button>
-    <span class="module-title">Grabovoi</span>
-  </div>
-  <div class="module-body ex-screen-body">
-    <div class="ex-big-icon">🔢</div>
-    <div class="ex-intro-title">Séquence de conscience</div>
-    <p class="ex-intro-text">Reproduis la séquence numérique avec attention. Chaque chiffre mérite ta présence totale.</p>
-    <div class="grabovoi-sequence" id="grab-seq">8 8 8 8 8</div>
-    <div class="grabovoi-user-seq" id="grab-user">…</div>
-    <div class="grabovoi-keys" id="grab-keys">
-      <button class="gk-btn" onclick="grabKey('1')">1</button>
-      <button class="gk-btn" onclick="grabKey('2')">2</button>
-      <button class="gk-btn" onclick="grabKey('3')">3</button>
-      <button class="gk-btn" onclick="grabKey('4')">4</button>
-      <button class="gk-btn" onclick="grabKey('5')">5</button>
-      <button class="gk-btn" onclick="grabKey('6')">6</button>
-      <button class="gk-btn" onclick="grabKey('7')">7</button>
-      <button class="gk-btn" onclick="grabKey('8')">8</button>
-      <button class="gk-btn" onclick="grabKey('9')">9</button>
-      <button class="gk-btn" onclick="grabKey('⌫')" style="grid-column:span 2">⌫</button>
-      <button class="gk-btn" onclick="grabKey('0')">0</button>
-    </div>
-    <div class="integration-msg" id="grab-msg" style="display:none">
-      ✨ Prends quelques instants pour accueillir cet espace de concentration et de présence.
-    </div>
-    <button class="btn btn-ghost" id="grab-back" style="display:none" onclick="backToDash()">Retour à l'accueil</button>
-  </div>
-</div>
-
-<!-- Mudra -->
-<div class="screen module-screen" id="ex-mudra">
-  <div class="module-header">
-    <button class="back-btn" onclick="goModule('exercices')">‹</button>
-    <span class="module-title">Mudra</span>
-  </div>
-  <div class="module-body ex-screen-body">
-    <div class="mudra-display">
-      <div class="mudra-hands">🙏</div>
-      <div class="mudra-name" id="mudra-name">Mudra de la paix intérieure</div>
-      <p class="mudra-desc" id="mudra-desc">Joindre le pouce et l'index de chaque main en formant un cercle, les autres doigts étendus. Pose tes mains sur tes genoux, paumes vers le ciel.</p>
-    </div>
-    <div class="mudra-timer-display" id="mudra-timer" style="display:none">3:00</div>
-    <button class="btn btn-gold" id="mudra-btn" onclick="startMudra()">Maintenir cette posture ›</button>
-    <div class="integration-msg" id="mudra-msg" style="display:none">
-      ✨ Prends quelques instants pour sentir l'ancrage de cette posture en toi.
-    </div>
-    <button class="btn btn-ghost" id="mudra-back" style="display:none" onclick="backToDash()">Retour à l'accueil</button>
-  </div>
-</div>
-
-<!-- Ho'oponopono -->
-<div class="screen module-screen" id="ex-hooponopono">
-  <div class="module-header">
-    <button class="back-btn" onclick="goModule('exercices')">‹</button>
-    <span class="module-title">Ho'oponopono</span>
-  </div>
-  <div class="module-body ex-screen-body">
-    <div class="ex-big-icon">🌺</div>
-    <div class="ex-intro-title">Pardon et paix intérieure</div>
-    <p class="ex-intro-text">Ces quatre phrases ancestrales sont un chemin vers le relâchement. Dis-les doucement, avec sincérité, à toi-même ou à une situation.</p>
-    <div class="hooponopono-phrases">
-      <div class="hp-phrase active" id="hp0">Désolé(e)</div>
-      <div class="hp-phrase" id="hp1">Pardonne-moi</div>
-      <div class="hp-phrase" id="hp2">Merci</div>
-      <div class="hp-phrase" id="hp3">Je t'aime</div>
-    </div>
-    <button class="btn btn-gold" id="hp-btn" onclick="hpNext()">Phrase suivante ›</button>
-    <div class="integration-msg" id="hp-msg" style="display:none">
-      ✨ Prends quelques instants pour accueillir la paix que ces mots ont ouverte en toi.
-    </div>
-    <button class="btn btn-ghost" id="hp-back" style="display:none" onclick="backToDash()">Retour à l'accueil</button>
-  </div>
-</div>
-
-<!-- Lettre de Libération -->
-<div class="screen module-screen" id="ex-lettre">
-  <div class="module-header">
-    <button class="back-btn" onclick="goModule('exercices')">‹</button>
-    <span class="module-title">Lettre de Libération</span>
-  </div>
-  <div class="module-body ex-screen-body">
-    <div id="lettre-form" style="width:100%; display:flex; flex-direction:column; gap:16px; align-items:center">
-      <div class="ex-big-icon">📝</div>
-      <p class="ex-intro-text">Écris librement ce que tu portes. Personne ne lira ces mots. Ils te sont destinés, puis ils disparaîtront.</p>
-      <textarea class="letter-textarea" id="lettre-text" placeholder="Chers mots, je libère ici ce que je porte…"></textarea>
-      <button class="btn btn-gold btn-full" onclick="lettreConsume()">✦ Libérer et brûler</button>
-    </div>
-    <div class="flame-animation" id="flame-anim">
-      <div class="flame">🔥</div>
-      <p style="font-family:'Cinzel',serif; font-size:0.85rem; letter-spacing:0.1em; color:var(--gold)">Tes mots sont libérés.</p>
-      <div class="integration-msg" style="margin-top:8px">
-        ✨ Prends quelques instants pour accueillir cet espace de légèreté qu'ils ont laissé derrière eux.
-      </div>
-      <button class="btn btn-ghost" onclick="backToDash()" style="margin-top:16px">Retour à l'accueil</button>
-    </div>
-  </div>
-</div>
-
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav hidden" id="bottom-nav">
-  <button class="nav-btn active" id="nb-matin" onclick="navTo('matin')">
-    <span class="nb-icon">☀️</span>
-    <span class="nb-label">Matin</span>
-  </button>
-  <button class="nav-btn" id="nb-exercices" onclick="navTo('exercices')">
-    <span class="nb-icon">✨</span>
-    <span class="nb-label">Exercices</span>
-  </button>
-  <button class="nav-btn" id="nb-soir" onclick="navTo('soir')">
-    <span class="nb-icon">🌙</span>
-    <span class="nb-label">Soir</span>
-  </button>
-  <button class="nav-btn" id="nb-profil" onclick="navTo('profil')">
-    <span class="nb-icon">👤</span>
-    <span class="nb-label">Profil</span>
-  </button>
-</nav>
 
 <script>
-// ══ STATE ══
-const STATE = {
-  user: null,
-  stars: [],
-  obSlide: 0,
-  matinDone: false,
-  soirCount: 0,
-  currentModule: null,
-};
-
-const CHEMINS = {
-  1: "Véritable pionnier de l'existence, le Chemin 1 est né pour ouvrir de nouvelles voies avec courage et autonomie. Votre belle force d'action vous pousse naturellement vers l'indépendance. Votre chemin d'évolution vous invite doucement à apprivoiser l'impatience et à transformer la peur de ne pas réussir en une confiance sereine.",
-  2: "Animé par un merveilleux sens de la diplomatie et une grande sensibilité, le Chemin 2 excelle dans l'art de créer des ponts entre les êtres. Votre présence apporte naturellement paix et harmonie. En apprenant à honorer votre propre voix, vous devenez un médiateur d'une justesse et d'une force exceptionnelles.",
-  3: "Le Chemin 3 est un rayon de soleil doté d'une créativité pétillante et d'un don naturel pour la communication. Votre joie d'vivre et votre expression artistique inspirent l'enthousiasme autour de vous. En accueillant vos émotions avec bienveillance, vous parvenez à exprimer votre vérité intérieure authentique.",
-  4: "Pilier de confiance et de stabilité, le Chemin 4 possède le don précieux de donner corps et structure aux projets de la vie. Votre loyauté, votre rigueur et votre patience font de vous un repère solide. Votre chemin d'évolution vous encourage à accueillir le changement et la souplesse avec sérénité.",
-  5: "Amoureux de la liberté et de la découverte, le Chemin 5 croque la vie à pleines dents grâce à une magnifique adaptabilité et une curiosité sans limites. Votre défi est de trouver votre ancrage intérieur au milieu de ce mouvement permanent pour savourer pleinement chaque expérience.",
-  6: "Le Chemin 6 bat au rythme d'un cœur profondément généreux, guidé par l'amour de la famille et la recherche du beau. En apprenant à vous aimer inconditionnellement en premier, vous rayonnez d'un amour universel qui guide et protège harmonieusement.",
-  7: "Chercheur de vérité et d'absolu, le Chemin 7 possède une âme sage, portée vers la réflexion profonde et la vie intérieure. Votre intuition est une boussole précieuse. Votre potentiel est d'éclairer les consciences par votre immense sagesse.",
-  8: "Le Chemin 8 est doté d'une puissance de réalisation remarquable et d'une grande résilience. Vous avez la capacité naturelle de transformer l'ambition en réussites concrètes. En mettant votre autorité au service du bien commun, vous devenez un guide juste et inspirant.",
-  9: "Porteur d'un idéal humaniste élevé, le Chemin 9 est une âme profondément altruiste. Votre compassion et votre ouverture d'esprit n'ont pas de frontières. En cultivant votre paix intérieure, vous devenez un phare de sagesse et d'amour universel.",
-  11: "En tant que Maître Nombre, le Chemin 11 capte une lumière intuitive intense et porte une vision inspirante pour l'éveil des consciences. Votre chemin vous invite à accueillir cette énergie avec douceur. Votre potentiel est de devenir un canal d'inspiration pure.",
-  22: "Le Chemin 22 est le Maître Bâtisseur, doté d'une capacité unique à concevoir des projets d'envergure pour le bien de tous. Votre chemin vous invite à avancer pas à pas, avec une infinie patience. Votre destinée est de laisser une empreinte positive durable.",
-  33: "Le Chemin 33 incarne l'énergie du Maître Enseignant, guidé par un amour inconditionnel. Votre sensibilité aux besoins d'autrui est immense. En prenant soin de votre propre lumière, vous diffusez une énergie d'amour capable d'élever l'humanité."
-};
-
-const AFFIRMATIONS = {
-  "Amour": ["Un lien inattendu pourrait aujourd'hui t'apporter de la chaleur.", "L'amour se manifeste parfois dans les plus petits gestes du quotidien.", "Une attention portée à quelqu'un pourrait créer quelque chose de beau.", "Ce que tu donnes avec sincérité revient toujours, d'une façon ou d'une autre."],
-  "Abondance": ["Une opportunité se dessine peut-être là où tu ne regardes pas encore.", "L'abondance se manifeste sous des formes que l'on n'anticipe pas toujours.", "Ce que tu semailles aujourd'hui nourrit quelque chose de plus grand demain.", "La gratitude ouvre souvent des portes que l'effort seul ne peut atteindre."],
-  "Santé": ["Ton corps sait où il veut aller si tu prends le temps de l'écouter.", "Un petit geste de bienveillance envers toi-même peut changer ton élan de la journée.", "L'énergie suit l'attention — où portes-tu ta conscience aujourd'hui ?", "Quelque chose de léger et de bon t'attend peut-être au détour de cette journée."],
-  "Relations": ["Une rencontre ou un échange pourrait aujourd'hui t'apporter un éclairage nouveau.", "Ce que tu exprimes avec authenticité crée des ponts sincères.", "Un moment de présence partagée peut valoir bien des mots.", "Les connexions qui comptent se renforcent dans les petits instants."],
-  "Évolution personnelle": ["Tu es peut-être plus prêt(e) pour ce changement que tu ne le crois.", "Une prise de conscience subtile peut transformer ta manière de voir.", "Ce qui te résiste parfois est souvent ce qui te fait grandir le plus.", "Quelque chose s'ouvre en toi. Peut-être aujourd'hui."]
-};
-
-const QUOTES = [
-  "Chaque instant est une porte ouverte sur ce qui peut être.",
-  "La douceur est une force que peu de gens connaissent encore.",
-  "Ce que tu cherches te cherche aussi.",
-  "Il n'y a pas de petit moment de conscience. Chacun compte.",
-  "Tu n'as pas besoin d'être différent pour être lumineux.",
-  "La transformation n'est pas une destination. C'est un mouvement continu.",
-  "Ce qui est posé avec légèreté revient toujours en beauté.",
-  "Ouvre les yeux doucement. La journée est déjà là, pleine de possibilités."
+const CITATIONS = [
+  {text:"Le bonheur est une direction, pas une destination.",author:"Channing Pollock",theme:"Bonheur"},
+  {text:"La vie est un défi à relever, un bonheur à mériter, une aventure à tenter.",author:"Mère Teresa",theme:"Inspiration"},
+  {text:"Le plus grand secret du bonheur, c'est d'être bien avec soi-même.",author:"Socrate",theme:"Bonheur"},
+  {text:"Crois en toi et tes rêves se réaliseront sûrement.",author:"Anonyme",theme:"Confiance en soi"},
+  {text:"L'optimisme est la foi qui mène à la réussite.",author:"Helen Keller",theme:"Optimisme"},
+  {text:"Fais de ta vie un rêve, et d'un rêve, une réalité.",author:"Antoine de Saint-Exupéry",theme:"Inspiration"},
+  {text:"La bienveillance est le langage qu'un sourd peut entendre et qu'un aveugle peut voir.",author:"Mark Twain",theme:"Bienveillance"},
+  {text:"Le bonheur ne se trouve pas au sommet de la montagne, mais dans la façon de la gravir.",author:"Confucius",theme:"Bonheur"},
+  {text:"Il n'est jamais trop tard pour être ce que vous auriez pu être.",author:"George Eliot",theme:"Inspiration"},
+  {text:"Le sourire que tu envoies revient vers toi.",author:"Proverbe hindou",theme:"Bienveillance"},
+  {text:"La confiance en soi est le premier secret du succès.",author:"Ralph Waldo Emerson",theme:"Confiance en soi"},
+  {text:"Chaque jour est une nouvelle chance d'être heureux.",author:"Anonyme",theme:"Bonheur"},
+  {text:"Soyez vous-même, tous les autres sont déjà pris.",author:"Oscar Wilde",theme:"Confiance en soi"},
+  {text:"Là où il y a de l'amour, il y a de la vie.",author:"Mahatma Gandhi",theme:"Bienveillance"},
+  {text:"Oser, c'est perdre pied un instant. Ne pas oser, c'est se perdre soi-même.",author:"Søren Kierkegaard",theme:"Confiance en soi"},
+  {text:"Le bonheur est la seule chose qui se double si on la partage.",author:"Albert Schweitzer",theme:"Bonheur"},
+  {text:"L'avenir appartient à ceux qui croient à la beauté de leurs rêves.",author:"Eleanor Roosevelt",theme:"Inspiration"},
+  {text:"Au milieu de l'hiver, j'ai découvert en moi un invincible été.",author:"Albert Camus",theme:"Inspiration"},
+  {text:"S'aimer soi-même est le début d'une histoire d'amour qui dure toute la vie.",author:"Oscar Wilde",theme:"Confiance en soi"},
+  {text:"La joie est en tout ; il faut savoir l'extraire.",author:"Confucius",theme:"Bonheur"},
+  {text:"Gardez votre visage vers le soleil et vous ne verrez jamais l'ombre.",author:"Helen Keller",theme:"Optimisme"},
+  {text:"Il y a des fleurs partout pour qui veut bien les voir.",author:"Henri Matisse",theme:"Optimisme"},
+  {text:"Si vous pouvez le rêver, vous pouvez le faire.",author:"Walt Disney",theme:"Inspiration"},
+  {text:"Vous êtes plus courageux que vous ne le croyez.",author:"A.A. Milne",theme:"Confiance en soi"},
+  {text:"Soyez le changement que vous voulez voir dans le monde.",author:"Mahatma Gandhi",theme:"Inspiration"},
+  {text:"Le cœur a ses raisons que la raison ne connaît point.",author:"Blaise Pascal",theme:"Bienveillance"},
+  {text:"Après la pluie vient le beau temps.",author:"Proverbe français",theme:"Optimisme"},
+  {text:"Chaque pas en avant est une victoire.",author:"Anonyme",theme:"Inspiration"},
+  {text:"Un mot gentil peut réchauffer trois mois d'hiver.",author:"Proverbe japonais",theme:"Bienveillance"},
+  {text:"Le bonheur, c'est quand ce que vous pensez, ce que vous dites et ce que vous faites sont en harmonie.",author:"Mahatma Gandhi",theme:"Bonheur"},
+  {text:"Le secret du bonheur est la liberté, et le secret de la liberté est le courage.",author:"Périclès",theme:"Bonheur"},
+  {text:"La joie est en tout ; il faut savoir l'extraire.",author:"Confucius",theme:"Bonheur"},
+  {text:"Ne limitez pas vos défis. Défiez vos limites.",author:"Anonyme",theme:"Inspiration"},
+  {text:"Le seul moyen de faire du bon travail, c'est d'aimer ce que vous faites.",author:"Steve Jobs",theme:"Inspiration"},
+  {text:"Chaque bonne action est une lumière qui s'allume.",author:"Anonyme",theme:"Bienveillance"},
+  {text:"La confiance grandit avec l'action.",author:"Anonyme",theme:"Confiance en soi"},
+  {text:"L'optimisme est un aimant à bonheur.",author:"Anonyme",theme:"Optimisme"},
+  {text:"Il n'y a pas de réussite facile ni d'échecs définitifs.",author:"Marcel Proust",theme:"Optimisme"},
+  {text:"Soyez le changement que vous voulez voir dans le monde.",author:"Mahatma Gandhi",theme:"Inspiration"},
+  {text:"S'accepter tel que l'on est, c'est ouvrir la porte au bonheur.",author:"Anonyme",theme:"Confiance en soi"},
+  {text:"Le bonheur réside dans les choses simples de la vie.",author:"Anonyme",theme:"Bonheur"},
+  {text:"Aucun acte de gentillesse, aussi petit soit-il, n'est jamais perdu.",author:"Ésope",theme:"Bienveillance"},
+  {text:"Tout est possible à qui rêve, ose, travaille et n'abandonne jamais.",author:"Xavier Dolan",theme:"Inspiration"},
+  {text:"Il faut viser la lune, car même en cas d'échec, on atterrit dans les étoiles.",author:"Oscar Wilde",theme:"Inspiration"},
+  {text:"La persévérance est la clé de toutes les victoires.",author:"Anonyme",theme:"Inspiration"},
+  {text:"Faites de chaque jour votre chef-d'œuvre.",author:"John Wooden",theme:"Inspiration"},
+  {text:"La bienveillance est une clé qui ouvre toutes les portes.",author:"Anonyme",theme:"Bienveillance"},
+  {text:"Soyez doux avec vous-même, vous faites de votre mieux.",author:"Anonyme",theme:"Bienveillance"},
+  {text:"Un cœur bon est une source de joie, il apporte le sourire autour de lui.",author:"Anonyme",theme:"Bienveillance"},
+  {text:"La meilleure façon de prédire l'avenir, c'est de le créer.",author:"Peter Drucker",theme:"Inspiration"},
 ];
 
-const DOMAINS = ["Amour", "Abondance", "Santé", "Relations", "Évolution personnelle"];
-const DOMAIN_ICONS = { "Amour": "❤️", "Abondance": "💰", "Santé": "🌿", "Relations": "🤝", "Évolution personnelle": "✨" };
+// ─── État des rituels du jour (dans la vraie app : lu depuis localStorage) ───
+// Modifie ces valeurs pour tester les différents états visuels :
+const RITUELS_STATE = {
+  matin: true,
+  exercice: false,
+  soir: false,
+};
 
-// ══ INIT ══
-function init() {
-  createStarfield();
-  loadFromStorage();
-
-  setTimeout(() => {
-    if (STATE.user) {
-      showDash();
-    } else {
-      const disclaimerDone = localStorage.getItem('nae_disclaimer');
-      const onboardingDone = localStorage.getItem('nae_onboarded');
-      if (!disclaimerDone) {
-        go('disclaimer');
-      } else if (!onboardingDone) {
-        go('onboarding');
-      } else {
-        go('auth');
-      }
-    }
-  }, 2200);
+// ─── Calcul du jour de l'année (1→365) ───
+function getDayOfYear(){
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  return Math.floor((now - start) / 86400000);
 }
 
-function loadFromStorage() {
-  const u = localStorage.getItem('nae_user');
-  if (u) {
-    STATE.user = JSON.parse(u);
-    STATE.stars = JSON.parse(localStorage.getItem('nae_stars') || '[]');
-    checkDailyReset();
-  }
+function formatDate(){
+  const now = new Date();
+  const jours = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
+  const mois = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+  return `${jours[now.getDay()]} ${now.getDate()} ${mois[now.getMonth()]}`;
 }
 
-function checkDailyReset() {
-  const today = new Date().toDateString();
-  const lastDate = localStorage.getItem('nae_last_date');
-  if (lastDate !== today) {
-    STATE.matinDone = false;
-    STATE.soirCount = 0;
-    localStorage.setItem('nae_last_date', today);
-    localStorage.setItem('nae_matin_done', '0');
-    localStorage.setItem('nae_soir_count', '0');
-  } else {
-    STATE.matinDone = localStorage.getItem('nae_matin_done') === '1';
-    STATE.soirCount = parseInt(localStorage.getItem('nae_soir_count') || '0');
-  }
-}
-
-// ══ NAVIGATION ══
-let currentScreen = 'splash';
-
-function go(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-  currentScreen = id;
-}
-
-function goModule(mod) {
-  const navScreens = ['dashboard', 'mod-matin', 'mod-exercices', 'mod-soir', 'mod-profil'];
-  const showNav = navScreens.includes('mod-' + mod) || mod === 'dashboard';
-  
-  STATE.currentModule = mod;
-  if (mod === 'constellation') {
-    go('constellation-view');
-    renderConstellation();
-    document.getElementById('bottom-nav').classList.add('hidden');
-  } else if (mod === 'profil') {
-    go('mod-profil');
-    updateProfilUI();
-    showBottomNav();
-    setActiveNav('nb-profil');
-  } else if (mod === 'matin') {
-    go('mod-matin');
-    resetMatin();
-    showBottomNav();
-    setActiveNav('nb-matin');
-  } else if (mod === 'exercices') {
-    go('mod-exercices');
-    showBottomNav();
-    setActiveNav('nb-exercices');
-  } else if (mod === 'soir') {
-    go('mod-soir');
-    resetSoir();
-    showBottomNav();
-    setActiveNav('nb-soir');
-  } else if (mod === 'chemin-de-vie') {
-    go('mod-chemin-de-vie');
-    renderCheminDeVie();
-    document.getElementById('bottom-nav').classList.add('hidden');
-  } else if (mod === 'parametres') {
-    go('mod-parametres');
-    document.getElementById('bottom-nav').classList.add('hidden');
-  } else if (mod === 'horizon') {
-    go('mod-horizon');
-    document.getElementById('bottom-nav').classList.add('hidden');
-  }
-}
-
-function navTo(mod) { goModule(mod); }
-
-function backToDash() {
-  go('dashboard');
-  showBottomNav();
-  updateDashGreeting();
-}
-
-function backToProfile() {
-  goModule('profil');
-}
-
-function showBottomNav() {
-  document.getElementById('bottom-nav').classList.remove('hidden');
-}
-
-function setActiveNav(id) {
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-// ══ STARFIELD ══
-function createStarfield() {
-  const sf = document.getElementById('starfield');
-  for (let i = 0; i < 120; i++) {
-    const s = document.createElement('div');
-    s.className = 'star-dot';
-    const size = Math.random() * 2 + 0.5;
-    const op1 = Math.random() * 0.15 + 0.05;
-    const op2 = Math.random() * 0.4 + 0.2;
-    s.style.cssText = `
-      width:${size}px; height:${size}px;
-      left:${Math.random()*100}%;
-      top:${Math.random()*100}%;
-      --d:${Math.random()*5+3}s;
-      --delay:${Math.random()*6}s;
-      --op1:${op1}; --op2:${op2};
-    `;
-    sf.appendChild(s);
-  }
-}
-
-// ══ DISCLAIMER ══
-let disclaimerChecked = false;
-document.getElementById('disclaimer-check-wrap').addEventListener('click', () => {
-  disclaimerChecked = !disclaimerChecked;
-  const box = document.getElementById('disclaimer-box');
-  const btn = document.getElementById('disclaimer-btn');
-  box.classList.toggle('checked', disclaimerChecked);
-  btn.disabled = !disclaimerChecked;
-  btn.style.opacity = disclaimerChecked ? '1' : '0.4';
-});
-document.getElementById('disclaimer-btn').addEventListener('click', () => {
-  if (!disclaimerChecked) return;
-  localStorage.setItem('nae_disclaimer', '1');
-  go('onboarding');
-});
-
-// ══ ONBOARDING ══
-function obNext() {
-  const slides = document.getElementById('ob-slides');
-  const dots = document.querySelectorAll('.ob-dot');
-  const nextBtn = document.getElementById('ob-next');
-
-  if (STATE.obSlide < 3) {
-    STATE.obSlide++;
-    slides.style.transform = `translateX(-${STATE.obSlide * 25}%)`;
-    dots.forEach((d, i) => d.classList.toggle('active', i === STATE.obSlide));
-    if (STATE.obSlide === 3) {
-      nextBtn.textContent = '✦ Commencer mon voyage';
-      nextBtn.onclick = () => { localStorage.setItem('nae_onboarded', '1'); go('auth'); };
-    }
-  }
-}
-function goToAuth() { localStorage.setItem('nae_onboarded', '1'); go('auth'); }
-
-// ══ AUTH ══
-function switchAuthTab(tab) {
-  document.querySelectorAll('.auth-tab').forEach((t, i) => {
-    t.classList.toggle('active', (i === 0 && tab === 'login') || (i === 1 && tab === 'register'));
-  });
-  document.getElementById('auth-login').classList.toggle('active', tab === 'login');
-  document.getElementById('auth-register').classList.toggle('active', tab === 'register');
-}
-
-function doLogin() {
-  const email = document.getElementById('login-email').value.trim();
-  const pwd = document.getElementById('login-pwd').value;
-  const stored = localStorage.getItem('nae_user');
-  if (!stored) { showToast('Aucun compte trouvé. Crée ton compte.'); return; }
-  const u = JSON.parse(stored);
-  if (u.email === email && u.pwd === pwd) {
-    STATE.user = u;
-    STATE.stars = JSON.parse(localStorage.getItem('nae_stars') || '[]');
-    checkDailyReset();
-    showDash();
-  } else {
-    showToast('Identifiants incorrects');
-  }
-}
-
-function doRegister() {
-  const prenom = document.getElementById('reg-prenom').value.trim();
-  const ddn = document.getElementById('reg-ddn').value;
-  const email = document.getElementById('reg-email').value.trim();
-  const pwd = document.getElementById('reg-pwd').value;
-  if (!prenom || !ddn || !email || !pwd) { showToast('Merci de remplir tous les champs'); return; }
-  const cdv = calcCheminDeVie(ddn);
-  const user = { prenom, ddn, email, pwd, cdv, horizon: false };
-  localStorage.setItem('nae_user', JSON.stringify(user));
-  STATE.user = user;
-  STATE.stars = [];
-  checkDailyReset();
-  showDash();
-}
-
-function calcCheminDeVie(ddn) {
-  const digits = ddn.replace(/-/g, '').split('').map(Number);
-  let sum = digits.reduce((a, b) => a + b, 0);
-  while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
-    sum = sum.toString().split('').map(Number).reduce((a, b) => a + b, 0);
-  }
-  return sum;
-}
-
-function doLogout() {
-  STATE.user = null;
-  STATE.stars = [];
-  go('auth');
-  document.getElementById('bottom-nav').classList.add('hidden');
-}
-
-// ══ DASHBOARD ══
-function showDash() {
-  updateDashGreeting();
-  go('dashboard');
-  showBottomNav();
-  setActiveNav('nb-matin');
-}
-
-function updateDashGreeting() {
+function setGreeting(){
   const h = new Date().getHours();
-  let greet = 'Bonne journée';
-  if (h < 12) greet = 'Bonjour';
-  else if (h < 18) greet = 'Bon après-midi';
-  else greet = 'Bonsoir';
-  document.getElementById('dash-time').textContent = greet;
-  if (STATE.user) {
-    document.getElementById('dash-prenom').textContent = STATE.user.prenom;
+  const tl = document.getElementById('timeLabel');
+  const gn = document.getElementById('greetingName');
+  const gs = document.getElementById('greetingSub');
+  if(h < 12){
+    tl.textContent = 'Bonjour';
+    gn.textContent = 'Bonjour, Floriane ☀️';
+    gs.textContent = 'Prête à ouvrir le champ des possibles ?';
+  } else if(h < 18){
+    tl.textContent = 'Bonne après-midi';
+    gn.textContent = 'Bon après-midi, Floriane ✨';
+    gs.textContent = 'Comment se passe ta journée ?';
+  } else {
+    tl.textContent = 'Bonsoir';
+    gn.textContent = 'Bonsoir, Floriane 🌙';
+    gs.textContent = 'Prends un moment pour toi ce soir.';
   }
-  const qi = Math.floor(Date.now() / 86400000) % QUOTES.length;
-  document.getElementById('dash-quote').innerHTML = `<em>✦ ${QUOTES[qi]}</em>`;
 }
 
-// ══ MATIN ══
-function resetMatin() {
-  const domain = DOMAINS[Math.floor(Math.random() * DOMAINS.length)];
-  STATE.currentDomain = domain;
-  document.getElementById('matin-domain-name').textContent = `${DOMAIN_ICONS[domain]} ${domain}`;
-  document.getElementById('matin-s1').style.display = 'flex';
-  document.getElementById('matin-s2').style.display = 'none';
-  document.getElementById('matin-s3').style.display = 'none';
+function setCitation(){
+  const idx = (getDayOfYear() - 1) % CITATIONS.length;
+  const c = CITATIONS[idx];
+  document.getElementById('citeText').textContent = c.text;
+  document.getElementById('citeAuthor').textContent = '— ' + c.author;
+  document.getElementById('citeTheme').textContent = c.theme;
+  document.getElementById('dateLabel').textContent = formatDate();
 }
 
-function matinReveal() {
-  const domain = STATE.currentDomain;
-  const affirmations = AFFIRMATIONS[domain];
-  const aff = affirmations[Math.floor(Math.random() * affirmations.length)];
-  document.getElementById('matin-affirmation-text').textContent = aff;
-  document.getElementById('matin-s1').style.display = 'none';
-  document.getElementById('matin-s2').style.display = 'flex';
+function renderPills(){
+  const row = document.getElementById('pillsRow');
+  const items = [
+    {key:'matin', icon:'☀️', label:'Matin'},
+    {key:'exercice', icon:'✨', label:'Exercice'},
+    {key:'soir', icon:'🌙', label:'Soir'},
+  ];
+  row.innerHTML = items.map(it => {
+    const done = RITUELS_STATE[it.key];
+    return `<div class="state-pill ${done?'done':'pending'}">
+      <span class="pill-icon">${it.icon}</span>
+      <span class="pill-label">${it.label}</span>
+      ${done ? `<div class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></div>` : ''}
+    </div>`;
+  }).join('');
 }
 
-function matinAccueille() {
-  STATE.matinDone = true;
-  localStorage.setItem('nae_matin_done', '1');
-  document.getElementById('matin-s2').style.display = 'none';
-  document.getElementById('matin-s3').style.display = 'flex';
+function renderQuickCards(){
+  const grid = document.getElementById('quickGrid');
+  const cards = [
+    {
+      key:'matin', icon:'☀️', iconBg:'rgba(212,168,60,0.1)',
+      title:'Rituel du<br>Matin', sub:'Ouvre ton champ',
+      highlight: !RITUELS_STATE.matin, done: RITUELS_STATE.matin
+    },
+    {
+      key:'exercice', icon:'✦', iconBg:'rgba(120,60,220,0.12)',
+      title:'Exercice<br>du jour', sub:"Transforme de l'intérieur",
+      highlight: RITUELS_STATE.matin && !RITUELS_STATE.exercice, done: RITUELS_STATE.exercice
+    },
+    {
+      key:'soir', icon:'🌙', iconBg:'rgba(60,100,200,0.1)',
+      title:'Rituel du<br>Soir', sub:'Intègre ta lumière',
+      highlight: false, done: RITUELS_STATE.soir
+    },
+    {
+      key:'constellation', icon:'✧', iconBg:'rgba(212,168,60,0.06)',
+      title:'Ma Cons-<br>tellation', sub:'Ton ciel intérieur',
+      highlight: false, done: false, premium: true
+    },
+  ];
+  grid.innerHTML = cards.map(c => `
+    <div class="quick-card ${c.highlight?'highlight':''} ${c.done?'done-card':''}" onclick="openModule('${c.key}')">
+      ${c.premium ? '<div class="premium-badge">Horizon</div>' : ''}
+      <div class="card-icon" style="background:${c.iconBg};">${c.icon}</div>
+      <div>
+        <div class="card-title">${c.title}</div>
+        <div class="card-sub">${c.sub}</div>
+      </div>
+      ${c.done
+        ? `<div class="card-done-mark"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></div>`
+        : `<div class="card-arrow">→</div>`
+      }
+    </div>
+  `).join('');
 }
 
-// ══ SOIR ══
-function resetSoir() {
-  document.getElementById('soir-form').style.display = 'flex';
-  document.getElementById('star-anim').classList.remove('show');
-  document.getElementById('gratitude-text').value = '';
+function generateStars(){
+  const c = document.getElementById('stars');
+  for(let i=0;i<60;i++){
+    const s = document.createElement('div');
+    s.className='star';
+    const sz=Math.random()*1.5+0.4;
+    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*65}%;--d:${(Math.random()*4+2).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s;`;
+    c.appendChild(s);
+  }
 }
 
-function transformerEtoile() {
-  const text = document.getElementById('gratitude-text').value.trim();
-  if (!text) { showToast('Prends un instant pour écrire…'); return; }
-  // Text is never stored — only the star
-  const star = {
-    x: 0.1 + Math.random() * 0.8,
-    y: 0.1 + Math.random() * 0.8,
-    size: 1.5 + Math.random() * 2.5,
-    intensity: 0.5 + Math.random() * 0.5,
-    id: Date.now()
+function openModule(mod){
+  const labels={
+    matin:'☀️ Rituel du Matin',
+    exercice:'✦ Exercice du jour — Bonhomme Allumette',
+    soir:'🌙 Rituel du Soir',
+    constellation:'✧ Ma Constellation (Horizon)'
   };
-  STATE.stars.push(star);
-  localStorage.setItem('nae_stars', JSON.stringify(STATE.stars));
-  STATE.soirCount++;
-  localStorage.setItem('nae_soir_count', STATE.soirCount.toString());
-  document.getElementById('soir-form').style.display = 'none';
-  document.getElementById('star-anim').classList.add('show');
+  alert(labels[mod] + '\n\n→ Navigation vers ce module');
 }
 
-// ══ CONSTELLATION ══
-function renderConstellation() {
-  const canvas = document.getElementById('constellation-canvas');
-  const wrap = canvas.parentElement;
-  canvas.width = wrap.offsetWidth;
-  canvas.height = wrap.offsetHeight;
-  const ctx = canvas.getContext('2d');
-  const empty = document.getElementById('constellation-empty');
-
-  if (STATE.stars.length === 0) {
-    empty.style.display = 'flex';
-    return;
-  }
-  empty.style.display = 'none';
-
-  // Draw nebula bg
-  const grad = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, canvas.width * 0.7);
-  grad.addColorStop(0, 'rgba(123,94,167,0.08)');
-  grad.addColorStop(1, 'transparent');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  // Draw stars
-  STATE.stars.forEach(star => {
-    const x = star.x * canvas.width;
-    const y = star.y * canvas.height;
-    const r = star.size;
-    const glow = ctx.createRadialGradient(x, y, 0, x, y, r * 5);
-    glow.addColorStop(0, `rgba(232,216,160,${star.intensity})`);
-    glow.addColorStop(0.3, `rgba(201,169,110,${star.intensity * 0.4})`);
-    glow.addColorStop(1, 'transparent');
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(x, y, r * 5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = `rgba(255,245,220,${star.intensity})`;
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fill();
-  });
-}
-
-function shareConstellation() {
-  const canvas = document.getElementById('constellation-canvas');
-  const url = canvas.toDataURL('image/png');
-  if (navigator.share) {
-    fetch(url).then(r => r.blob()).then(blob => {
-      const file = new File([blob], 'ma-constellation-naeora.png', { type: 'image/png' });
-      navigator.share({ title: 'Ma constellation Naéora', files: [file] });
-    });
-  } else {
-    showToast('Capture d\'écran disponible sur mobile');
-  }
-}
-
-// ══ PROFIL ══
-function updateProfilUI() {
-  if (!STATE.user) return;
-  document.getElementById('profil-name').textContent = STATE.user.prenom;
-  document.getElementById('profil-avatar').textContent = STATE.user.prenom.charAt(0).toUpperCase();
-  document.getElementById('profil-status').textContent = STATE.user.horizon ? '✨ Horizon' : 'Gratuit';
-}
-
-// ══ CHEMIN DE VIE ══
-function renderCheminDeVie() {
-  if (!STATE.user) return;
-  const cdv = STATE.user.cdv;
-  document.getElementById('cdv-number').textContent = cdv;
-  document.getElementById('cdv-desc').textContent = CHEMINS[cdv] || "Ton chemin de vie est unique et lumineux.";
-}
-
-// ══ PARAMÈTRES ══
-function toggleParam(el) {
-  el.classList.toggle('on');
-}
-
-function confirmDeleteAccount() {
-  if (confirm('Supprimer définitivement ton compte Naéora ? Cette action est irréversible.')) {
-    localStorage.clear();
-    STATE.user = null;
-    STATE.stars = [];
-    go('auth');
-    document.getElementById('bottom-nav').classList.add('hidden');
-    showToast('Compte supprimé');
-  }
-}
-
-// ══ EXERCICES ══
-function startExercise(ex) {
-  go('ex-' + ex);
-  document.getElementById('bottom-nav').classList.add('hidden');
-  if (ex === 'grabovoi') resetGrabovoi();
-  if (ex === 'hooponopono') resetHP();
-  if (ex === 'eft') resetEFT();
-}
-
-// Bonhomme
-function bonhommeDissolve() {
-  ['bl1','bl2','bl3'].forEach((id, i) => {
-    setTimeout(() => document.getElementById(id).classList.add('dissolved'), i * 400);
-  });
-  document.getElementById('bonhomme-btn').style.display = 'none';
-  setTimeout(() => {
-    document.getElementById('bonhomme-msg').style.display = 'block';
-    document.getElementById('bonhomme-back').style.display = 'block';
-  }, 1800);
-}
-
-// Douche
-function doucheStart() {
-  document.getElementById('douche-btn').style.display = 'none';
-  document.getElementById('douche-visual').style.display = 'flex';
-  setTimeout(() => {
-    document.getElementById('douche-msg').style.display = 'block';
-    document.getElementById('douche-back').style.display = 'block';
-  }, 6000);
-}
-
-// Cohérence
-let coherenceInterval = null;
-function startCoherence() {
-  document.getElementById('coherence-start-btn').style.display = 'none';
-  let secs = 300;
-  const circle = document.getElementById('breath-circle');
-  const timer = document.getElementById('breath-timer');
-  const phases = ['Inspire','Retiens','Expire','Retiens'];
-  const durations = [4000, 2000, 4000, 2000];
-  let phaseIdx = 0;
-
-  function nextPhase() {
-    circle.textContent = phases[phaseIdx];
-    circle.className = 'breathing-circle';
-    if (phaseIdx === 0) setTimeout(() => circle.classList.add('inhale'), 50);
-    if (phaseIdx === 2) setTimeout(() => circle.classList.add('exhale'), 50);
-    const d = durations[phaseIdx];
-    phaseIdx = (phaseIdx + 1) % 4;
-    return d;
-  }
-
-  function runPhases() {
-    if (secs <= 0) return;
-    const d = nextPhase();
-    setTimeout(runPhases, d);
-  }
-  runPhases();
-
-  coherenceInterval = setInterval(() => {
-    secs--;
-    const m = Math.floor(secs / 60);
-    const s = secs % 60;
-    timer.textContent = `${m}:${s.toString().padStart(2,'0')}`;
-    if (secs <= 0) {
-      clearInterval(coherenceInterval);
-      circle.textContent = '✦';
-      circle.className = 'breathing-circle';
-      document.getElementById('coherence-msg').style.display = 'block';
-      document.getElementById('coherence-back').style.display = 'block';
-    }
-  }, 1000);
-}
-
-// EFT
-let eftIdx = 0;
-function resetEFT() {
-  eftIdx = 0;
-  document.querySelectorAll('.eft-point').forEach((p, i) => p.classList.toggle('active', i === 0));
-  document.getElementById('eft-btn').style.display = 'block';
-  document.getElementById('eft-msg').style.display = 'none';
-  document.getElementById('eft-back').style.display = 'none';
-}
-function eftNext() {
-  const pts = document.querySelectorAll('.eft-point');
-  pts[eftIdx].classList.remove('active');
-  eftIdx++;
-  if (eftIdx < pts.length) {
-    pts[eftIdx].classList.add('active');
-  } else {
-    document.getElementById('eft-btn').style.display = 'none';
-    document.getElementById('eft-msg').style.display = 'block';
-    document.getElementById('eft-back').style.display = 'block';
-  }
-}
-
-// Grabovoi
-const GRAB_SEQS = ['8 8 8 8 8', '5 1 9 0 4', '3 1 4 1 5', '7 7 7 7 7', '9 0 9 0 9'];
-let grabTarget = '';
-let grabInput = '';
-function resetGrabovoi() {
-  grabTarget = GRAB_SEQS[Math.floor(Math.random() * GRAB_SEQS.length)];
-  document.getElementById('grab-seq').textContent = grabTarget;
-  grabInput = '';
-  document.getElementById('grab-user').textContent = '…';
-  document.getElementById('grab-msg').style.display = 'none';
-  document.getElementById('grab-back').style.display = 'none';
-  document.getElementById('grab-keys').style.display = 'grid';
-}
-function grabKey(k) {
-  if (k === '⌫') {
-    const nums = grabInput.split(' ').filter(Boolean);
-    nums.pop();
-    grabInput = nums.join(' ');
-  } else {
-    const nums = grabInput.split(' ').filter(Boolean);
-    if (nums.length < grabTarget.split(' ').length) {
-      nums.push(k);
-      grabInput = nums.join(' ');
-    }
-  }
-  document.getElementById('grab-user').textContent = grabInput || '…';
-  // Check
-  if (grabInput === grabTarget) {
-    document.getElementById('grab-keys').style.display = 'none';
-    document.getElementById('grab-msg').style.display = 'block';
-    document.getElementById('grab-back').style.display = 'block';
-  }
-}
-
-// Mudra
-let mudraTimerInterval = null;
-function startMudra() {
-  document.getElementById('mudra-btn').style.display = 'none';
-  document.getElementById('mudra-timer').style.display = 'block';
-  let secs = 180;
-  mudraTimerInterval = setInterval(() => {
-    secs--;
-    const m = Math.floor(secs / 60);
-    const s = secs % 60;
-    document.getElementById('mudra-timer').textContent = `${m}:${s.toString().padStart(2,'0')}`;
-    if (secs <= 0) {
-      clearInterval(mudraTimerInterval);
-      document.getElementById('mudra-timer').textContent = '✦';
-      document.getElementById('mudra-msg').style.display = 'block';
-      document.getElementById('mudra-back').style.display = 'block';
-    }
-  }, 1000);
-}
-
-// Ho'oponopono
-let hpIdx = 0;
-function resetHP() {
-  hpIdx = 0;
-  for (let i = 0; i < 4; i++) {
-    document.getElementById('hp' + i).classList.toggle('active', i === 0);
-  }
-  document.getElementById('hp-btn').style.display = 'block';
-  document.getElementById('hp-msg').style.display = 'none';
-  document.getElementById('hp-back').style.display = 'none';
-}
-function hpNext() {
-  document.getElementById('hp' + hpIdx).classList.remove('active');
-  hpIdx++;
-  if (hpIdx < 4) {
-    document.getElementById('hp' + hpIdx).classList.add('active');
-  } else {
-    document.getElementById('hp-btn').style.display = 'none';
-    document.getElementById('hp-msg').style.display = 'block';
-    document.getElementById('hp-back').style.display = 'block';
-  }
-}
-
-// Lettre
-function lettreConsume() {
-  const text = document.getElementById('lettre-text').value.trim();
-  if (!text) { showToast('Prends un instant pour écrire…'); return; }
-  document.getElementById('lettre-form').style.display = 'none';
-  document.getElementById('flame-anim').classList.add('show');
-}
-
-// ══ UTILS ══
-let toastTimeout;
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastTimeout);
-  toastTimeout = setTimeout(() => t.classList.remove('show'), 2800);
-}
-
-// ══ START ══
-window.addEventListener('load', init);
+generateStars();
+setGreeting();
+setCitation();
+renderPills();
+renderQuickCards();
 </script>
 </body>
 </html>
