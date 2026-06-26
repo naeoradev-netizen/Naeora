@@ -2,482 +2,60 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Naéora — Accueil</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@300;400;500&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Naéora — Écran d'ouverture</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;height:100%;overflow:hidden;background:#000;}
-#app{
-  width:390px;height:844px;margin:0 auto;
-  position:relative;overflow:hidden;
-  background:linear-gradient(170deg,#080514 0%,#0f0828 25%,#160c38 45%,#0e1428 70%,#090d1e 100%);
-  display:flex;flex-direction:column;
-}
-.nebula{position:absolute;inset:0;pointer-events:none;z-index:0;}
-.nebula::before{
-  content:'';position:absolute;
-  width:500px;height:500px;top:-80px;left:-60px;
-  background:radial-gradient(ellipse at 35% 25%,rgba(120,60,220,0.15) 0%,rgba(80,20,150,0.06) 45%,transparent 70%);
-  animation:drift1 14s ease-in-out infinite alternate;
-}
-.nebula::after{
-  content:'';position:absolute;
-  width:400px;height:400px;bottom:100px;right:-50px;
-  background:radial-gradient(ellipse at 65% 75%,rgba(200,130,20,0.1) 0%,rgba(160,60,10,0.05) 45%,transparent 70%);
-  animation:drift2 18s ease-in-out infinite alternate;
-}
-@keyframes drift1{from{transform:translate(0,0);}to{transform:translate(25px,18px);}}
-@keyframes drift2{from{transform:translate(0,0);}to{transform:translate(-18px,-25px);}}
-.stars{position:absolute;inset:0;pointer-events:none;z-index:0;}
-.star{position:absolute;border-radius:50%;background:#fff;animation:twinkle var(--d,3s) ease-in-out infinite alternate;}
-@keyframes twinkle{from{opacity:0.1;}to{opacity:0.8;}}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{
+    width:100%;height:100%;
+    background:#05060f;
+    overflow:hidden;
+  }
+  .stage{
+    position:relative;
+    width:100%;
+    height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#05060f;
+  }
+  .splash-img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    opacity:0;
+    transform:scale(1.04);
+    animation:reveal 2.2s ease-out forwards;
+  }
+  @keyframes reveal{
+    0%{ opacity:0; transform:scale(1.04); }
+    100%{ opacity:1; transform:scale(1); }
+  }
 
-.content{position:relative;z-index:1;display:flex;flex-direction:column;height:100%;padding-bottom:72px;}
+  /* léger effet de respiration continue sur la lumière, très subtil */
+  .glow-pulse{
+    position:absolute;
+    inset:0;
+    background:radial-gradient(circle at 50% 78%, rgba(255,210,140,0.10) 0%, transparent 35%);
+    animation:pulse 7s ease-in-out infinite;
+    pointer-events:none;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:0.6; }
+    50%{ opacity:1; }
+  }
 
-/* Header */
-.header{
-  padding:54px 24px 18px;
-  display:flex;align-items:flex-start;justify-content:space-between;
-}
-.greeting-time{
-  font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.22em;
-  color:rgba(212,168,60,0.65);text-transform:uppercase;margin-bottom:6px;
-}
-.greeting-name{
-  font-family:'Cinzel',serif;font-size:22px;font-weight:300;
-  letter-spacing:0.06em;color:#f0e8d8;
-  text-shadow:0 0 30px rgba(212,168,60,0.2);
-}
-.greeting-sub{
-  font-family:'Cormorant Garamond',serif;font-size:15px;
-  font-weight:300;font-style:italic;
-  color:rgba(200,185,160,0.7);margin-top:4px;
-}
-.avatar{
-  width:42px;height:42px;border-radius:50%;
-  background:rgba(212,168,60,0.08);
-  border:1px solid rgba(212,168,60,0.25);
-  display:flex;align-items:center;justify-content:center;cursor:pointer;
-  transition:border-color 0.3s;flex-shrink:0;
-}
-.avatar:hover{border-color:rgba(212,168,60,0.6);}
-.avatar svg{width:18px;height:18px;stroke:rgba(212,168,60,0.7);fill:none;stroke-width:1.5;}
-
-/* Citation */
-.citation-section{padding:0 20px;}
-.citation-card{
-  background:rgba(255,255,255,0.04);
-  backdrop-filter:blur(24px);
-  border:1px solid rgba(212,168,60,0.12);
-  border-radius:22px;padding:22px 24px 20px;
-  position:relative;overflow:hidden;
-}
-.citation-card::before{
-  content:'';position:absolute;top:-40px;right:-40px;
-  width:120px;height:120px;
-  background:radial-gradient(circle,rgba(212,168,60,0.07) 0%,transparent 70%);
-  border-radius:50%;
-}
-.citation-date-badge{
-  display:inline-flex;align-items:center;gap:6px;
-  font-family:'Cinzel',serif;font-size:9px;letter-spacing:0.2em;
-  color:rgba(212,168,60,0.55);text-transform:uppercase;
-  background:rgba(212,168,60,0.06);
-  border:1px solid rgba(212,168,60,0.12);
-  border-radius:20px;padding:3px 10px;
-  margin-bottom:14px;
-}
-.quote-mark{
-  font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:300;
-  color:rgba(212,168,60,0.22);line-height:0.7;margin-bottom:10px;display:block;
-}
-.citation-text{
-  font-family:'Cormorant Garamond',serif;font-size:17.5px;
-  font-weight:300;font-style:italic;line-height:1.65;
-  color:rgba(240,230,210,0.92);
-}
-.citation-footer{
-  display:flex;align-items:center;justify-content:space-between;margin-top:14px;
-}
-.citation-author{
-  font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.18em;
-  color:rgba(212,168,60,0.6);text-transform:uppercase;
-}
-.cite-thematique{
-  font-family:'Inter',sans-serif;font-size:10px;font-weight:300;
-  color:rgba(212,168,60,0.5);letter-spacing:0.1em;text-transform:uppercase;
-  background:rgba(212,168,60,0.06);border:1px solid rgba(212,168,60,0.12);
-  border-radius:20px;padding:3px 10px;
-}
-
-/* Rituels — lecture seule */
-.state-section{padding:18px 20px 0;}
-.section-label{
-  font-family:'Cinzel',serif;font-size:10px;letter-spacing:0.2em;
-  color:rgba(180,165,140,0.45);text-transform:uppercase;margin-bottom:12px;
-}
-.state-row{display:flex;gap:10px;}
-.state-pill{
-  display:flex;align-items:center;gap:7px;
-  padding:9px 14px;border-radius:50px;
-  flex:1;justify-content:center;
-  cursor:default;transition:all 0.5s ease;
-}
-.state-pill.done{
-  border:1px solid rgba(212,168,60,0.3);
-  background:rgba(212,168,60,0.07);
-}
-.state-pill.pending{
-  border:1px solid rgba(255,255,255,0.07);
-  background:rgba(255,255,255,0.025);
-}
-.pill-icon{font-size:14px;}
-.pill-label{
-  font-family:'Inter',sans-serif;font-size:11px;font-weight:300;
-  color:rgba(180,168,150,0.5);
-}
-.state-pill.done .pill-label{color:rgba(212,168,60,0.8);}
-.check{
-  width:14px;height:14px;border-radius:50%;
-  background:rgba(212,168,60,0.15);
-  border:1px solid rgba(212,168,60,0.45);
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.check svg{width:8px;height:8px;stroke:rgba(212,168,60,0.85);fill:none;stroke-width:2.5;}
-.state-note{
-  font-family:'Cormorant Garamond',serif;font-size:12px;font-style:italic;
-  color:rgba(180,168,150,0.35);margin-top:8px;text-align:center;letter-spacing:0.03em;
-}
-
-/* Quick access */
-.quick-section{padding:18px 20px 0;flex:1;}
-.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.quick-card{
-  background:rgba(255,255,255,0.035);
-  backdrop-filter:blur(16px);
-  border:1px solid rgba(255,255,255,0.07);
-  border-radius:18px;padding:16px 15px 14px;
-  cursor:pointer;transition:all 0.3s ease;
-  display:flex;flex-direction:column;gap:9px;
-  position:relative;overflow:hidden;
-}
-.quick-card:hover{border-color:rgba(212,168,60,0.2);transform:translateY(-2px);}
-.quick-card.highlight{border-color:rgba(212,168,60,0.22);background:rgba(212,168,60,0.05);}
-.quick-card.done-card{border-color:rgba(212,168,60,0.15);opacity:0.7;}
-.card-icon{
-  width:34px;height:34px;border-radius:11px;
-  display:flex;align-items:center;justify-content:center;font-size:17px;
-}
-.card-title{
-  font-family:'Cinzel',serif;font-size:11.5px;font-weight:400;
-  letter-spacing:0.04em;color:rgba(230,220,200,0.9);line-height:1.4;
-}
-.card-sub{
-  font-family:'Inter',sans-serif;font-size:10px;font-weight:300;
-  color:rgba(180,168,150,0.5);margin-top:1px;
-}
-.card-arrow{
-  position:absolute;bottom:13px;right:13px;
-  font-size:12px;color:rgba(212,168,60,0.4);
-}
-.card-done-mark{
-  position:absolute;bottom:11px;right:11px;
-  width:16px;height:16px;border-radius:50%;
-  background:rgba(212,168,60,0.12);
-  border:1px solid rgba(212,168,60,0.35);
-  display:flex;align-items:center;justify-content:center;
-}
-.card-done-mark svg{width:9px;height:9px;stroke:rgba(212,168,60,0.75);fill:none;stroke-width:2.5;}
-.premium-badge{
-  position:absolute;top:10px;right:10px;
-  font-family:'Cinzel',serif;font-size:8px;letter-spacing:0.1em;
-  color:rgba(212,168,60,0.65);background:rgba(212,168,60,0.08);
-  border:1px solid rgba(212,168,60,0.18);border-radius:20px;padding:2px 7px;
-}
-
-/* Bottom nav */
-.bottom-nav{
-  position:absolute;bottom:0;left:0;right:0;height:72px;
-  background:rgba(8,5,20,0.88);backdrop-filter:blur(20px);
-  border-top:1px solid rgba(212,168,60,0.07);
-  display:flex;align-items:center;justify-content:space-around;
-  padding:0 10px 10px;z-index:10;
-}
-.nav-item{
-  display:flex;flex-direction:column;align-items:center;gap:4px;
-  cursor:pointer;padding:8px 16px;border-radius:14px;transition:all 0.3s;min-width:70px;
-}
-.nav-item.active{background:rgba(212,168,60,0.08);}
-.nav-icon{font-size:19px;line-height:1;}
-.nav-label{
-  font-family:'Inter',sans-serif;font-size:10px;font-weight:300;
-  letter-spacing:0.05em;color:rgba(180,168,150,0.4);
-}
-.nav-item.active .nav-label{color:rgba(212,168,60,0.8);}
+  @media (prefers-reduced-motion: reduce){
+    .splash-img{ animation:none; opacity:1; transform:none; }
+    .glow-pulse{ animation:none; }
+  }
 </style>
 </head>
 <body>
-<div id="app">
-  <div class="nebula"></div>
-  <div class="stars" id="stars"></div>
-
-  <div class="content">
-
-    <!-- Header -->
-    <div class="header">
-      <div class="greeting-block">
-        <div class="greeting-time" id="timeLabel">Bonjour</div>
-        <div class="greeting-name" id="greetingName">Bonjour, Floriane ☀️</div>
-        <div class="greeting-sub" id="greetingSub">Prête à ouvrir le champ des possibles ?</div>
-      </div>
-      <div class="avatar">
-        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-      </div>
-    </div>
-
-    <!-- Citation du jour — fixe toute la journée -->
-    <div class="citation-section">
-      <div class="citation-card">
-        <div class="citation-date-badge">
-          ✦ Citation du <span id="dateLabel"></span>
-        </div>
-        <span class="quote-mark">"</span>
-        <p class="citation-text" id="citeText"></p>
-        <div class="citation-footer">
-          <span class="citation-author" id="citeAuthor"></span>
-          <span class="cite-thematique" id="citeTheme"></span>
-        </div>
-      </div>
-    </div>
-
-    <!-- État rituels — lecture seule -->
-    <div class="state-section">
-      <div class="section-label">Rituels du jour</div>
-      <div class="state-row" id="pillsRow"></div>
-      <p class="state-note">Se mettent à jour automatiquement après chaque rituel</p>
-    </div>
-
-    <!-- Accès rapide -->
-    <div class="quick-section">
-      <div class="section-label">Commencer</div>
-      <div class="quick-grid" id="quickGrid"></div>
-    </div>
-
+  <div class="stage">
+    <img class="splash-img" src="assets/splash.webp" alt="Naéora — Ouvrir un nouveau champ des possibles">
+    <div class="glow-pulse"></div>
   </div>
-
-  <!-- Bottom Nav -->
-  <div class="bottom-nav">
-    <div class="nav-item active">
-      <div class="nav-icon">☀️</div>
-      <div class="nav-label">Accueil</div>
-    </div>
-    <div class="nav-item">
-      <div class="nav-icon" style="font-size:17px;color:rgba(180,168,150,0.4);">✦</div>
-      <div class="nav-label">Exercices</div>
-    </div>
-    <div class="nav-item">
-      <div class="nav-icon">🌙</div>
-      <div class="nav-label">Soir</div>
-    </div>
-    <div class="nav-item">
-      <div class="nav-icon">
-        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="rgba(180,168,150,0.4)" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-      </div>
-      <div class="nav-label">Profil</div>
-    </div>
-  </div>
-
-</div>
-
-<script>
-const CITATIONS = [
-  {text:"Le bonheur est une direction, pas une destination.",author:"Channing Pollock",theme:"Bonheur"},
-  {text:"La vie est un défi à relever, un bonheur à mériter, une aventure à tenter.",author:"Mère Teresa",theme:"Inspiration"},
-  {text:"Le plus grand secret du bonheur, c'est d'être bien avec soi-même.",author:"Socrate",theme:"Bonheur"},
-  {text:"Crois en toi et tes rêves se réaliseront sûrement.",author:"Anonyme",theme:"Confiance en soi"},
-  {text:"L'optimisme est la foi qui mène à la réussite.",author:"Helen Keller",theme:"Optimisme"},
-  {text:"Fais de ta vie un rêve, et d'un rêve, une réalité.",author:"Antoine de Saint-Exupéry",theme:"Inspiration"},
-  {text:"La bienveillance est le langage qu'un sourd peut entendre et qu'un aveugle peut voir.",author:"Mark Twain",theme:"Bienveillance"},
-  {text:"Le bonheur ne se trouve pas au sommet de la montagne, mais dans la façon de la gravir.",author:"Confucius",theme:"Bonheur"},
-  {text:"Il n'est jamais trop tard pour être ce que vous auriez pu être.",author:"George Eliot",theme:"Inspiration"},
-  {text:"Le sourire que tu envoies revient vers toi.",author:"Proverbe hindou",theme:"Bienveillance"},
-  {text:"La confiance en soi est le premier secret du succès.",author:"Ralph Waldo Emerson",theme:"Confiance en soi"},
-  {text:"Chaque jour est une nouvelle chance d'être heureux.",author:"Anonyme",theme:"Bonheur"},
-  {text:"Soyez vous-même, tous les autres sont déjà pris.",author:"Oscar Wilde",theme:"Confiance en soi"},
-  {text:"Là où il y a de l'amour, il y a de la vie.",author:"Mahatma Gandhi",theme:"Bienveillance"},
-  {text:"Oser, c'est perdre pied un instant. Ne pas oser, c'est se perdre soi-même.",author:"Søren Kierkegaard",theme:"Confiance en soi"},
-  {text:"Le bonheur est la seule chose qui se double si on la partage.",author:"Albert Schweitzer",theme:"Bonheur"},
-  {text:"L'avenir appartient à ceux qui croient à la beauté de leurs rêves.",author:"Eleanor Roosevelt",theme:"Inspiration"},
-  {text:"Au milieu de l'hiver, j'ai découvert en moi un invincible été.",author:"Albert Camus",theme:"Inspiration"},
-  {text:"S'aimer soi-même est le début d'une histoire d'amour qui dure toute la vie.",author:"Oscar Wilde",theme:"Confiance en soi"},
-  {text:"La joie est en tout ; il faut savoir l'extraire.",author:"Confucius",theme:"Bonheur"},
-  {text:"Gardez votre visage vers le soleil et vous ne verrez jamais l'ombre.",author:"Helen Keller",theme:"Optimisme"},
-  {text:"Il y a des fleurs partout pour qui veut bien les voir.",author:"Henri Matisse",theme:"Optimisme"},
-  {text:"Si vous pouvez le rêver, vous pouvez le faire.",author:"Walt Disney",theme:"Inspiration"},
-  {text:"Vous êtes plus courageux que vous ne le croyez.",author:"A.A. Milne",theme:"Confiance en soi"},
-  {text:"Soyez le changement que vous voulez voir dans le monde.",author:"Mahatma Gandhi",theme:"Inspiration"},
-  {text:"Le cœur a ses raisons que la raison ne connaît point.",author:"Blaise Pascal",theme:"Bienveillance"},
-  {text:"Après la pluie vient le beau temps.",author:"Proverbe français",theme:"Optimisme"},
-  {text:"Chaque pas en avant est une victoire.",author:"Anonyme",theme:"Inspiration"},
-  {text:"Un mot gentil peut réchauffer trois mois d'hiver.",author:"Proverbe japonais",theme:"Bienveillance"},
-  {text:"Le bonheur, c'est quand ce que vous pensez, ce que vous dites et ce que vous faites sont en harmonie.",author:"Mahatma Gandhi",theme:"Bonheur"},
-  {text:"Le secret du bonheur est la liberté, et le secret de la liberté est le courage.",author:"Périclès",theme:"Bonheur"},
-  {text:"La joie est en tout ; il faut savoir l'extraire.",author:"Confucius",theme:"Bonheur"},
-  {text:"Ne limitez pas vos défis. Défiez vos limites.",author:"Anonyme",theme:"Inspiration"},
-  {text:"Le seul moyen de faire du bon travail, c'est d'aimer ce que vous faites.",author:"Steve Jobs",theme:"Inspiration"},
-  {text:"Chaque bonne action est une lumière qui s'allume.",author:"Anonyme",theme:"Bienveillance"},
-  {text:"La confiance grandit avec l'action.",author:"Anonyme",theme:"Confiance en soi"},
-  {text:"L'optimisme est un aimant à bonheur.",author:"Anonyme",theme:"Optimisme"},
-  {text:"Il n'y a pas de réussite facile ni d'échecs définitifs.",author:"Marcel Proust",theme:"Optimisme"},
-  {text:"Soyez le changement que vous voulez voir dans le monde.",author:"Mahatma Gandhi",theme:"Inspiration"},
-  {text:"S'accepter tel que l'on est, c'est ouvrir la porte au bonheur.",author:"Anonyme",theme:"Confiance en soi"},
-  {text:"Le bonheur réside dans les choses simples de la vie.",author:"Anonyme",theme:"Bonheur"},
-  {text:"Aucun acte de gentillesse, aussi petit soit-il, n'est jamais perdu.",author:"Ésope",theme:"Bienveillance"},
-  {text:"Tout est possible à qui rêve, ose, travaille et n'abandonne jamais.",author:"Xavier Dolan",theme:"Inspiration"},
-  {text:"Il faut viser la lune, car même en cas d'échec, on atterrit dans les étoiles.",author:"Oscar Wilde",theme:"Inspiration"},
-  {text:"La persévérance est la clé de toutes les victoires.",author:"Anonyme",theme:"Inspiration"},
-  {text:"Faites de chaque jour votre chef-d'œuvre.",author:"John Wooden",theme:"Inspiration"},
-  {text:"La bienveillance est une clé qui ouvre toutes les portes.",author:"Anonyme",theme:"Bienveillance"},
-  {text:"Soyez doux avec vous-même, vous faites de votre mieux.",author:"Anonyme",theme:"Bienveillance"},
-  {text:"Un cœur bon est une source de joie, il apporte le sourire autour de lui.",author:"Anonyme",theme:"Bienveillance"},
-  {text:"La meilleure façon de prédire l'avenir, c'est de le créer.",author:"Peter Drucker",theme:"Inspiration"},
-];
-
-// ─── État des rituels du jour (dans la vraie app : lu depuis localStorage) ───
-// Modifie ces valeurs pour tester les différents états visuels :
-const RITUELS_STATE = {
-  matin: true,
-  exercice: false,
-  soir: false,
-};
-
-// ─── Calcul du jour de l'année (1→365) ───
-function getDayOfYear(){
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  return Math.floor((now - start) / 86400000);
-}
-
-function formatDate(){
-  const now = new Date();
-  const jours = ['dimanche','lundi','mardi','mercredi','jeudi','vendredi','samedi'];
-  const mois = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
-  return `${jours[now.getDay()]} ${now.getDate()} ${mois[now.getMonth()]}`;
-}
-
-function setGreeting(){
-  const h = new Date().getHours();
-  const tl = document.getElementById('timeLabel');
-  const gn = document.getElementById('greetingName');
-  const gs = document.getElementById('greetingSub');
-  if(h < 12){
-    tl.textContent = 'Bonjour';
-    gn.textContent = 'Bonjour, Floriane ☀️';
-    gs.textContent = 'Prête à ouvrir le champ des possibles ?';
-  } else if(h < 18){
-    tl.textContent = 'Bonne après-midi';
-    gn.textContent = 'Bon après-midi, Floriane ✨';
-    gs.textContent = 'Comment se passe ta journée ?';
-  } else {
-    tl.textContent = 'Bonsoir';
-    gn.textContent = 'Bonsoir, Floriane 🌙';
-    gs.textContent = 'Prends un moment pour toi ce soir.';
-  }
-}
-
-function setCitation(){
-  const idx = (getDayOfYear() - 1) % CITATIONS.length;
-  const c = CITATIONS[idx];
-  document.getElementById('citeText').textContent = c.text;
-  document.getElementById('citeAuthor').textContent = '— ' + c.author;
-  document.getElementById('citeTheme').textContent = c.theme;
-  document.getElementById('dateLabel').textContent = formatDate();
-}
-
-function renderPills(){
-  const row = document.getElementById('pillsRow');
-  const items = [
-    {key:'matin', icon:'☀️', label:'Matin'},
-    {key:'exercice', icon:'✨', label:'Exercice'},
-    {key:'soir', icon:'🌙', label:'Soir'},
-  ];
-  row.innerHTML = items.map(it => {
-    const done = RITUELS_STATE[it.key];
-    return `<div class="state-pill ${done?'done':'pending'}">
-      <span class="pill-icon">${it.icon}</span>
-      <span class="pill-label">${it.label}</span>
-      ${done ? `<div class="check"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></div>` : ''}
-    </div>`;
-  }).join('');
-}
-
-function renderQuickCards(){
-  const grid = document.getElementById('quickGrid');
-  const cards = [
-    {
-      key:'matin', icon:'☀️', iconBg:'rgba(212,168,60,0.1)',
-      title:'Rituel du<br>Matin', sub:'Ouvre ton champ',
-      highlight: !RITUELS_STATE.matin, done: RITUELS_STATE.matin
-    },
-    {
-      key:'exercice', icon:'✦', iconBg:'rgba(120,60,220,0.12)',
-      title:'Exercice<br>du jour', sub:"Transforme de l'intérieur",
-      highlight: RITUELS_STATE.matin && !RITUELS_STATE.exercice, done: RITUELS_STATE.exercice
-    },
-    {
-      key:'soir', icon:'🌙', iconBg:'rgba(60,100,200,0.1)',
-      title:'Rituel du<br>Soir', sub:'Intègre ta lumière',
-      highlight: false, done: RITUELS_STATE.soir
-    },
-    {
-      key:'constellation', icon:'✧', iconBg:'rgba(212,168,60,0.06)',
-      title:'Ma Cons-<br>tellation', sub:'Ton ciel intérieur',
-      highlight: false, done: false, premium: true
-    },
-  ];
-  grid.innerHTML = cards.map(c => `
-    <div class="quick-card ${c.highlight?'highlight':''} ${c.done?'done-card':''}" onclick="openModule('${c.key}')">
-      ${c.premium ? '<div class="premium-badge">Horizon</div>' : ''}
-      <div class="card-icon" style="background:${c.iconBg};">${c.icon}</div>
-      <div>
-        <div class="card-title">${c.title}</div>
-        <div class="card-sub">${c.sub}</div>
-      </div>
-      ${c.done
-        ? `<div class="card-done-mark"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></div>`
-        : `<div class="card-arrow">→</div>`
-      }
-    </div>
-  `).join('');
-}
-
-function generateStars(){
-  const c = document.getElementById('stars');
-  for(let i=0;i<60;i++){
-    const s = document.createElement('div');
-    s.className='star';
-    const sz=Math.random()*1.5+0.4;
-    s.style.cssText=`width:${sz}px;height:${sz}px;left:${Math.random()*100}%;top:${Math.random()*65}%;--d:${(Math.random()*4+2).toFixed(1)}s;animation-delay:${(Math.random()*5).toFixed(1)}s;`;
-    c.appendChild(s);
-  }
-}
-
-function openModule(mod){
-  const labels={
-    matin:'☀️ Rituel du Matin',
-    exercice:'✦ Exercice du jour — Bonhomme Allumette',
-    soir:'🌙 Rituel du Soir',
-    constellation:'✧ Ma Constellation (Horizon)'
-  };
-  alert(labels[mod] + '\n\n→ Navigation vers ce module');
-}
-
-generateStars();
-setGreeting();
-setCitation();
-renderPills();
-renderQuickCards();
-</script>
 </body>
 </html>
