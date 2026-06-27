@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Naéora — Mon ciel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;background:#0a0820;overflow:hidden;font-family:'Jost',sans-serif;}
+  .stage{position:relative;width:100%;height:100vh;overflow:hidden;display:flex;flex-direction:column;}
+  .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;}
+  .vignette{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%, rgba(0,0,0,0) 0%, rgba(8,6,24,0.25) 70%, rgba(8,6,24,0.55) 100%);z-index:1;}
+
+  .sky-stars{position:absolute;inset:0;z-index:2;pointer-events:none;}
+  .fixed-star{position:absolute;border-radius:50%;box-shadow:0 0 6px 1px currentColor;}
+  .fixed-star.subscriber{animation:twinkleStar 2.4s ease-in-out infinite alternate;}
+  @keyframes twinkleStar{0%{opacity:0.6;transform:scale(0.85);}100%{opacity:1;transform:scale(1.15);}}
+
+  .spacer-top{flex-shrink:0;height:6vh;}
+
+  .share-icon{
+    position:absolute;top:6vh;right:7vw;z-index:3;
+    width:30px;height:30px;border-radius:50%;
+    border:1px solid rgba(217,176,111,0.4);display:flex;align-items:center;justify-content:center;
+    color:#d9b06f;cursor:pointer;background:rgba(255,255,255,0.04);
+    opacity:0;pointer-events:none;transition:opacity 0.5s ease;
+  }
+  .share-icon.visible{opacity:1;pointer-events:auto;}
+
+  /* Modal de partage */
+  .modal-overlay{
+    position:fixed;inset:0;background:rgba(5,4,16,0.78);z-index:30;
+    display:none;align-items:center;justify-content:center;padding:6vw;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-card{
+    background:#171336;border:1px solid rgba(217,176,111,0.3);border-radius:20px;
+    padding:26px 22px;max-width:380px;width:100%;text-align:center;
+  }
+  .modal-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:#f7f2e9;margin-bottom:14px;}
+  .modal-caption{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;
+    color:#f3d9a8;background:rgba(217,176,111,0.08);border:1px solid rgba(217,176,111,0.25);
+    border-radius:12px;padding:14px;margin-bottom:18px;
+  }
+  .modal-btn{
+    width:100%;padding:13px;border-radius:25px;border:1px solid #d9b06f;
+    background:rgba(217,176,111,0.14);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.08em;
+    text-transform:uppercase;cursor:pointer;font-family:inherit;margin-bottom:16px;
+  }
+  .modal-options{text-align:left;font-size:0.82rem;color:#cfc9e6;}
+  .modal-options label{display:flex;align-items:flex-start;gap:8px;margin-bottom:10px;cursor:pointer;}
+  .modal-options input{margin-top:2px;accent-color:#d9b06f;}
+  .modal-close{margin-top:6px;font-size:0.78rem;color:#7d76a0;text-align:center;cursor:pointer;text-decoration:underline;}
+
+  .testbar{position:absolute;top:8px;left:8px;z-index:50;display:flex;gap:4px;flex-wrap:wrap;}
+  .testbar button{font-size:0.6rem;padding:4px 7px;border-radius:5px;border:1px solid rgba(217,176,111,0.4);background:rgba(0,0,0,0.5);color:#d9b06f;cursor:pointer;}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <div onclick="naeoraNav('accueil')" style="position:absolute;top:6vh;left:7vw;z-index:5;width:30px;height:30px;border-radius:50%;border:1px solid rgba(217,176,111,0.4);display:flex;align-items:center;justify-content:center;color:#d9b06f;cursor:pointer;background:rgba(255,255,255,0.04);">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#d9b06f" stroke-width="1.4"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <img class="bg" src="assets/ciel_silhouette.webp
+" alt="">
+    <div class="vignette"></div>
+    <div class="sky-stars" id="skyStars"></div>
+
+    <div class="testbar">
+      <button onclick="setStars(8)">8 étoiles</button>
+      <button onclick="setStars(49)">49 étoiles</button>
+      <button onclick="setStars(50)">50 étoiles</button>
+      <button onclick="setStars(127)">127 étoiles</button>
+    </div>
+
+    <div class="spacer-top"></div>
+
+    <div class="spacer"></div>
+
+    <div class="share-icon" id="shareIcon" onclick="openModal()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="M8.2 10.7l7.6-4.4M8.2 13.3l7.6 4.4"/></svg>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-card">
+      <div class="modal-title">Ton ciel est prêt à être partagé</div>
+      <div class="modal-caption">« Ce ciel, c'est tout ce que j'ai choisi de retenir. »</div>
+      <button class="modal-btn" onclick="closeModal()">Partager</button>
+      <div class="modal-options">
+        <label><input type="checkbox" id="remind100"> Me rappeler quand mon ciel aura 100 étoiles</label>
+        <label><input type="checkbox" id="neverShow"> Ne plus jamais me proposer de partager</label>
+      </div>
+      <div class="modal-close" onclick="closeModal()">Fermer</div>
+    </div>
+  </div>
+
+  <script>
+    const STAR_COLORS = ['#ffffff','#f6a6c1','#9ecbff','#9be8b0','#f6e08a','#c79bf2'];
+    let currentStars = 0;
+    let neverShowShare = false;
+
+    function setStars(n){
+      currentStars = n;
+      renderSky(n);
+      updateShareVisibility();
+    }
+
+    function renderSky(n){
+      const sky = document.getElementById('skyStars');
+      sky.innerHTML = '';
+      for(let i=0;i<n;i++){
+        const star = document.createElement('div');
+        const subscriber = Math.random() > 0.4; // simulation mixte pour la démo
+        star.className = 'fixed-star' + (subscriber ? ' subscriber' : '');
+        const size = 2.5 + Math.random()*3;
+        star.style.width = size+'px';
+        star.style.height = size+'px';
+        star.style.left = (10 + Math.random()*78) + '%';
+        star.style.top = (4 + Math.random()*44) + '%';
+        const color = subscriber ? STAR_COLORS[Math.floor(Math.random()*STAR_COLORS.length)] : '#ffffff';
+        star.style.background = color;
+        star.style.color = color;
+        sky.appendChild(star);
+      }
+    }
+
+    function updateShareVisibility(){
+      const icon = document.getElementById('shareIcon');
+      if(currentStars >= 50 && !neverShowShare){
+        icon.classList.add('visible');
+      } else {
+        icon.classList.remove('visible');
+      }
+    }
+
+    function openModal(){
+      document.getElementById('modalOverlay').classList.add('show');
+    }
+    function closeModal(){
+      const remind = document.getElementById('remind100').checked;
+      const never = document.getElementById('neverShow').checked;
+      if(never){ neverShowShare = true; updateShareVisibility(); }
+      document.getElementById('modalOverlay').classList.remove('show');
+    }
+
+    setStars(8);
+  </script>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
+</html>

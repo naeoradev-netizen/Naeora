@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Naéora — L'écho</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;background:#14123a;overflow:hidden;font-family:'Jost',sans-serif;}
+  .stage{position:relative;width:100%;height:100vh;overflow:hidden;}
+  .bg{position:absolute;top:0;left:0;width:100%;height:42%;object-fit:cover;object-position:top;}
+  .overlay{position:absolute;top:0;left:0;width:100%;height:42%;background:linear-gradient(to bottom, transparent 55%, #14123a 100%);}
+
+  .view{position:absolute;inset:0;z-index:3;display:none;flex-direction:column;}
+  .view.active{display:flex;}
+
+  /* ---------- Explication ---------- */
+  #view-explain{padding-top:46%;padding-left:8vw;padding-right:8vw;padding-bottom:5vh;align-items:center;text-align:center;overflow-y:auto;}
+  .ex-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.6rem;color:#f7f2e9;margin-bottom:6px;flex-shrink:0;}
+  .ex-divider{width:70px;height:1.5px;background:linear-gradient(to right, transparent, #d9b06f, transparent);margin:14px 0 18px;flex-shrink:0;}
+  .ex-text{font-size:0.9rem;line-height:1.65;color:#e3ddf0;max-width:380px;margin-bottom:12px;}
+  .ex-text b{color:#f3d9a8;font-weight:500;}
+  .ex-tip{
+    margin-top:6px;padding:13px 15px;border-radius:14px;
+    background:rgba(217,176,111,0.08);border:1px solid rgba(217,176,111,0.3);
+    font-size:0.82rem;line-height:1.5;color:#f3d9a8;max-width:380px;
+  }
+  .ex-btn{
+    margin-top:3.5vh;padding:14px 38px;border-radius:30px;border:1px solid #d9b06f;
+    background:rgba(217,176,111,0.1);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.12em;
+    text-transform:uppercase;cursor:pointer;font-family:inherit;flex-shrink:0;
+  }
+
+  /* ---------- Vue commune écran centré ---------- */
+  .centered-view{padding-top:46%;padding-left:8vw;padding-right:8vw;align-items:center;justify-content:flex-start;text-align:center;position:relative;height:100%;}
+  .help-icon{
+    position:absolute;top:6vh;right:7vw;width:30px;height:30px;border-radius:50%;
+    border:1px solid rgba(217,176,111,0.4);display:flex;align-items:center;justify-content:center;
+    color:#d9b06f;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;cursor:pointer;
+    background:rgba(255,255,255,0.04);z-index:4;
+  }
+
+  /* ---------- Étape situation ---------- */
+  .step-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:#f7f2e9;margin-top:6vh;margin-bottom:3vh;max-width:360px;}
+  .step-card{
+    width:100%;max-width:380px;border-radius:18px;
+    background:rgba(255,255,255,0.06);backdrop-filter:blur(6px);
+    border:1px solid rgba(217,176,111,0.3);padding:18px;margin-bottom:4vh;
+  }
+  .step-card textarea{
+    width:100%;min-height:90px;background:transparent;border:none;outline:none;resize:none;
+    color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;line-height:1.6;
+  }
+  .step-card textarea::placeholder{color:#7d76a0;font-size:0.92rem;}
+  .step-btn{
+    padding:13px 36px;border-radius:30px;border:1px solid #d9b06f;
+    background:rgba(217,176,111,0.12);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.1em;
+    text-transform:uppercase;cursor:pointer;font-family:inherit;
+  }
+
+  .step-card.folding{
+    animation: foldCard 1.1s ease-in forwards;
+  }
+  @keyframes foldCard{
+    0%{ transform:scaleY(1) scale(1); opacity:1; }
+    45%{ transform:scaleY(0.04) scale(1); opacity:1; }
+    100%{ transform:scaleY(0.04) scale(0.18) translateY(140px); opacity:0; }
+  }
+  .step-btn.fading{
+    transition:opacity 0.5s ease;
+    opacity:0;
+  }
+
+  /* ---------- Courrier reçu (avant ouverture) ---------- */
+  #view-mail{align-items:center;justify-content:flex-start;padding-top:50%;padding-left:8vw;padding-right:8vw;text-align:center;}
+  .mail-icon{
+    width:120px;height:90px;cursor:pointer;
+    animation:mailArrive 0.8s ease-out;
+  }
+  @keyframes mailArrive{
+    0%{ transform:scale(0.3) translateY(-40px); opacity:0; }
+    100%{ transform:scale(1) translateY(0); opacity:1; }
+  }
+  .mail-label{
+    margin-top:4vh;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:#f7f2e9;
+  }
+  .mail-sub{
+    margin-top:1.5vh;font-size:0.82rem;color:#a89fc4;max-width:280px;
+  }
+  #view-envelope{align-items:center;justify-content:center;padding:8vw;text-align:center;position:relative;}
+  .envelope-wrap{position:relative;width:220px;height:160px;cursor:pointer;}
+  .envelope-svg{width:100%;height:100%;}
+  .envelope-label{
+    margin-top:4vh;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:#cfc9e6;
+    opacity:0;transition:opacity 1.5s ease;max-width:320px;
+  }
+  .envelope-label.show{opacity:1;}
+
+  .letter-paper{
+    position:absolute;inset:14px 18px;
+    background:rgba(250,247,240,0.95);border-radius:6px;
+    transform-origin:top center;
+    transform:scaleY(0);
+    box-shadow:0 4px 14px rgba(0,0,0,0.25);
+  }
+  .letter-paper.unfolding{
+    transition:transform 1.2s ease-out;
+    transform:scaleY(1) translateY(-30px);
+  }
+  .letter-paper-text{
+    padding:14px 12px;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.78rem;
+    color:#2a2440;line-height:1.45;opacity:0;transition:opacity 1s ease;
+  }
+  .letter-paper-text.show{opacity:1;}
+
+  /* ---------- Lettre reçue (texte plein écran) ---------- */
+  #view-received{align-items:center;justify-content:flex-start;padding:46% 8vw 5vh;text-align:center;overflow-y:auto;}
+  .received-intro{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:#d9b06f;margin-bottom:2vh;}
+  .received-text{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;line-height:1.7;color:#f7f2e9;
+    max-width:380px;margin-bottom:4vh;
+    opacity:0;transition:opacity 2s ease;
+  }
+  .received-text.show{opacity:1;}
+  .received-closing{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.98rem;color:#cfc9e6;
+    max-width:340px;line-height:1.6;opacity:0;transition:opacity 2.2s ease;
+  }
+  .received-closing.show{opacity:1;}
+  .commit-btn{
+    margin-top:5vh;padding:15px 28px;border-radius:30px;border:1px solid #d9b06f;
+    background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:0.98rem;line-height:1.4;cursor:pointer;max-width:320px;
+    box-shadow:0 0 16px rgba(217,176,111,0.2);
+    opacity:0;transition:opacity 2s ease;
+  }
+  .commit-btn.show{opacity:1;}
+  .commit-btn.committed{
+    background:rgba(63,174,106,0.18);border-color:#3fae6a;color:#cdeedc;
+  }
+
+  .newself-title{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;color:#f7f2e9;
+    max-width:360px;margin-bottom:5vh;
+    opacity:0;transition:opacity 2.5s ease, transform 2.5s ease;transform:translateY(10px);
+  }
+  .newself-title.show{opacity:1;transform:translateY(0);}
+  .newself-validate{
+    padding:15px 36px;border-radius:30px;border:1px solid #d9b06f;
+    background:rgba(217,176,111,0.12);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.1em;
+    text-transform:uppercase;cursor:pointer;font-family:inherit;
+    opacity:0;transition:opacity 2.5s ease;
+  }
+  .newself-validate.show{opacity:1;}
+
+  .testbar{position:absolute;top:8px;left:8px;z-index:50;display:flex;gap:4px;flex-wrap:wrap;}
+  .testbar button{font-size:0.6rem;padding:4px 7px;border-radius:5px;border:1px solid rgba(217,176,111,0.4);background:rgba(0,0,0,0.5);color:#d9b06f;cursor:pointer;}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <img class="bg" src="assets/echo.webp" alt="">
+    <div class="overlay"></div>
+
+    <div class="testbar">
+      <button onclick="showView('explain')">Explication</button>
+      <button onclick="restart()">Écriture</button>
+    </div>
+
+    <!-- VUE 1 : EXPLICATION -->
+    <div class="view" id="view-explain">
+      <div class="ex-title">L'écho</div>
+      <div class="ex-divider"></div>
+      <div class="ex-text">On trouve souvent les mots les plus doux pour les personnes qu'on aime — mais rarement pour soi-même. On se parle parfois avec une dureté qu'on n'oserait jamais avoir envers un ami.</div>
+      <div class="ex-text">Dans cet exercice, tu vas écrire à la personne que tu aimes le plus, comme si elle vivait exactement ta situation. <b>Laisse ensuite la suite te surprendre.</b></div>
+      <div class="ex-tip">💡 Écris avec sincérité, comme si cette personne était vraiment devant toi.</div>
+      <button class="ex-btn" onclick="restart()">J'ai compris</button>
+    </div>
+
+    <!-- VUE 2 : ÉCRITURE -->
+    <div class="view centered-view" id="view-write">
+      <div class="help-icon" onclick="showView('explain')">?</div>
+      <div class="step-title">Imagine que ta meilleure amie vit exactement ce que tu vis. Qu'est-ce que tu lui dis ?</div>
+      <div class="step-card" id="writeCard">
+        <textarea id="letterInput" placeholder="Écris-lui avec toute la douceur que tu lui offrirais..."></textarea>
+      </div>
+      <button class="step-btn" id="sealBtn" onclick="sealEnvelope()">Laisser partir ces mots</button>
+    </div>
+
+    <!-- VUE 4 : COURRIER REÇU -->
+    <div class="view" id="view-mail">
+      <svg class="mail-icon" id="mailIcon" viewBox="0 0 220 160" onclick="openEnvelope()">
+        <rect x="4" y="4" width="212" height="152" rx="8" fill="#1c1a4a" stroke="#d9b06f" stroke-width="1.3"/>
+        <path d="M4 12 L110 95 L216 12" fill="none" stroke="#d9b06f" stroke-width="1.3"/>
+        <circle cx="110" cy="60" r="13" fill="#d9b06f"/>
+      </svg>
+      <div class="mail-label">Tu as reçu un courrier.</div>
+      <div class="mail-sub">Touche l'enveloppe pour l'ouvrir.</div>
+    </div>
+
+    <!-- VUE 5 : LETTRE REÇUE -->
+    <div class="view" id="view-received">
+      <div class="received-intro">Quelqu'un qui t'aime profondément te dit :</div>
+      <div class="received-text" id="receivedText"></div>
+      <div class="received-closing" id="receivedClosing">Si tu es capable de trouver ces mots pour la personne que tu aimes le plus, pourquoi tu t'infliges des insultes que tu ne dirais même pas à ton pire ennemi ?<br><br>Tu as le droit d'être ton propre meilleur ami.</div>
+      <button class="commit-btn" id="commitBtn" onclick="commitToSelf()">Je m'engage à être plus douce envers moi-même</button>
+    </div>
+
+    <!-- VUE 6 : NOUVEAU MOI -->
+    <div class="view" id="view-newself" style="align-items:center;justify-content:center;padding:8vw;text-align:center;">
+      <div class="newself-title" id="newselfTitle">Mon nouveau moi commence maintenant.</div>
+      <button class="newself-validate" id="newselfValidate" onclick="finishExercise()">Je valide mon exercice</button>
+    </div>
+  </div>
+
+  <script>
+    const USER_FIRST_NAME = "Floriane"; // viendra du profil utilisateur dans la vraie app
+
+    function showView(name){
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + name).classList.add('active');
+    }
+
+    function restart(){
+      document.getElementById('letterInput').value = '';
+      const card = document.getElementById('writeCard');
+      card.classList.remove('folding');
+      card.style.opacity = '1';
+      card.style.transform = 'none';
+      document.getElementById('sealBtn').classList.remove('fading');
+      const commitBtn = document.getElementById('commitBtn');
+      commitBtn.classList.remove('show', 'committed');
+      commitBtn.disabled = false;
+      commitBtn.style.cursor = 'pointer';
+      commitBtn.style.opacity = '';
+      commitBtn.style.transition = '';
+      commitBtn.textContent = "Je m'engage à être plus douce envers moi-même";
+      document.getElementById('receivedText').style.opacity = '';
+      document.getElementById('receivedText').style.transition = '';
+      document.getElementById('receivedClosing').style.opacity = '';
+      document.getElementById('receivedClosing').style.transition = '';
+      showView('write');
+    }
+
+    function sealEnvelope(){
+      const text = document.getElementById('letterInput').value.trim();
+      if(!text){ document.getElementById('letterInput').focus(); return; }
+
+      const card = document.getElementById('writeCard');
+      const btn = document.getElementById('sealBtn');
+      btn.classList.add('fading');
+      card.classList.add('folding');
+
+      setTimeout(() => {
+        showView('mail');
+      }, 2400);
+    }
+
+    function openEnvelope(){
+      const text = document.getElementById('letterInput').value.trim();
+      const icon = document.getElementById('mailIcon');
+      icon.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+      icon.style.transform = 'scale(0.85)';
+      icon.style.opacity = '0.4';
+
+      setTimeout(() => {
+        showView('received');
+        const textEl = document.getElementById('receivedText');
+        const closingEl = document.getElementById('receivedClosing');
+        textEl.innerHTML = 'Pour ' + USER_FIRST_NAME + ',<br><br>' + text;
+        textEl.classList.remove('show');
+        closingEl.classList.remove('show');
+        setTimeout(() => textEl.classList.add('show'), 200);
+        setTimeout(() => closingEl.classList.add('show'), 2800);
+        setTimeout(() => document.getElementById('commitBtn').classList.add('show'), 5200);
+      }, 500);
+    }
+
+    function commitToSelf(){
+      const textEl = document.getElementById('receivedText');
+      const closingEl = document.getElementById('receivedClosing');
+      const btn = document.getElementById('commitBtn');
+
+      textEl.style.transition = 'opacity 1.8s ease';
+      closingEl.style.transition = 'opacity 1.8s ease';
+      btn.style.transition = 'opacity 1.8s ease';
+      textEl.style.opacity = '0';
+      closingEl.style.opacity = '0';
+      btn.style.opacity = '0';
+
+      setTimeout(() => {
+        showView('newself');
+        const title = document.getElementById('newselfTitle');
+        const validateBtn = document.getElementById('newselfValidate');
+        title.classList.remove('show');
+        validateBtn.classList.remove('show');
+        setTimeout(() => title.classList.add('show'), 100);
+        setTimeout(() => validateBtn.classList.add('show'), 2600);
+      }, 1900);
+    }
+
+    function finishExercise(){
+      naeoraNav('accueil');
+    }
+
+    showView('explain');
+  </script>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
+</html>

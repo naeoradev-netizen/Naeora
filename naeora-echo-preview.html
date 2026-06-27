@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Naéora — La source</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;background:#14123a;overflow:hidden;font-family:'Jost',sans-serif;}
+  .stage{position:relative;width:100%;height:100vh;overflow:hidden;}
+  .bg{position:absolute;top:0;left:0;width:100%;height:42%;object-fit:cover;object-position:top;}
+  .overlay{position:absolute;top:0;left:0;width:100%;height:42%;background:linear-gradient(to bottom, transparent 55%, #14123a 100%);}
+
+  .view{position:absolute;inset:0;z-index:3;display:none;flex-direction:column;}
+  .view.active{display:flex;}
+
+  #view-explain{padding-top:46%;padding-left:8vw;padding-right:8vw;padding-bottom:5vh;align-items:center;text-align:center;overflow-y:auto;}
+  .ex-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.6rem;color:#f7f2e9;margin-bottom:6px;flex-shrink:0;}
+  .ex-divider{width:70px;height:1.5px;background:linear-gradient(to right, transparent, #d9b06f, transparent);margin:14px 0 18px;flex-shrink:0;}
+  .ex-text{font-size:0.9rem;line-height:1.65;color:#e3ddf0;max-width:380px;margin-bottom:12px;}
+  .ex-text b{color:#f3d9a8;font-weight:500;}
+  .ex-tip{
+    margin-top:6px;padding:13px 15px;border-radius:14px;
+    background:rgba(217,176,111,0.08);border:1px solid rgba(217,176,111,0.3);
+    font-size:0.82rem;line-height:1.5;color:#f3d9a8;max-width:380px;
+  }
+  .ex-tip.kit-tip{
+    background:rgba(217,176,111,0.05);border-style:dashed;color:#cfc9e6;
+  }
+  .ex-btn{
+    margin-top:3.5vh;padding:14px 38px;border-radius:30px;border:1px solid #d9b06f;
+    background:rgba(217,176,111,0.1);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.12em;
+    text-transform:uppercase;cursor:pointer;font-family:inherit;flex-shrink:0;
+  }
+
+  #view-active{padding-top:46%;padding-left:8vw;padding-right:8vw;align-items:center;justify-content:flex-start;text-align:center;position:relative;height:100%;}
+  .help-icon{
+    position:absolute;top:6vh;right:7vw;width:30px;height:30px;border-radius:50%;
+    border:1px solid rgba(217,176,111,0.4);display:flex;align-items:center;justify-content:center;
+    color:#d9b06f;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;cursor:pointer;
+    background:rgba(255,255,255,0.04);z-index:4;
+  }
+
+  .guide-text{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+    font-size:1.3rem;line-height:1.6;color:#f7f2e9;text-shadow:0 2px 14px rgba(0,0,0,0.4);
+    max-width:380px;margin-top:8vh;
+    opacity:0;transition:opacity 1.8s ease, transform 1.8s ease;transform:translateY(8px);
+  }
+  .guide-text.show{opacity:1;transform:translateY(0);}
+
+  .guide-example{
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:0.88rem;line-height:1.5;color:#cfc9e6;
+    max-width:340px;margin-top:2.5vh;
+    opacity:0;transition:opacity 1.8s ease;
+  }
+  .guide-example.show{opacity:1;}
+
+  .finish-btn{
+    margin-top:4vh;padding:15px 36px;border-radius:30px;border:1px solid #d9b06f;
+    background:rgba(217,176,111,0.12);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.1em;
+    text-transform:uppercase;cursor:pointer;font-family:inherit;
+    opacity:0;transition:opacity 2s ease;
+  }
+  .finish-btn.show{opacity:1;}
+
+  .particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+  .bubble{position:absolute;border-radius:50%;background:radial-gradient(circle, rgba(247,242,233,0.95), rgba(217,176,111,0.4));opacity:0;}
+  @keyframes floatUp{0%{transform:translateY(0) scale(0.5);opacity:0;}15%{opacity:1;}100%{transform:translateY(-260px) scale(1.1);opacity:0;}}
+
+  .hold-wrap.collapsing{animation: collapseBtn 0.6s ease-in forwards;}
+  @keyframes collapseBtn{0%{transform:scale(1);opacity:1;}70%{transform:scale(0.15);opacity:0.8;}100%{transform:scale(0);opacity:0;}}
+
+  #view-done{align-items:center;justify-content:center;padding:8vw;text-align:center;}
+  .done-msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:#f7f2e9;margin-bottom:2vh;max-width:380px;opacity:0;transition:opacity 2.2s ease, transform 2.2s ease;transform:translateY(10px);}
+  .done-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:#cfc9e6;max-width:330px;line-height:1.6;opacity:0;transition:opacity 2.2s ease;transition-delay:0.6s;}
+  .done-kit{
+    margin-top:3vh;padding:14px 16px;border-radius:14px;max-width:330px;
+    background:rgba(217,176,111,0.08);border:1px solid rgba(217,176,111,0.25);
+    font-size:0.84rem;line-height:1.55;color:#f3d9a8;
+    opacity:0;transition:opacity 2.2s ease;transition-delay:1.3s;display:none;
+  }
+  #view-done.show-content .done-msg{opacity:1;transform:translateY(0);}
+  #view-done.show-content .done-sub{opacity:1;}
+  .past-return-btn-source{
+    margin-top:5vh;padding:15px 34px;border-radius:30px;border:1px solid #d9b06f;
+    background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:'Cormorant Garamond',serif;
+    font-style:italic;font-size:1rem;cursor:pointer;
+    box-shadow:0 0 16px rgba(217,176,111,0.2);
+    opacity:0;transition:opacity 2.2s ease;transition-delay:1.4s;
+  }
+  #view-done.show-content .past-return-btn-source{opacity:1;}
+  #view-done.show-content .done-kit{opacity:1;}
+
+  .testbar{position:absolute;top:8px;left:8px;z-index:50;display:flex;gap:4px;}
+  .testbar button{font-size:0.6rem;padding:4px 7px;border-radius:5px;border:1px solid rgba(217,176,111,0.4);background:rgba(0,0,0,0.5);color:#d9b06f;cursor:pointer;}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <img class="bg" src="assets/coherence.webp" alt="">
+    <div class="overlay"></div>
+
+    <div class="testbar">
+      <button onclick="showView('explain')">Explication</button>
+      <button onclick="startExercise()">Exercice</button>
+      <button onclick="toggleKit()">Basculer coffret</button>
+    </div>
+
+    <!-- VUE 1 : EXPLICATION -->
+    <div class="view" id="view-explain">
+      <div class="ex-title">La source</div>
+      <div class="ex-divider"></div>
+      <div class="ex-text">La loi de l'attraction n'est pas de la magie, c'est de la mise au point&nbsp;: en focalisant tes pensées sur tes objectifs, tu forces ton cerveau à repérer les opportunités concrètes que tu aurais ignorées autrement.</div>
+      <div class="ex-text">Avant de commencer, munis-toi d'un papier (ou d'une page de ton carnet) et d'un verre d'eau transparent (ou du flacon présent dans le sac Naéora). Tu as juste besoin de te laisser guider, étape par étape.</div>
+      <div class="ex-tip kit-tip">🌿 Garder l'eau sur toi toute la journée, grâce au flacon, permet de garder ton intention connectée à ton esprit — un rappel permanent pour rester focalisée sur ton objectif et amplifier les effets.</div>
+      <button class="ex-btn" onclick="startExercise()">J'ai compris</button>
+    </div>
+
+    <!-- VUE 2 : EXERCICE ACTIF -->
+    <div class="view" id="view-active">
+      <div class="help-icon" onclick="showView('explain')">?</div>
+
+      <div class="guide-text" id="guideText"></div>
+      <div class="guide-example" id="guideExample"></div>
+      <button class="finish-btn" id="continueBtn" onclick="continueGuide()" style="border-color:rgba(217,176,111,0.6);">Continuer</button>
+      <button class="finish-btn" id="finishBtn" onclick="finishGuide()">J'ai terminé</button>
+    </div>
+
+    <!-- VUE 3 : TERMINÉ -->
+    <div class="view" id="view-done">
+      <div class="done-msg">Ton intention est en cours d'infusion.</div>
+      <div class="done-sub">Elle fait désormais partie de toi.</div>
+      <button class="past-return-btn-source" id="sourceReturnBtn" onclick="returnHomeSource()">Merci</button>
+      <div class="done-kit" id="doneKit">🌿 Garde ton flacon près de toi aujourd'hui — porte-le, pose-le sur ton bureau, glisse-le dans ta poche. Il continue de s'imprégner de ton énergie tout au long de la journée.</div>
+    </div>
+  </div>
+
+  <script>
+    let isKitOwner = false;
+
+    function toggleKit(){
+      isKitOwner = !isKitOwner;
+      document.getElementById('doneKit').style.display = isKitOwner ? 'block' : 'none';
+    }
+
+    const GUIDE_STEPS = [
+      { text: "Pour commencer, rince ton verre — ou ton flacon — à l'eau fraîche.", pause: true },
+      { text: "Sur ton papier, écris ton intention au présent (comme si elle était déjà réalisée).", example: "Ex : « Je me sens sereine et confiante. »", pause: true },
+      { text: "Pose ton verre d'eau directement sur ce papier.", example: "🌿 Si tu as ton flacon, entoure-le avec le papier — pour une eau plus concentrée en intention.", pause: true },
+      { text: "Frotte tes mains l'une contre l'autre, pour créer de la chaleur.", duration: 4500 },
+      { text: "Entoure ton verre avec tes mains sans le toucher, ferme les yeux, et visualise ton objectif réalisé.", pause: true },
+      { text: "Quand tu es prête, savoure lentement la première gorgée.", example: "Pour plus de puissance, garde ton flacon près de toi toute la journée, et bois-le entièrement ce soir.", duration: 6500 }
+    ];
+
+    function showView(name){
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + name).classList.add('active');
+      if(name === 'active'){ startGuide(); }
+    }
+
+    let guideTimer = null;
+
+    function startGuide(){
+      clearTimeout(guideTimer);
+      document.getElementById('finishBtn').classList.remove('show');
+      document.getElementById('continueBtn').classList.remove('show');
+      runStep(0);
+    }
+
+    let pausedStepIndex = null;
+
+    function runStep(index){
+      const textEl = document.getElementById('guideText');
+      const exampleEl = document.getElementById('guideExample');
+      document.getElementById('continueBtn').classList.remove('show');
+
+      if(index >= GUIDE_STEPS.length){
+        document.getElementById('finishBtn').classList.add('show');
+        return;
+      }
+
+      textEl.classList.remove('show');
+      exampleEl.classList.remove('show');
+      guideTimer = setTimeout(() => {
+        const step = GUIDE_STEPS[index];
+        textEl.innerHTML = step.text;
+        textEl.classList.add('show');
+        if(step.example){
+          exampleEl.innerHTML = step.example;
+          setTimeout(() => exampleEl.classList.add('show'), 600);
+        } else {
+          exampleEl.innerHTML = '';
+        }
+
+        if(step.pause){
+          pausedStepIndex = index;
+          setTimeout(() => document.getElementById('continueBtn').classList.add('show'), 1200);
+        } else {
+          guideTimer = setTimeout(() => runStep(index + 1), step.duration);
+        }
+      }, 900);
+    }
+
+    function continueGuide(){
+      document.getElementById('continueBtn').classList.remove('show');
+      runStep(pausedStepIndex + 1);
+    }
+
+    function finishGuide(){
+      showView('done');
+      const v = document.getElementById('view-done');
+      v.classList.remove('show-content');
+      setTimeout(() => v.classList.add('show-content'), 50);
+    }
+
+    function startExercise(){
+      showView('active');
+    }
+
+    function returnHomeSource(){
+      naeoraNav('accueil');
+    }
+
+    showView('explain');
+  </script>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
+</html>

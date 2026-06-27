@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Naéora — Le matin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;background:#0a0820;overflow:hidden;font-family:'Jost',sans-serif;}
+  .stage{position:relative;width:100%;height:100vh;overflow:hidden;}
+  .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;}
+  .vignette{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%, rgba(0,0,0,0) 0%, rgba(8,6,24,0.45) 65%, rgba(8,6,24,0.78) 100%);z-index:1;}
+
+  .view{position:absolute;inset:0;z-index:3;display:none;flex-direction:column;}
+  .view.active{display:flex;}
+
+  #view-explain{padding:7vh 8vw 5vh;align-items:center;text-align:center;overflow-y:auto;}
+  .ex-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.6rem;color:#f7f2e9;margin-bottom:6px;flex-shrink:0;}
+  .ex-divider{width:70px;height:1.5px;background:linear-gradient(to right, transparent, #d9b06f, transparent);margin:14px 0 20px;flex-shrink:0;}
+  .ex-text{font-size:0.92rem;line-height:1.7;color:#e3ddf0;max-width:380px;margin-bottom:14px;}
+  .ex-text b{color:#f3d9a8;font-weight:500;}
+  .ex-tip{
+    margin-top:8px;padding:14px 16px;border-radius:14px;
+    background:rgba(217,176,111,0.08);border:1px solid rgba(217,176,111,0.3);
+    font-size:0.84rem;line-height:1.55;color:#f3d9a8;max-width:380px;
+  }
+  .ex-btn{
+    margin-top:4vh;padding:14px 38px;border-radius:30px;border:1px solid #d9b06f;
+    background:rgba(217,176,111,0.1);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.12em;
+    text-transform:uppercase;cursor:pointer;font-family:inherit;flex-shrink:0;
+  }
+
+  #view-active{align-items:center;justify-content:flex-end;padding:8vw 8vw 14vh;text-align:center;position:relative;}
+  .help-icon{
+    position:absolute;top:6vh;right:7vw;width:30px;height:30px;border-radius:50%;
+    border:1px solid rgba(217,176,111,0.4);display:flex;align-items:center;justify-content:center;
+    color:#d9b06f;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;cursor:pointer;
+    background:rgba(255,255,255,0.04);
+  }
+  .phrase{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+    font-size:1.7rem;line-height:1.5;color:#f7f2e9;text-shadow:0 2px 14px rgba(0,0,0,0.5);
+    margin-bottom:11vh;max-width:420px;
+  }
+  .hold-wrap{position:relative;width:130px;height:130px;}
+  .hold-wrap::before{
+    content:'';position:absolute;inset:8px;border-radius:50%;
+    background:radial-gradient(circle, rgba(217,176,111,0.22) 0%, rgba(217,176,111,0.08) 60%, transparent 100%);
+  }
+  .hold-svg{width:100%;height:100%;transform:rotate(-90deg);}
+  .hold-track{fill:none;stroke:rgba(217,176,111,0.2);stroke-width:4;}
+  .hold-fill{fill:none;stroke:#d9b06f;stroke-width:4;stroke-linecap:round;stroke-dasharray:377;stroke-dashoffset:377;transition:stroke-dashoffset 0.05s linear;}
+  .hold-center{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    flex-direction:column;color:#f7f2e9;
+  }
+  .hold-center .lbl{font-size:0.72rem;letter-spacing:0.08em;color:#cfc9e6;text-transform:uppercase;}
+  .hold-center .timer{font-family:'Cormorant Garamond',serif;font-size:1.6rem;margin-top:4px;}
+  .hold-instruction{margin-top:5vh;font-size:0.86rem;color:#a89fc4;max-width:300px;}
+  .encourage-msg{
+    margin-top:3vh;font-size:0.88rem;color:#f3d9a8;max-width:300px;
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    opacity:0;transition:opacity 0.3s ease;min-height:1.4em;
+  }
+  .encourage-msg.show{opacity:1;}
+
+  .hold-wrap.collapsing{
+    animation: collapseBtn 0.6s ease-in forwards;
+  }
+  @keyframes collapseBtn{
+    0%{ transform:scale(1); opacity:1; }
+    70%{ transform:scale(0.15); opacity:0.8; }
+    100%{ transform:scale(0); opacity:0; }
+  }
+
+  .particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+  .bubble{
+    position:absolute;border-radius:50%;
+    background:radial-gradient(circle, rgba(247,242,233,0.95), rgba(217,176,111,0.4));
+    opacity:0;
+  }
+
+  #view-done{align-items:center;justify-content:center;padding:8vw;text-align:center;}
+  .done-phrase{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+    font-size:1.5rem;line-height:1.5;color:#f7f2e9;margin-bottom:3vh;max-width:400px;
+  }
+  .done-msg{font-size:0.88rem;color:#cfc9e6;max-width:320px;line-height:1.6;}
+
+  .testbar{position:absolute;top:8px;left:8px;z-index:50;display:flex;gap:4px;}
+  .testbar button{font-size:0.6rem;padding:4px 7px;border-radius:5px;border:1px solid rgba(217,176,111,0.4);background:rgba(0,0,0,0.4);color:#d9b06f;cursor:pointer;}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <img class="bg" src="assets/aube.webp" alt="">
+    <div class="vignette"></div>
+
+    <div class="testbar">
+      <button onclick="showView('explain')">Explication</button>
+      <button onclick="showView('active')">Exercice</button>
+      <button onclick="showView('done')">Infusion</button>
+    </div>
+
+    <div class="view" id="view-explain">
+      <div class="ex-title">L'ouverture des possibles</div>
+      <div class="ex-divider"></div>
+      <div class="ex-text">Ton cerveau adore ce qu'il connaît déjà. Face à une situation, il rejoue presque toujours les <b>mêmes pensées, les mêmes réactions, les mêmes conclusions</b> — par habitude, pas par choix.</div>
+      <div class="ex-text">Répéter une phrase d'ouverture, à voix haute ou en pleine conscience, c'est une façon d'<b>interrompre cette boucle automatique</b>. Pendant ces quelques secondes, tu ne cherches pas à analyser, comprendre ou juger ta phrase — tu la laisses simplement exister.</div>
+      <div class="ex-text">Cette absence d'analyse <b>désarme le mental</b>, celui qui veut toujours tout contrôler et tout expliquer. Et dans cet espace qu'il libère, quelque chose de nouveau peut enfin trouver sa place.</div>
+      <div class="ex-tip">💡 Pour plus d'intensité, récite ta phrase devant un miroir, en te regardant droit dans les yeux.</div>
+      <button class="ex-btn" onclick="showView('active')">J'ai compris</button>
+    </div>
+
+    <div class="view" id="view-active">
+      <div class="help-icon" onclick="showView('explain')">?</div>
+      <div class="phrase" id="phrase-text">« Je suis pleinement ouverte à tout ce que la vie a de meilleur pour moi. »</div>
+
+      <div class="hold-wrap" id="holdBtn">
+        <svg class="hold-svg" viewBox="0 0 130 130">
+          <circle class="hold-track" cx="65" cy="65" r="60"/>
+          <circle class="hold-fill" id="holdFill" cx="65" cy="65" r="60"/>
+        </svg>
+        <div class="hold-center">
+          <div class="lbl">Maintiens</div>
+          <div class="timer" id="holdTimer">8s</div>
+        </div>
+      </div>
+      <div class="particles" id="particles"></div>
+
+      <div class="hold-instruction">Maintiens appuyé pendant 8 secondes en prononçant ta phrase, à voix haute ou en conscience.</div>
+      <div class="encourage-msg" id="encourageMsg"></div>
+    </div>
+
+    <div class="view" id="view-done">
+      <div class="done-phrase">« Je suis pleinement ouverte à tout ce que la vie a de meilleur pour moi. »</div>
+      <div class="done-msg">Ta phrase infuse déjà en toi pour aujourd'hui.<br>Tu peux revenir la relire et la répéter quand tu le souhaites.</div>
+      <button onclick="naeoraNav('accueil')" style="margin-top:5vh;padding:13px 30px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.92rem;cursor:pointer;">Retour à l'accueil</button>
+    </div>
+  </div>
+
+  <script>
+    function showView(name){
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + name).classList.add('active');
+      if(name === 'active'){ resetHold(); }
+    }
+
+    const HOLD_DURATION = 8000;
+    let holdInterval = null, holdStart = null, isHolding = false;
+    const fillCircle = document.getElementById('holdFill');
+    const timerLabel = document.getElementById('holdTimer');
+    const encourageMsg = document.getElementById('encourageMsg');
+    const CIRCUM = 2 * Math.PI * 60;
+
+    const ENCOURAGEMENTS = [
+      "Ne lâche pas. Prends une inspiration, et recommence.",
+      "C'est normal de vouloir lâcher. Respire, et reviens à ta phrase.",
+      "Encore un peu. Reste avec toi, et continue."
+    ];
+
+    function resetHold(){
+      clearInterval(holdInterval);
+      isHolding = false;
+      fillCircle.style.strokeDashoffset = CIRCUM;
+      timerLabel.textContent = '8s';
+      document.getElementById('holdBtn').classList.remove('collapsing');
+      encourageMsg.classList.remove('show');
+    }
+
+    function startHold(e){
+      e.preventDefault();
+      if(isHolding) return;
+      isHolding = true;
+      encourageMsg.classList.remove('show');
+      holdStart = Date.now();
+      holdInterval = setInterval(() => {
+        if(!isHolding) return;
+        const elapsed = Date.now() - holdStart;
+        const progress = Math.min(elapsed / HOLD_DURATION, 1);
+        fillCircle.style.strokeDashoffset = CIRCUM * (1 - progress);
+        const remaining = Math.ceil((HOLD_DURATION - elapsed) / 1000);
+        timerLabel.textContent = remaining > 0 ? remaining + 's' : '✓';
+        if(progress >= 1){
+          clearInterval(holdInterval);
+          isHolding = false;
+          document.getElementById('holdBtn').classList.add('collapsing');
+          burstParticles();
+          setTimeout(() => showView('done'), 1600);
+        }
+      }, 30);
+    }
+
+    function cancelHold(){
+      if(!isHolding) return;
+      const elapsed = Date.now() - holdStart;
+      isHolding = false;
+      clearInterval(holdInterval);
+      fillCircle.style.strokeDashoffset = CIRCUM;
+      timerLabel.textContent = '8s';
+      if(elapsed < HOLD_DURATION){
+        const msg = ENCOURAGEMENTS[Math.floor(Math.random()*ENCOURAGEMENTS.length)];
+        encourageMsg.textContent = msg;
+        encourageMsg.classList.add('show');
+      }
+    }
+
+    const holdBtn = document.getElementById('holdBtn');
+    holdBtn.style.touchAction = 'none';
+    holdBtn.addEventListener('pointerdown', startHold);
+    holdBtn.addEventListener('pointerup', cancelHold);
+    holdBtn.addEventListener('pointercancel', cancelHold);
+    holdBtn.addEventListener('pointerleave', cancelHold);
+
+    function burstParticles(){
+      const container = document.getElementById('particles');
+      for(let i=0;i<36;i++){
+        const b = document.createElement('div');
+        b.className = 'bubble';
+        const size = 4 + Math.random()*10;
+        b.style.width = size+'px';
+        b.style.height = size+'px';
+        b.style.left = (Math.random()*100) + '%';
+        b.style.top = (40 + Math.random()*50) + '%';
+        b.style.animation = 'floatUp ' + (1.8 + Math.random()*1.6) + 's ease-out forwards';
+        b.style.animationDelay = (Math.random()*0.7)+'s';
+        container.appendChild(b);
+        setTimeout(() => b.remove(), 4000);
+      }
+    }
+
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = '@keyframes floatUp { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(-260px) scale(1.1); opacity: 0; } }';
+    document.head.appendChild(styleSheet);
+
+    showView('explain');
+  </script>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
+</html>

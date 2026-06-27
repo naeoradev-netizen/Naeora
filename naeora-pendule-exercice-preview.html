@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Naéora — Le pendule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;background:#14123a;overflow:hidden;font-family:'Jost',sans-serif;}
+  .stage{position:relative;width:100%;height:100vh;overflow:hidden;}
+  .bg{position:absolute;top:0;left:0;width:100%;height:42%;object-fit:cover;object-position:top;}
+  .overlay{position:absolute;top:0;left:0;width:100%;height:42%;background:linear-gradient(to bottom, transparent 55%, #14123a 100%);}
+
+  .view{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;}
+
+  #view-explain{padding-top:46%;padding-left:8vw;padding-right:8vw;padding-bottom:5vh;align-items:center;text-align:center;overflow-y:auto;}
+  .ex-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.6rem;color:#f7f2e9;margin-bottom:6px;flex-shrink:0;}
+  .ex-divider{width:70px;height:1.5px;background:linear-gradient(to right, transparent, #d9b06f, transparent);margin:14px 0 18px;flex-shrink:0;}
+  .ex-text{font-size:0.9rem;line-height:1.65;color:#e3ddf0;max-width:380px;margin-bottom:12px;}
+  .ex-text b{color:#f3d9a8;font-weight:500;}
+
+  .ex-tip{
+    margin-top:6px;padding:13px 15px;border-radius:14px;
+    background:rgba(217,176,111,0.08);border:1px solid rgba(217,176,111,0.3);
+    font-size:0.82rem;line-height:1.5;color:#f3d9a8;max-width:380px;
+  }
+  .idea-tip{
+    margin-top:14px;padding:13px 15px;border-radius:14px;
+    background:rgba(217,176,111,0.05);border:1px dashed rgba(217,176,111,0.35);
+    font-size:0.82rem;line-height:1.5;color:#cfc9e6;max-width:380px;
+    text-align:left;
+  }
+  .idea-tip .idea-label{
+    display:block;font-family:'Cormorant Garamond',serif;font-style:italic;color:#d9b06f;
+    margin-bottom:5px;font-size:0.85rem;
+  }
+
+  .ex-btn{
+    margin-top:3.5vh;padding:14px 38px;border-radius:30px;border:1px solid #d9b06f;
+    background:rgba(217,176,111,0.1);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.12em;
+    text-transform:uppercase;cursor:pointer;font-family:inherit;flex-shrink:0;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <img class="bg" src="assets/nuit.webp" alt="">
+    <div class="overlay"></div>
+
+    <div class="view" id="view-explain">
+      <div class="ex-title">Le pendule</div>
+      <div class="ex-divider"></div>
+
+      <div class="ex-text">Le pendule est un outil de précision qui ne possède aucun pouvoir propre&nbsp;: il sert de prolongement à ton corps.</div>
+
+      <div class="ex-text">Lorsque tu poses une question, ton cerveau traite l'information de manière inconsciente. Cela génère des micro-mouvements musculaires imperceptibles.</div>
+
+      <div class="ex-text">Le pendule amplifie ces signaux infimes pour les rendre visibles à l'œil nu. Il agit comme une antenne capable de capter des informations que ton esprit conscient ne sait pas encore formuler. <b>C'est ton corps qui répond.</b></div>
+
+      <div class="ex-tip">💡 Pour cet exercice, prends le pendule de ton coffret pour plus de précision et de fluidité — sinon, accroche une de tes bagues à un fil.</div>
+
+      <div class="idea-tip">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#d9b06f" stroke-width="1.3" style="margin-bottom:7px;display:block;">
+          <path d="M12 21c4-1.5 6-4.5 6-8 0-3-1.5-5-3-7 0 2.5-1.5 4-3 4-1.8 0-2.5-1.8-2.5-3.5-2 2-4.5 5-4.5 8.5 0 3.5 2.5 5.5 4 6"/>
+          <path d="M12 21c1.5-0.8 2.3-2 2.3-3.5 0-1.2-0.6-2-1.3-2.8 0 1-0.6 1.8-1.3 1.8s-1.2-0.6-1.2-1.5c-0.8 1-1.5 2.2-1.5 3.5 0 1.3 0.8 2.1 1.5 2.5"/>
+        </svg>
+        Passe ton pendule dans la fumée d'un bâton de Palo Santo allumé, pour le purifier et libérer les énergies accumulées.
+      </div>
+
+      <button class="ex-btn" onclick="pendulumCommencer()">Commencer</button>
+      <script>
+        function pendulumCommencer(){
+          if(localStorage.getItem('naeora_pendule_tuto_fait')){
+            naeoraNav('pendule_exercice');
+          } else {
+            localStorage.setItem('naeora_pendule_tuto_fait', '1');
+            naeoraNav('pendule_tuto');
+          }
+        }
+      </script>
+    </div>
+  </div>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
+</html>

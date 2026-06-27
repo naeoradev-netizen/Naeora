@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Naéora — Tuto pendule (1ère fois)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;background:#14123a;overflow:hidden;font-family:'Jost',sans-serif;}
+  .stage{position:relative;width:100%;height:100vh;overflow:hidden;}
+  .bg{position:absolute;top:0;left:0;width:100%;height:42%;object-fit:cover;object-position:top;}
+  .overlay{position:absolute;top:0;left:0;width:100%;height:42%;background:linear-gradient(to bottom, transparent 55%, #14123a 100%);}
+
+  .view{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;}
+
+  #view-guide{padding-top:46%;padding-left:8vw;padding-right:8vw;align-items:center;justify-content:flex-start;text-align:center;height:100%;}
+
+  .guide-text{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+    font-size:1.25rem;line-height:1.6;color:#f7f2e9;text-shadow:0 2px 14px rgba(0,0,0,0.4);
+    max-width:380px;margin-top:7vh;
+    opacity:0;transition:opacity 1.6s ease, transform 1.6s ease;transform:translateY(8px);
+  }
+  .guide-text.show{opacity:1;transform:translateY(0);}
+  .guide-text b{color:#f3d9a8;font-weight:500;}
+
+  .guide-example{
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:0.85rem;line-height:1.5;color:#cfc9e6;
+    max-width:340px;margin-top:2vh;
+    opacity:0;transition:opacity 1.6s ease;
+  }
+  .guide-example.show{opacity:1;}
+
+  .continue-btn{
+    margin-top:5vh;padding:14px 34px;border-radius:30px;border:1px solid #d9b06f;
+    background:rgba(217,176,111,0.12);color:#f7f2e9;font-size:0.8rem;letter-spacing:0.08em;
+    text-transform:uppercase;cursor:pointer;font-family:inherit;
+    opacity:0;transition:opacity 1.8s ease;
+  }
+  .continue-btn.show{opacity:1;}
+
+  .closing-text{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:#cfc9e6;
+    line-height:1.6;max-width:360px;margin-top:7vh;
+    opacity:0;transition:opacity 2s ease;
+  }
+  .closing-text.show{opacity:1;}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <img class="bg" src="assets/echo.webp" alt="">
+    <div class="overlay"></div>
+
+    <div class="view" id="view-guide">
+      <div class="guide-text" id="guideText"></div>
+      <div class="guide-example" id="guideExample"></div>
+      <div class="closing-text" id="closingText"></div>
+      <button class="continue-btn" id="continueBtn" onclick="nextStep()">Continuer</button>
+    </div>
+  </div>
+
+  <script>
+    const STEPS = [
+      { text: "Prends trois grandes inspirations, pour calmer ton mental et être présente." },
+      { text: "Sois prête à accepter n'importe quelle réponse, sans projeter tes désirs." },
+      { text: "Choisis un lieu calme, loin des ondes électromagnétiques fortes." },
+      { text: "Pose ton coude sur une surface plane. Tiens la chaîne entre le pouce et l'index, bras détendu." },
+      { text: "Laisse environ 5 à 8 cm entre tes doigts et le poids. Laisse le pendule s'immobiliser naturellement." },
+      { text: "Avant de poser des questions, tu dois comprendre comment ton corps fait réagir le pendule.", example: "C'est ce qu'on appelle « programmer » ou demander sa convention. Ce code est propre à chacune." },
+      { text: "Demande, à voix haute ou dans ta tête :<br><b>« Montre-moi un OUI »</b>", example: "Observe le mouvement, puis note-le sur la carte du coffret ou un papier libre." },
+      { text: "Arrête le pendule de l'autre main, puis demande :<br><b>« Montre-moi un NON »</b>", example: "Observe le nouveau mouvement, et note-le." },
+      { text: "Fais de même avec « peut-être » et « je ne sais pas »." },
+      { text: "Pose maintenant des questions dont tu connais déjà la réponse.", example: "Ex : « Est-ce que je m'appelle … ? », « Suis-je assise sur la lune ? »" },
+      { text: "Si le pendule répond juste 10 fois sur 10, ta connexion est stable — tu peux passer à des questions plus personnelles." }
+    ];
+
+    let currentStep = 0;
+    let finished = false;
+
+    function showStep(index){
+      const textEl = document.getElementById('guideText');
+      const exampleEl = document.getElementById('guideExample');
+      const closingEl = document.getElementById('closingText');
+      const btn = document.getElementById('continueBtn');
+
+      btn.classList.remove('show');
+
+      if(index >= STEPS.length){
+        textEl.classList.remove('show');
+        exampleEl.classList.remove('show');
+        finished = true;
+        setTimeout(() => {
+          closingEl.innerHTML = "Amuse-toi à apprendre à te connaître. Tu peux être surprise.<br><br>Le pendule n'est qu'un miroir. La réponse est déjà en toi.";
+          closingEl.classList.add('show');
+          btn.textContent = "J'ai terminé";
+          setTimeout(() => btn.classList.add('show'), 1200);
+        }, 700);
+        return;
+      }
+
+      closingEl.classList.remove('show');
+      textEl.classList.remove('show');
+      exampleEl.classList.remove('show');
+      setTimeout(() => {
+        const step = STEPS[index];
+        textEl.innerHTML = step.text;
+        textEl.classList.add('show');
+        if(step.example){
+          exampleEl.innerHTML = step.example;
+          setTimeout(() => exampleEl.classList.add('show'), 500);
+        } else {
+          exampleEl.innerHTML = '';
+        }
+        setTimeout(() => btn.classList.add('show'), 1000);
+      }, 700);
+    }
+
+    function nextStep(){
+      if(finished){
+        naeoraNav('accueil');
+        return;
+      }
+      currentStep++;
+      showStep(currentStep);
+    }
+
+    document.getElementById('continueBtn').textContent = 'Continuer';
+    showStep(0);
+  </script>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
+</html>

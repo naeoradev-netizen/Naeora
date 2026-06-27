@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Naéora — Onboarding Slide 2</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;background:#14123a;overflow:hidden;font-family:'Helvetica Neue',Arial,sans-serif;}
+  .stage{position:relative;width:100%;height:100vh;background:#14123a;overflow:hidden;}
+  .bg{position:absolute;top:0;left:0;width:100%;height:42%;object-fit:cover;object-position:top;}
+  .overlay{position:absolute;top:0;left:0;width:100%;height:42%;background:linear-gradient(to bottom, transparent 60%, #14123a 100%);}
+
+  .medallion{
+    position:absolute;
+    top:42%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:64px;height:64px;
+    border-radius:50%;
+    background:#1c1a4a;
+    box-shadow:0 0 18px rgba(217,176,111,0.35);
+    display:flex;align-items:center;justify-content:center;
+    z-index:3;
+  }
+  .medallion svg{width:30px;height:30px;}
+
+  .content{
+    position:absolute;
+    top:46%;
+    left:0;right:0;
+    bottom:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:0 9vw;
+    text-align:center;
+    z-index:3;
+  }
+  .title{
+    font-family:Georgia,'Times New Roman',serif;
+    font-size:1.6rem;
+    color:#f7f2e9;
+    margin-bottom:18px;
+    margin-top:7vh;
+  }
+  .text{
+    font-size:0.98rem;
+    line-height:1.65;
+    color:#cfc9e6;
+    max-width:380px;
+  }
+
+  .dots{
+    position:absolute;
+    bottom:6vh;
+    left:0;right:0;
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    z-index:3;
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.25);}
+  .dot.active{background:#d9b06f;width:18px;border-radius:4px;}
+
+  .tap-zone{position:absolute;inset:0;z-index:2;cursor:pointer;}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <img class="bg" src="assets/slide2.webp" alt="">
+    <div class="overlay"></div>
+
+    <div class="medallion">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#d9b06f" stroke-width="1.3">
+        <path d="M9 18c-1.5-1-2.5-2.5-2.5-4.5C6.5 10 8.5 8 11 8c.5-1.2 1.7-2 3-2 1.8 0 3.3 1.5 3.3 3.3 0 .4-.05.8-.15 1.2 1.4.5 2.35 1.85 2.35 3.4 0 2-1.6 3.6-3.6 3.6"/>
+        <path d="M11 8v10M9 18h6"/>
+        <circle cx="11" cy="11" r="0.5" fill="#d9b06f"/>
+        <circle cx="14" cy="14" r="0.5" fill="#d9b06f"/>
+      </svg>
+    </div>
+
+    <div class="content">
+      <div class="title">Le pourquoi</div>
+      <div class="text">Environ 95% de tes pensées sont automatiques, façonnées depuis l'enfance.<br>Elles tournent en boucle sans que tu les choisisses vraiment.<br>Naéora t'aide à reprendre la main, un peu chaque jour.</div>
+    </div>
+
+    <div class="dots">
+      <div class="dot"></div>
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+
+    <div class="tap-zone" onclick="naeoraNav('onb3')"></div>
+  </div>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
+</html>

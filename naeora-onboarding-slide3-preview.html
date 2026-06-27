@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Naéora — Exercice pendule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;background:#14123a;overflow:hidden;font-family:'Jost',sans-serif;}
+  .stage{position:relative;width:100%;height:100vh;overflow:hidden;}
+  .bg{position:absolute;top:0;left:0;width:100%;height:42%;object-fit:cover;object-position:top;}
+  .overlay{position:absolute;top:0;left:0;width:100%;height:42%;background:linear-gradient(to bottom, transparent 55%, #14123a 100%);}
+
+  .view{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;}
+
+  #view-active{padding-top:46%;padding-left:8vw;padding-right:8vw;align-items:center;justify-content:flex-start;text-align:center;position:relative;height:100%;}
+  .help-icon{
+    position:absolute;top:6vh;right:7vw;width:30px;height:30px;border-radius:50%;
+    border:1px solid rgba(217,176,111,0.4);display:flex;align-items:center;justify-content:center;
+    color:#d9b06f;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;cursor:pointer;
+    background:rgba(255,255,255,0.04);z-index:4;
+  }
+
+  .guide-text{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+    font-size:1.28rem;line-height:1.6;color:#f7f2e9;text-shadow:0 2px 14px rgba(0,0,0,0.4);
+    max-width:380px;margin-top:7vh;
+    opacity:0;transition:opacity 1.6s ease, transform 1.6s ease;transform:translateY(8px);
+  }
+  .guide-text.show{opacity:1;transform:translateY(0);}
+
+  .guide-example{
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:0.85rem;line-height:1.5;color:#cfc9e6;
+    max-width:340px;margin-top:2vh;
+    opacity:0;transition:opacity 1.6s ease;
+  }
+  .guide-example.show{opacity:1;}
+
+  .continue-btn{
+    margin-top:5vh;padding:14px 34px;border-radius:30px;border:1px solid #d9b06f;
+    background:rgba(217,176,111,0.12);color:#f7f2e9;font-size:0.8rem;letter-spacing:0.08em;
+    text-transform:uppercase;cursor:pointer;font-family:inherit;
+    opacity:0;transition:opacity 1.8s ease;
+  }
+  .continue-btn.show{opacity:1;}
+
+  /* Pendule animé */
+  .pendulum-wrap{
+    margin-top:5vh;width:120px;height:140px;position:relative;
+    opacity:0;transition:opacity 1.8s ease;
+  }
+  .pendulum-wrap.show{opacity:1;}
+  .pendulum-anchor{
+    position:absolute;top:0;left:50%;width:8px;height:8px;margin-left:-4px;
+    border-radius:50%;background:#d9b06f;
+  }
+  .pendulum-arm{
+    position:absolute;top:4px;left:50%;width:1.4px;height:100px;
+    background:linear-gradient(to bottom, rgba(217,176,111,0.7), rgba(217,176,111,0.3));
+    transform-origin:top center;
+    animation:swing 2.6s ease-in-out infinite;
+  }
+  .pendulum-bob{
+    position:absolute;bottom:-9px;left:50%;width:18px;height:18px;margin-left:-9px;
+    border-radius:50%;
+    background:radial-gradient(circle at 35% 30%, #fff3da, #d9b06f 70%);
+    box-shadow:0 0 10px rgba(217,176,111,0.5);
+  }
+  @keyframes swing{
+    0%,100%{ transform:rotate(-16deg); }
+    50%{ transform:rotate(16deg); }
+  }
+
+  .final-text{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+    font-size:1.5rem;color:#f3d9a8;margin-top:15vh;
+    opacity:0;transition:opacity 2s ease;
+  }
+  .final-text.show{opacity:1;}
+
+  .finish-btn{
+    margin-top:4.5vh;padding:14px 34px;border-radius:30px;border:1px solid #d9b06f;
+    background:rgba(217,176,111,0.12);color:#f7f2e9;font-size:0.8rem;letter-spacing:0.08em;
+    text-transform:uppercase;cursor:pointer;font-family:inherit;
+    opacity:0;transition:opacity 2s ease;
+  }
+  .finish-btn.show{opacity:1;}
+
+  .testbar{position:absolute;top:8px;left:8px;z-index:50;display:flex;gap:4px;}
+  .testbar button{font-size:0.6rem;padding:4px 7px;border-radius:5px;border:1px solid rgba(217,176,111,0.4);background:rgba(0,0,0,0.5);color:#d9b06f;cursor:pointer;}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <img class="bg" src="assets/echo.webp" alt="">
+    <div class="overlay"></div>
+
+    <div class="testbar">
+      <button onclick="restart()">Recommencer</button>
+    </div>
+
+    <div class="view" id="view-active">
+      <div class="help-icon" onclick="naeoraNav('pendule_resume')">?</div>
+
+      <div class="guide-text" id="guideText"></div>
+      <div class="guide-example" id="guideExample"></div>
+
+      <div class="pendulum-wrap" id="pendulumWrap">
+        <div class="pendulum-arm">
+          <div class="pendulum-bob"></div>
+        </div>
+        <div class="pendulum-anchor"></div>
+      </div>
+
+      <div class="final-text" id="finalText"></div>
+
+      <button class="continue-btn" id="continueBtn" onclick="nextStep()">Continuer</button>
+      <button class="finish-btn" id="finishBtn" onclick="naeoraNav('accueil')">J'ai terminé</button>
+    </div>
+  </div>
+
+  <script>
+    const STEPS = [
+      {
+        text: "Prends deux bouts de papier libres, ou issus de ton carnet Naéora.",
+        example: "Inscris les deux choix qui s'offrent à toi aujourd'hui — une décision à prendre, ton ressenti face à une situation, ou simplement pour mieux te connaître."
+      },
+      {
+        text: "Pose ton coude. Inspire et expire trois fois, pour te détendre.",
+        example: "Ne projette pas de désirs."
+      }
+    ];
+
+    let currentStep = 0;
+
+    function showStep(index){
+      const textEl = document.getElementById('guideText');
+      const exampleEl = document.getElementById('guideExample');
+      const btn = document.getElementById('continueBtn');
+      const pendulum = document.getElementById('pendulumWrap');
+      const finalText = document.getElementById('finalText');
+      const finishBtn = document.getElementById('finishBtn');
+
+      btn.classList.remove('show');
+
+      if(index >= STEPS.length){
+        textEl.classList.remove('show');
+        exampleEl.classList.remove('show');
+        setTimeout(() => {
+          textEl.innerHTML = "Observe simplement le mouvement du pendule, et rapporte-toi à ta carte de convention faite lors de ta première utilisation.";
+          textEl.classList.add('show');
+          setTimeout(() => pendulum.classList.add('show'), 900);
+          setTimeout(() => {
+            finalText.textContent = "À toi de jouer.";
+            finalText.classList.add('show');
+          }, 2200);
+          setTimeout(() => finishBtn.classList.add('show'), 3400);
+        }, 700);
+        return;
+      }
+
+      textEl.classList.remove('show');
+      exampleEl.classList.remove('show');
+      setTimeout(() => {
+        const step = STEPS[index];
+        textEl.innerHTML = step.text;
+        textEl.classList.add('show');
+        if(step.example){
+          exampleEl.innerHTML = step.example;
+          setTimeout(() => exampleEl.classList.add('show'), 500);
+        } else {
+          exampleEl.innerHTML = '';
+        }
+        setTimeout(() => btn.classList.add('show'), 1000);
+      }, 700);
+    }
+
+    function nextStep(){
+      currentStep++;
+      showStep(currentStep);
+    }
+
+    function restart(){
+      currentStep = 0;
+      document.getElementById('pendulumWrap').classList.remove('show');
+      document.getElementById('finalText').classList.remove('show');
+      document.getElementById('finishBtn').classList.remove('show');
+      showStep(0);
+    }
+
+    showStep(0);
+  </script>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
+</html>

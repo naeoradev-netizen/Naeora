@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Naéora — Onboarding Slide 6</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;background:#14123a;overflow:hidden;font-family:'Helvetica Neue',Arial,sans-serif;}
+  .stage{position:relative;width:100%;height:100vh;background:#14123a;overflow:hidden;}
+  .bg{position:absolute;top:0;left:0;width:100%;height:42%;object-fit:cover;object-position:top;}
+  .overlay{position:absolute;top:0;left:0;width:100%;height:42%;background:linear-gradient(to bottom, transparent 60%, #14123a 100%);}
+
+  .medallion{
+    position:absolute;
+    top:42%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:64px;height:64px;
+    border-radius:50%;
+    background:#1c1a4a;
+    box-shadow:0 0 18px rgba(217,176,111,0.35);
+    display:flex;align-items:center;justify-content:center;
+    z-index:3;
+  }
+  .medallion svg{width:30px;height:30px;}
+
+  .content{
+    position:absolute;
+    top:46%;
+    left:0;right:0;
+    bottom:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:0 9vw;
+    text-align:center;
+    z-index:3;
+  }
+  .title{
+    font-family:Georgia,'Times New Roman',serif;
+    font-size:1.6rem;
+    color:#f7f2e9;
+    margin-bottom:18px;
+    margin-top:7vh;
+  }
+  .text{
+    font-size:0.98rem;
+    line-height:1.65;
+    color:#cfc9e6;
+    max-width:380px;
+    margin-bottom:8vh;
+  }
+
+  .btn{
+    padding:16px 38px;
+    border:1px solid #d9b06f;
+    border-radius:30px;
+    color:#f7f2e9;
+    font-size:0.85rem;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    background:rgba(217,176,111,0.08);
+    cursor:pointer;
+    font-family:inherit;
+    transition:background 0.3s ease, box-shadow 0.3s ease;
+  }
+  .btn:hover{
+    background:rgba(217,176,111,0.18);
+    box-shadow:0 0 18px rgba(217,176,111,0.3);
+  }
+
+  .dots{
+    position:absolute;
+    bottom:6vh;
+    left:0;right:0;
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    z-index:3;
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.25);}
+  .dot.active{background:#d9b06f;width:18px;border-radius:4px;}
+</style>
+</head>
+<body>
+  <div class="stage">
+    <img class="bg" src="assets/slide6.webp" alt="">
+    <div class="overlay"></div>
+
+    <div class="medallion">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#d9b06f" stroke-width="1.3">
+        <path d="M4 19c2-4 4-13 8-13s6 9 8 13" stroke-linecap="round"/>
+        <path d="M4 19h16" stroke-linecap="round"/>
+        <circle cx="12" cy="9" r="1" fill="#d9b06f" stroke="none"/>
+      </svg>
+    </div>
+
+    <div class="content">
+      <div class="title">L'invitation</div>
+      <div class="text">Naéora ne te juge pas, ne te chronomètre pas, ne te compare à personne.<br>Elle ne transformera pas ta vie d'un coup, mais t'accompagnera vers ce que tu souhaites devenir — pour une vie plus épanouie, plus alignée avec qui tu es vraiment.</div>
+      <button class="btn" onclick="naeoraNav('inscription')">Commencer l'aventure</button>
+    </div>
+
+    <div class="dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot active"></div>
+    </div>
+  </div>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
+</html>

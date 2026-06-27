@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Naéora — Tuto pendule</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;background:#14123a;overflow:hidden;font-family:'Jost',sans-serif;}
+  .stage{position:relative;width:100%;height:100vh;overflow:hidden;}
+  .bg{position:absolute;top:0;left:0;width:100%;height:24%;object-fit:cover;object-position:top;}
+  .overlay{position:absolute;top:0;left:0;width:100%;height:24%;background:linear-gradient(to bottom, transparent 40%, #14123a 100%);}
+
+  .view{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;}
+
+  #view-tuto{padding-top:20%;padding-left:8vw;padding-right:8vw;padding-bottom:6vh;align-items:center;text-align:center;overflow-y:auto;}
+
+  .ex-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.55rem;color:#f7f2e9;margin-bottom:4px;flex-shrink:0;}
+  .ex-sub{font-size:0.78rem;color:#a89fc4;margin-bottom:3vh;letter-spacing:0.03em;}
+
+  .section{width:100%;max-width:400px;margin-bottom:3vh;}
+  .section-num{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:26px;height:26px;border-radius:50%;border:1px solid rgba(217,176,111,0.5);
+    color:#d9b06f;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.85rem;
+    margin-bottom:10px;
+  }
+  .section-title{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;color:#f3d9a8;
+    margin-bottom:10px;
+  }
+  .section-text{font-size:0.87rem;line-height:1.65;color:#e3ddf0;margin-bottom:8px;}
+  .section-text b{color:#f3d9a8;font-weight:500;}
+
+  .section-divider{
+    width:50px;height:1px;background:linear-gradient(to right, transparent, rgba(217,176,111,0.4), transparent);
+    margin:3vh auto;
+  }
+
+  .closing-text{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:#cfc9e6;
+    line-height:1.6;max-width:360px;margin:1vh 0 4vh;
+  }
+
+  .ex-btn{
+    padding:14px 38px;border-radius:30px;border:1px solid #d9b06f;
+    background:rgba(217,176,111,0.1);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.12em;
+    text-transform:uppercase;cursor:pointer;font-family:inherit;flex-shrink:0;margin-bottom:2vh;
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <img class="bg" src="assets/nuit.webp" alt="">
+    <div class="overlay"></div>
+
+    <div class="view" id="view-tuto">
+      <div class="ex-title">Apprendre à utiliser ton pendule</div>
+      <div class="ex-sub">Ce tuto ne s'affichera qu'une seule fois — tu le retrouveras en résumé via le « ? »</div>
+
+      <div class="section">
+        <div class="section-num">1</div>
+        <div class="section-title">Se préparer</div>
+        <div class="section-text">Prends trois grandes inspirations pour calmer ton mental et être présente.</div>
+        <div class="section-text">Sois prête à accepter n'importe quelle réponse, sans projeter tes désirs.</div>
+        <div class="section-text">Choisis un lieu calme, loin des ondes électromagnétiques fortes.</div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <div class="section">
+        <div class="section-num">2</div>
+        <div class="section-title">La posture</div>
+        <div class="section-text">Pose ton coude sur une surface plane. Tiens la chaîne entre le pouce et l'index, bras détendu.</div>
+        <div class="section-text">La distance entre tes doigts et le poids doit être d'environ 5 à 8 cm. Laisse le pendule s'immobiliser naturellement avant de commencer.</div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <div class="section">
+        <div class="section-num">3</div>
+        <div class="section-title">Programmer ton pendule</div>
+        <div class="section-text">Avant de poser des questions, tu dois comprendre comment ton corps fait réagir le pendule. C'est ce qu'on appelle <b>« programmer »</b> ou <b>demander sa convention</b>.</div>
+        <div class="section-text">Ce code est propre à chacune. Ce qui est un « oui » pour toi peut être un « non » pour quelqu'un d'autre.</div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <div class="section">
+        <div class="section-num">4</div>
+        <div class="section-title">Trouver ton « Oui »</div>
+        <div class="section-text">Demande à voix haute ou dans ta tête : <b>« Montre-moi un OUI »</b>. Attends quelques secondes et observe le mouvement.</div>
+        <div class="section-text">Note, sur la carte du coffret ou sur un papier libre, le sens de ce mouvement.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Trouver ton « Non »</div>
+        <div class="section-text">Arrête le pendule de l'autre main, puis demande : <b>« Montre-moi un NON »</b>. Observe le nouveau mouvement, et note-le.</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">« Peut-être » et « Je ne sais pas »</div>
+        <div class="section-text">Fais de même avec ces deux réponses.</div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <div class="section">
+        <div class="section-num">5</div>
+        <div class="section-title">Vérifier ta connexion</div>
+        <div class="section-text">Pose des questions dont tu connais déjà la réponse — <i>« Est-ce que je m'appelle … ? »</i>, <i>« Suis-je assise sur la lune ? »</i></div>
+        <div class="section-text">Si le pendule répond correctement 10 fois sur 10, ta connexion est stable, et tu peux passer à des questions plus personnelles.</div>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <div class="closing-text">Amuse-toi à apprendre à te connaître. Tu peux être surprise.<br><br>Le pendule n'est qu'un miroir. La réponse est déjà en toi.</div>
+
+      <button class="ex-btn" onclick="alert('Vers le premier tirage / exercice')">J'ai compris</button>
+    </div>
+  </div>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
+</html>
