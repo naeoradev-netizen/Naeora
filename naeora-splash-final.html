@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Naéora — Écran d'ouverture (aperçu)</title>
+<title>Naéora — Écran d'ouverture</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{width:100%;height:100%;background:#05060f;overflow:hidden;}
@@ -16,8 +16,8 @@
 </head>
 <body>
   <div class="stage">
-    <img class="splash-img" src="assets/splash.webp" alt="Naéora — Ouvrir un nouveau champ des possibles">
+    <img class="splash-img" src="splash.webp" alt="Naéora — Ouvrir un nouveau champ des possibles">
     <div class="glow-pulse"></div>
   </div>
-<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script><script>setTimeout(function(){ naeoraNav('avertissement'); }, 4800);</script></body>
 </html>

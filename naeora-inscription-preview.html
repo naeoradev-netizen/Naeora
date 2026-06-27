@@ -2,124 +2,209 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Naéora — Tuto pendule</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Naéora — Inscription</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
-  html,body{width:100%;height:100%;background:#14123a;overflow:hidden;font-family:'Jost',sans-serif;}
-  .stage{position:relative;width:100%;height:100vh;overflow:hidden;}
-  .bg{position:absolute;top:0;left:0;width:100%;height:24%;object-fit:cover;object-position:top;}
-  .overlay{position:absolute;top:0;left:0;width:100%;height:24%;background:linear-gradient(to bottom, transparent 40%, #14123a 100%);}
-
-  .view{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;}
-
-  #view-tuto{padding-top:20%;padding-left:8vw;padding-right:8vw;padding-bottom:6vh;align-items:center;text-align:center;overflow-y:auto;}
-
-  .ex-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.55rem;color:#f7f2e9;margin-bottom:4px;flex-shrink:0;}
-  .ex-sub{font-size:0.78rem;color:#a89fc4;margin-bottom:3vh;letter-spacing:0.03em;}
-
-  .section{width:100%;max-width:400px;margin-bottom:3vh;}
-  .section-num{
-    display:inline-flex;align-items:center;justify-content:center;
-    width:26px;height:26px;border-radius:50%;border:1px solid rgba(217,176,111,0.5);
-    color:#d9b06f;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.85rem;
-    margin-bottom:10px;
+  html,body{
+    width:100%;height:100%;
+    background:#14123a;
+    overflow-y:auto;
+    font-family:'Helvetica Neue', Arial, sans-serif;
   }
-  .section-title{
-    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.12rem;color:#f3d9a8;
-    margin-bottom:10px;
-  }
-  .section-text{font-size:0.87rem;line-height:1.65;color:#e3ddf0;margin-bottom:8px;}
-  .section-text b{color:#f3d9a8;font-weight:500;}
-
-  .section-divider{
-    width:50px;height:1px;background:linear-gradient(to right, transparent, rgba(217,176,111,0.4), transparent);
-    margin:3vh auto;
+  .stage{
+    position:relative;
+    min-height:100vh;
+    width:100%;
+    background:
+      radial-gradient(circle at 50% 0%, rgba(60,40,110,0.5) 0%, transparent 45%),
+      #14123a;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:8vh 8vw 6vh;
   }
 
-  .closing-text{
-    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:#cfc9e6;
-    line-height:1.6;max-width:360px;margin:1vh 0 4vh;
+  .stars{
+    position:absolute;inset:0;
+    background-image:
+      radial-gradient(1px 1px at 10% 8%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 30% 4%, rgba(255,255,255,0.35), transparent),
+      radial-gradient(1px 1px at 55% 10%, rgba(255,255,255,0.4), transparent),
+      radial-gradient(1px 1px at 75% 5%, rgba(255,255,255,0.3), transparent),
+      radial-gradient(1px 1px at 90% 12%, rgba(255,255,255,0.35), transparent),
+      radial-gradient(1px 1px at 18% 16%, rgba(255,255,255,0.3), transparent);
+    pointer-events:none;
   }
 
-  .ex-btn{
-    padding:14px 38px;border-radius:30px;border:1px solid #d9b06f;
-    background:rgba(217,176,111,0.1);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.12em;
-    text-transform:uppercase;cursor:pointer;font-family:inherit;flex-shrink:0;margin-bottom:2vh;
+  .emblem{
+    width:52px;height:52px;
+    margin-bottom:18px;
+    position:relative;z-index:2;
+  }
+
+  .title{
+    font-family:Georgia,'Times New Roman',serif;
+    font-size:1.7rem;
+    color:#f7f2e9;
+    margin-bottom:8px;
+    position:relative;z-index:2;
+    text-align:center;
+  }
+  .subtitle{
+    font-size:0.9rem;
+    color:#a89fc4;
+    margin-bottom:5vh;
+    text-align:center;
+    position:relative;z-index:2;
+  }
+
+  form{
+    width:100%;
+    max-width:380px;
+    position:relative;z-index:2;
+  }
+
+  .field{
+    margin-bottom:20px;
+  }
+  .field label{
+    display:block;
+    font-size:0.78rem;
+    letter-spacing:0.06em;
+    color:#cfc9e6;
+    margin-bottom:8px;
+    text-transform:uppercase;
+  }
+  .field input{
+    width:100%;
+    padding:14px 16px;
+    border-radius:12px;
+    border:1px solid rgba(217,176,111,0.3);
+    background:rgba(255,255,255,0.04);
+    color:#f7f2e9;
+    font-size:0.98rem;
+    font-family:inherit;
+    transition:border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+  .field input::placeholder{
+    color:#6c6593;
+  }
+  .field input:focus{
+    outline:none;
+    border-color:#d9b06f;
+    box-shadow:0 0 0 3px rgba(217,176,111,0.15);
+  }
+  .field input[type="date"]{
+    color-scheme:dark;
+  }
+
+  .checkbox-row{
+    display:flex;
+    align-items:flex-start;
+    gap:10px;
+    margin:8px 0 32px;
+  }
+  .checkbox-row input[type="checkbox"]{
+    margin-top:3px;
+    width:17px;height:17px;
+    accent-color:#d9b06f;
+    flex-shrink:0;
+    cursor:pointer;
+  }
+  .checkbox-row label{
+    font-size:0.84rem;
+    line-height:1.5;
+    color:#cfc9e6;
+  }
+  .checkbox-row a{
+    color:#d9b06f;
+    text-decoration:underline;
+  }
+
+  .submit-btn{
+    width:100%;
+    padding:16px;
+    border-radius:30px;
+    border:none;
+    background:linear-gradient(135deg, #e8c889, #c9963f);
+    color:#1c1638;
+    font-size:0.92rem;
+    font-weight:600;
+    letter-spacing:0.04em;
+    cursor:pointer;
+    font-family:inherit;
+    transition:filter 0.25s ease, box-shadow 0.25s ease;
+  }
+  .submit-btn:hover{
+    filter:brightness(1.06);
+    box-shadow:0 0 22px rgba(217,176,111,0.35);
+  }
+
+  .login-link{
+    text-align:center;
+    margin-top:24px;
+    font-size:0.86rem;
+    color:#a89fc4;
+    position:relative;z-index:2;
+  }
+  .login-link a{
+    color:#d9b06f;
+    text-decoration:none;
   }
 </style>
 </head>
 <body>
   <div class="stage">
-    <img class="bg" src="assets/nuit.webp" alt="">
-    <div class="overlay"></div>
+    <div class="stars"></div>
 
-    <div class="view" id="view-tuto">
-      <div class="ex-title">Apprendre à utiliser ton pendule</div>
-      <div class="ex-sub">Ce tuto ne s'affichera qu'une seule fois — tu le retrouveras en résumé via le « ? »</div>
+    <svg class="emblem" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#fff3da"/>
+          <stop offset="50%" stop-color="#f3d9a8"/>
+          <stop offset="100%" stop-color="#d9b06f"/>
+        </linearGradient>
+      </defs>
+      <path d="M 50 12 A 38 38 0 1 0 50 88 A 30 30 0 1 1 50 12 Z" fill="url(#goldGrad)"/>
+      <g transform="translate(50,46)">
+        <path d="M0,-26 L4,-5 L26,0 L4,5 L0,26 L-4,5 L-26,0 L-4,-5 Z" fill="url(#goldGrad)"/>
+        <path d="M0,-17 L2.5,-3 L17,0 L2.5,3 L0,17 L-2.5,3 L-17,0 L-2.5,-3 Z" fill="#fff7e6" transform="rotate(45)"/>
+      </g>
+    </svg>
 
-      <div class="section">
-        <div class="section-num">1</div>
-        <div class="section-title">Se préparer</div>
-        <div class="section-text">Prends trois grandes inspirations pour calmer ton mental et être présente.</div>
-        <div class="section-text">Sois prête à accepter n'importe quelle réponse, sans projeter tes désirs.</div>
-        <div class="section-text">Choisis un lieu calme, loin des ondes électromagnétiques fortes.</div>
+    <div class="title">Crée ton espace</div>
+    <div class="subtitle">Quelques informations pour commencer</div>
+
+    <form onsubmit="event.preventDefault(); naeoraNav('accueil');">
+      <div class="field">
+        <label for="prenom">Prénom</label>
+        <input type="text" id="prenom" placeholder="Ton prénom" required>
       </div>
 
-      <div class="section-divider"></div>
-
-      <div class="section">
-        <div class="section-num">2</div>
-        <div class="section-title">La posture</div>
-        <div class="section-text">Pose ton coude sur une surface plane. Tiens la chaîne entre le pouce et l'index, bras détendu.</div>
-        <div class="section-text">La distance entre tes doigts et le poids doit être d'environ 5 à 8 cm. Laisse le pendule s'immobiliser naturellement avant de commencer.</div>
+      <div class="field">
+        <label for="naissance">Date de naissance</label>
+        <input type="date" id="naissance" required>
       </div>
 
-      <div class="section-divider"></div>
-
-      <div class="section">
-        <div class="section-num">3</div>
-        <div class="section-title">Programmer ton pendule</div>
-        <div class="section-text">Avant de poser des questions, tu dois comprendre comment ton corps fait réagir le pendule. C'est ce qu'on appelle <b>« programmer »</b> ou <b>demander sa convention</b>.</div>
-        <div class="section-text">Ce code est propre à chacune. Ce qui est un « oui » pour toi peut être un « non » pour quelqu'un d'autre.</div>
+      <div class="field">
+        <label for="email">Adresse e-mail</label>
+        <input type="email" id="email" placeholder="toi@exemple.com" required>
       </div>
 
-      <div class="section-divider"></div>
-
-      <div class="section">
-        <div class="section-num">4</div>
-        <div class="section-title">Trouver ton « Oui »</div>
-        <div class="section-text">Demande à voix haute ou dans ta tête : <b>« Montre-moi un OUI »</b>. Attends quelques secondes et observe le mouvement.</div>
-        <div class="section-text">Note, sur la carte du coffret ou sur un papier libre, le sens de ce mouvement.</div>
+      <div class="field">
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" placeholder="8 caractères minimum" required minlength="8">
       </div>
 
-      <div class="section">
-        <div class="section-title">Trouver ton « Non »</div>
-        <div class="section-text">Arrête le pendule de l'autre main, puis demande : <b>« Montre-moi un NON »</b>. Observe le nouveau mouvement, et note-le.</div>
+      <div class="checkbox-row">
+        <input type="checkbox" id="cgu" required>
+        <label for="cgu">J'accepte les <a href="#">conditions d'utilisation</a> et la <a href="#">politique de confidentialité</a></label>
       </div>
 
-      <div class="section">
-        <div class="section-title">« Peut-être » et « Je ne sais pas »</div>
-        <div class="section-text">Fais de même avec ces deux réponses.</div>
-      </div>
+      <button type="submit" class="submit-btn">Créer mon compte</button>
+    </form>
 
-      <div class="section-divider"></div>
-
-      <div class="section">
-        <div class="section-num">5</div>
-        <div class="section-title">Vérifier ta connexion</div>
-        <div class="section-text">Pose des questions dont tu connais déjà la réponse — <i>« Est-ce que je m'appelle … ? »</i>, <i>« Suis-je assise sur la lune ? »</i></div>
-        <div class="section-text">Si le pendule répond correctement 10 fois sur 10, ta connexion est stable, et tu peux passer à des questions plus personnelles.</div>
-      </div>
-
-      <div class="section-divider"></div>
-
-      <div class="closing-text">Amuse-toi à apprendre à te connaître. Tu peux être surprise.<br><br>Le pendule n'est qu'un miroir. La réponse est déjà en toi.</div>
-
-      <button class="ex-btn" onclick="alert('Vers le premier tirage / exercice')">J'ai compris</button>
-    </div>
+    <div class="login-link">Déjà un compte ? <a href="#">Se connecter</a></div>
   </div>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
 </html>

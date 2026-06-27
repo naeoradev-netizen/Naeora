@@ -2,261 +2,240 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Naéora — Accueil</title>
+<title>Naéora — Le matin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{width:100%;height:100%;background:#0a0820;overflow:hidden;font-family:'Jost',sans-serif;}
-  .stage{position:relative;width:100%;height:100vh;overflow:hidden;display:flex;flex-direction:column;}
-  .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;opacity:0;transition:opacity 1.2s ease;}
-  .bg.active{opacity:1;}
-  .vignette{position:absolute;inset:0;background:radial-gradient(circle at 50% 38%, rgba(0,0,0,0) 0%, rgba(8,6,24,0.35) 70%, rgba(8,6,24,0.6) 100%);z-index:1;}
+  .stage{position:relative;width:100%;height:100vh;overflow:hidden;}
+  .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;}
+  .vignette{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%, rgba(0,0,0,0) 0%, rgba(8,6,24,0.45) 65%, rgba(8,6,24,0.78) 100%);z-index:1;}
 
-  .content{position:relative;z-index:2;flex:1;min-height:0;display:flex;flex-direction:column;padding:7vh 7vw 0;overflow:hidden;}
+  .view{position:absolute;inset:0;z-index:3;display:none;flex-direction:column;}
+  .view.active{display:flex;}
 
-  .greeting{
-    font-family:'Cormorant Garamond', serif;
-    font-style:italic;
-    font-weight:500;
-    font-size:1.85rem;
-    color:#f7f2e9;
-    text-shadow:0 2px 12px rgba(0,0,0,0.5);
+  #view-explain{padding:7vh 8vw 5vh;align-items:center;text-align:center;overflow-y:auto;}
+  .ex-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.6rem;color:#f7f2e9;margin-bottom:6px;flex-shrink:0;}
+  .ex-divider{width:70px;height:1.5px;background:linear-gradient(to right, transparent, #d9b06f, transparent);margin:14px 0 20px;flex-shrink:0;}
+  .ex-text{font-size:0.92rem;line-height:1.7;color:#e3ddf0;max-width:380px;margin-bottom:14px;}
+  .ex-text b{color:#f3d9a8;font-weight:500;}
+  .ex-tip{
+    margin-top:8px;padding:14px 16px;border-radius:14px;
+    background:rgba(217,176,111,0.08);border:1px solid rgba(217,176,111,0.3);
+    font-size:0.84rem;line-height:1.55;color:#f3d9a8;max-width:380px;
   }
-
-  .quote-card{
-    margin-top:4vh;
-    padding:22px 24px 18px;
-    border-radius:20px;
-    background:rgba(255,255,255,0.05);
-    backdrop-filter:blur(6px);
-    border:1px solid rgba(217,176,111,0.28);
-    box-shadow:0 8px 24px rgba(0,0,0,0.25);
-  }
-  .quote-text{
-    font-family:'Cormorant Garamond', serif;
-    font-style:italic;
-    font-size:1.12rem;
-    line-height:1.6;
-    color:#ede8f5;
-    text-align:center;
-  }
-  .quote-mark{color:#d9b06f;font-size:1.3rem;}
-  .quote-author{
-    font-family:'Cormorant Garamond', serif;
-    font-style:italic;
-    font-size:0.86rem;
-    color:#d9b06f;
-    text-align:right;
-    margin-top:10px;
+  .ex-btn{
+    margin-top:4vh;padding:14px 38px;border-radius:30px;border:1px solid #d9b06f;
+    background:rgba(217,176,111,0.1);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.12em;
+    text-transform:uppercase;cursor:pointer;font-family:inherit;flex-shrink:0;
   }
 
-  .arc-wrap{flex:1;display:flex;align-items:center;justify-content:center;}
+  #view-active{align-items:center;justify-content:flex-end;padding:8vw 8vw 14vh;text-align:center;position:relative;}
+  .help-icon{
+    position:absolute;top:6vh;right:7vw;width:30px;height:30px;border-radius:50%;
+    border:1px solid rgba(217,176,111,0.4);display:flex;align-items:center;justify-content:center;
+    color:#d9b06f;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;cursor:pointer;
+    background:rgba(255,255,255,0.04);
+  }
+  .phrase{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+    font-size:1.7rem;line-height:1.5;color:#f7f2e9;text-shadow:0 2px 14px rgba(0,0,0,0.5);
+    margin-bottom:11vh;max-width:420px;
+  }
+  .hold-wrap{position:relative;width:130px;height:130px;}
+  .hold-wrap::before{
+    content:'';position:absolute;inset:8px;border-radius:50%;
+    background:radial-gradient(circle, rgba(217,176,111,0.22) 0%, rgba(217,176,111,0.08) 60%, transparent 100%);
+  }
+  .hold-svg{width:100%;height:100%;transform:rotate(-90deg);}
+  .hold-track{fill:none;stroke:rgba(217,176,111,0.2);stroke-width:4;}
+  .hold-fill{fill:none;stroke:#d9b06f;stroke-width:4;stroke-linecap:round;stroke-dasharray:377;stroke-dashoffset:377;transition:stroke-dashoffset 0.05s linear;}
+  .hold-center{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    flex-direction:column;color:#f7f2e9;
+  }
+  .hold-center .lbl{font-size:0.72rem;letter-spacing:0.08em;color:#cfc9e6;text-transform:uppercase;}
+  .hold-center .timer{font-family:'Cormorant Garamond',serif;font-size:1.6rem;margin-top:4px;}
+  .hold-instruction{margin-top:5vh;font-size:0.86rem;color:#a89fc4;max-width:300px;}
+  .encourage-msg{
+    margin-top:3vh;font-size:0.88rem;color:#f3d9a8;max-width:300px;
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    opacity:0;transition:opacity 0.3s ease;min-height:1.4em;
+  }
+  .encourage-msg.show{opacity:1;}
 
-  .calm-access{
-    display:flex;align-items:center;justify-content:center;gap:9px;
-    padding:11px 22px;border-radius:30px;margin-bottom:2.5vh;
-    background:rgba(255,255,255,0.04);border:1px solid rgba(217,176,111,0.25);
-    color:#cfc9e6;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.9rem;
-    cursor:pointer;align-self:center;
+  .hold-wrap.collapsing{
+    animation: collapseBtn 0.6s ease-in forwards;
   }
-  .calm-access svg{width:16px;height:16px;flex-shrink:0;}
-  .arc-svg{width:100%;max-width:380px;}
+  @keyframes collapseBtn{
+    0%{ transform:scale(1); opacity:1; }
+    70%{ transform:scale(0.15); opacity:0.8; }
+    100%{ transform:scale(0); opacity:0; }
+  }
 
-  .node-glow{filter:drop-shadow(0 0 10px rgba(217,176,111,0.45));}
-  .node-circle-outer{fill:none;stroke:rgba(217,176,111,0.35);stroke-width:1;}
-  .node-circle{fill:#1c1a4a;stroke:#d9b06f;stroke-width:1.3;}
-  .ritual-node.done .node-circle{fill:#26224f;stroke:#8a82ad;opacity:0.6;}
-  .ritual-node.done .node-circle-outer{stroke:rgba(140,130,170,0.25);}
-  .ritual-node.done .icon-stroke{stroke:#9b94bd !important;}
-  .node-label{font-family:'Jost',sans-serif;font-size:11px;font-weight:400;letter-spacing:0.03em;fill:#e3ddf0;text-anchor:middle;}
-  .icon-stroke{stroke:#e8c889;}
-  .check-badge{fill:#3fae6a;stroke:#0e2a18;stroke-width:0.5;}
-  .check-badge text{fill:#0e2a18;font-size:9px;text-anchor:middle;font-family:'Jost',sans-serif;font-weight:500;}
+  .particles{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+  .bubble{
+    position:absolute;border-radius:50%;
+    background:radial-gradient(circle, rgba(247,242,233,0.95), rgba(217,176,111,0.4));
+    opacity:0;
+  }
 
-  .bottom-nav{
-    position:relative;z-index:5;
-    display:flex;justify-content:space-around;align-items:center;
-    padding:16px 7vw max(16px, env(safe-area-inset-bottom));
-    border-top:1px solid rgba(217,176,111,0.2);
-    background:rgba(8,6,24,0.6);
-    backdrop-filter:blur(10px);
-    margin:0 -7vw;
-    flex-shrink:0;
+  #view-done{align-items:center;justify-content:center;padding:8vw;text-align:center;}
+  .done-phrase{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
+    font-size:1.5rem;line-height:1.5;color:#f7f2e9;margin-bottom:3vh;max-width:400px;
   }
-  .nav-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;color:#8b84ab;}
-  .nav-item.active{color:#d9b06f;}
-  .nav-icon-circle{
-    width:34px;height:34px;
-    border-radius:50%;
-    display:flex;align-items:center;justify-content:center;
-    border:1px solid rgba(217,176,111,0.25);
-    background:rgba(217,176,111,0.04);
-  }
-  .nav-item.active .nav-icon-circle{
-    border-color:#d9b06f;
-    background:rgba(217,176,111,0.12);
-    box-shadow:0 0 10px rgba(217,176,111,0.3);
-  }
-  .nav-item svg{width:16px;height:16px;}
-  .nav-item span{font-size:0.64rem;letter-spacing:0.04em;font-weight:400;}
+  .done-msg{font-size:0.88rem;color:#cfc9e6;max-width:320px;line-height:1.6;}
 
-  .debug-bar{
-    position:absolute;top:8px;right:8px;z-index:10;
-    display:flex;gap:4px;background:rgba(0,0,0,0.4);padding:4px;border-radius:8px;
-  }
-  .debug-bar button{
-    font-size:0.6rem;padding:4px 7px;border-radius:5px;border:1px solid rgba(217,176,111,0.4);
-    background:transparent;color:#d9b06f;cursor:pointer;font-family:'Jost',sans-serif;
-  }
-  .debug-bar button.active{background:rgba(217,176,111,0.3);}
+  .testbar{position:absolute;top:8px;left:8px;z-index:50;display:flex;gap:4px;}
+  .testbar button{font-size:0.6rem;padding:4px 7px;border-radius:5px;border:1px solid rgba(217,176,111,0.4);background:rgba(0,0,0,0.4);color:#d9b06f;cursor:pointer;}
 </style>
 </head>
 <body>
   <div class="stage">
-    <img class="bg" id="bg-aube" src="assets/aube.webp" alt="">
-    <img class="bg" id="bg-journee" src="assets/journee.webp" alt="">
-    <img class="bg" id="bg-crepuscule" src="assets/crepuscule.webp" alt="">
-    <img class="bg" id="bg-nuit" src="assets/nuit.webp" alt="">
+    <img class="bg" src="aube.webp" alt="">
     <div class="vignette"></div>
 
-    <!-- Barre de test pour prévisualiser les 4 ambiances (à retirer en prod) -->
-    <div class="debug-bar">
-      <button onclick="setBg('aube')">Aube</button>
-      <button onclick="setBg('journee')">Jour</button>
-      <button onclick="setBg('crepuscule')">Soir</button>
-      <button onclick="setBg('nuit')">Nuit</button>
+    <div class="testbar">
+      <button onclick="showView('explain')">Explication</button>
+      <button onclick="showView('active')">Exercice</button>
+      <button onclick="showView('done')">Infusion</button>
     </div>
 
-    <div class="content">
-      <div class="greeting">Bonjour Floriane</div>
-
-      <div class="quote-card">
-        <div class="quote-text"><span class="quote-mark">“</span>Chaque petit pas compte, même quand tu ne le vois pas encore.<span class="quote-mark">”</span></div>
-        <div class="quote-author">— Anonyme</div>
-      </div>
-
-      <div class="arc-wrap">
-        <svg class="arc-svg" viewBox="0 0 360 260">
-          <path d="M 40 200 A 140 140 0 0 1 320 200" fill="none" stroke="rgba(217,176,111,0.3)" stroke-width="1.2" stroke-dasharray="1 7"/>
-
-          <g class="ritual-node node-glow" transform="translate(40,200)" onclick="naeoraNav('matin')" style="cursor:pointer;">
-            <circle class="node-circle-outer" r="40"/>
-            <circle class="node-circle" r="34"/>
-            <g transform="translate(-13,-13)" class="icon-stroke" stroke-width="1.2" fill="none">
-              <circle cx="13" cy="16" r="6.5"/>
-              <path d="M13 4.5v2.3M13 27.5v0M2 16H0M26 16h-2M5.2 8.2L3.7 6.7M20.8 8.2l1.5-1.5" stroke-linecap="round"/>
-              <path d="M5 23c2.5 1.8 5 2.2 8 2.2s5.5-.4 8-2.2" stroke-linecap="round" opacity="0.5"/>
-            </g>
-            <text class="node-label" y="50">Le matin</text>
-          </g>
-
-          <g class="ritual-node node-glow" transform="translate(180,72)" onclick="pickJourneyExercise()" style="cursor:pointer;">
-            <circle class="node-circle-outer" r="44"/>
-            <circle class="node-circle" r="38"/>
-            <g transform="translate(-13,-15)" class="icon-stroke" stroke-width="1.2" fill="none">
-              <path d="M13 24c-5-2.8-8-6.8-8-11.2C5 7.3 8.6 3.5 13 3.5s8 3.8 8 9.3c0 4.4-3 8.4-8 11.2Z"/>
-              <path d="M13 24v-8.5" stroke-linecap="round"/>
-              <path d="M9.5 13.5c1 1.3 2.2 2 3.5 2.3" opacity="0.6" stroke-linecap="round"/>
-              <circle cx="13" cy="10" r="1" fill="#e8c889" stroke="none"/>
-            </g>
-            <text class="node-label" y="58">Dans la journée</text>
-          </g>
-
-          <g class="ritual-node node-glow done" transform="translate(320,200)" onclick="naeoraNav('soir')" style="cursor:pointer;">
-            <circle class="node-circle-outer" r="40"/>
-            <circle class="node-circle" r="34"/>
-            <g transform="translate(-12,-14)" class="icon-stroke" stroke-width="1.2" fill="none">
-              <path d="M21 16.8A8.5 8.5 0 1 1 12.8 5a6.8 6.8 0 0 0 8.2 11.8Z"/>
-              <path d="M16 2.5l0.7 1.6L18.3 4.8l-1.6 0.7L16 7.1l-0.7-1.6L13.7 4.8l1.6-0.7L16 2.5Z" fill="#e8c889" stroke="none" opacity="0.85"/>
-            </g>
-            <circle class="check-badge" cx="13" cy="-27" r="9.5"/>
-            <text x="13" y="-24">✓</text>
-            <text class="node-label" y="50">Le soir</text>
-          </g>
-        </svg>
-      </div>
-
-      <div class="calm-access" onclick="naeoraNav('coherence')">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#d9b06f" stroke-width="1.2">
-          <circle cx="12" cy="13" r="6"/>
-          <path d="M12 3v2.3M12 21.5v0M3 13H1M23 13h-2M5.5 6.5L4 5M18.5 6.5L20 5" stroke-linecap="round"/>
-        </svg>
-        Un instant pour souffler
-      </div>
+    <div class="view" id="view-explain">
+      <div class="ex-title">L'ouverture des possibles</div>
+      <div class="ex-divider"></div>
+      <div class="ex-text">Ton cerveau adore ce qu'il connaît déjà. Face à une situation, il rejoue presque toujours les <b>mêmes pensées, les mêmes réactions, les mêmes conclusions</b> — par habitude, pas par choix.</div>
+      <div class="ex-text">Répéter une phrase d'ouverture, à voix haute ou en pleine conscience, c'est une façon d'<b>interrompre cette boucle automatique</b>. Pendant ces quelques secondes, tu ne cherches pas à analyser, comprendre ou juger ta phrase — tu la laisses simplement exister.</div>
+      <div class="ex-text">Cette absence d'analyse <b>désarme le mental</b>, celui qui veut toujours tout contrôler et tout expliquer. Et dans cet espace qu'il libère, quelque chose de nouveau peut enfin trouver sa place.</div>
+      <div class="ex-tip">💡 Pour plus d'intensité, récite ta phrase devant un miroir, en te regardant droit dans les yeux.</div>
+      <button class="ex-btn" onclick="showView('active')">J'ai compris</button>
     </div>
 
-    <div class="bottom-nav">
-      <div class="nav-item active" onclick="naeoraNav('accueil')">
-        <div class="nav-icon-circle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
-            <path d="M4 11.5 12 4l8 7.5" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M6 10v10h12V10" stroke-linejoin="round"/>
-            <path d="M10 20v-5h4v5" stroke-linejoin="round"/>
-            <circle cx="12" cy="4" r="0.7" fill="currentColor" stroke="none"/>
-          </svg>
+    <div class="view" id="view-active">
+      <div class="help-icon" onclick="showView('explain')">?</div>
+      <div class="phrase" id="phrase-text">« Je suis pleinement ouverte à tout ce que la vie a de meilleur pour moi. »</div>
+
+      <div class="hold-wrap" id="holdBtn">
+        <svg class="hold-svg" viewBox="0 0 130 130">
+          <circle class="hold-track" cx="65" cy="65" r="60"/>
+          <circle class="hold-fill" id="holdFill" cx="65" cy="65" r="60"/>
+        </svg>
+        <div class="hold-center">
+          <div class="lbl">Maintiens</div>
+          <div class="timer" id="holdTimer">8s</div>
         </div>
-        <span>Accueil</span>
       </div>
-      <div class="nav-item" onclick="naeoraNav('ciel')">
-        <div class="nav-icon-circle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1">
-            <path d="M12 2.5l1.6 5.4L19 6.2l-2 5.1L23 13l-5.1 2-0.8 5.5L12 17l-5.1 3.5-0.8-5.5L1 13l6-1.7-2-5.1 5.4 1.7L12 2.5Z" stroke-linejoin="round"/>
-            <circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/>
-          </svg>
-        </div>
-        <span>Ciel</span>
-      </div>
-      <div class="nav-item" onclick="naeoraNav('boutique')">
-        <div class="nav-icon-circle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
-            <path d="M5 8.5h14l-1.3 11.2a1.3 1.3 0 0 1-1.3 1.1H7.6a1.3 1.3 0 0 1-1.3-1.1L5 8.5Z" stroke-linejoin="round"/>
-            <path d="M8.5 8.5v-2a3.5 3.5 0 0 1 7 0v2"/>
-            <path d="M9 12c0 1.6 1.3 2.6 3 2.6s3-1 3-2.6" opacity="0.6" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <span>Boutique</span>
-      </div>
-      <div class="nav-item" onclick="naeoraNav('profil')">
-        <div class="nav-icon-circle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
-            <circle cx="12" cy="7.8" r="3.2"/>
-            <path d="M4.8 20c1-4 4-6 7.2-6s6.2 2 7.2 6" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <span>Profil</span>
-      </div>
+      <div class="particles" id="particles"></div>
+
+      <div class="hold-instruction">Maintiens appuyé pendant 8 secondes en prononçant ta phrase, à voix haute ou en conscience.</div>
+      <div class="encourage-msg" id="encourageMsg"></div>
+    </div>
+
+    <div class="view" id="view-done">
+      <div class="done-phrase">« Je suis pleinement ouverte à tout ce que la vie a de meilleur pour moi. »</div>
+      <div class="done-msg">Ta phrase infuse déjà en toi pour aujourd'hui.<br>Tu peux revenir la relire et la répéter quand tu le souhaites.</div>
+      <button onclick="naeoraNav('accueil')" style="margin-top:5vh;padding:13px 30px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.92rem;cursor:pointer;">Retour à l'accueil</button>
     </div>
   </div>
 
   <script>
-    function setBg(key){
-      document.querySelectorAll('.bg').forEach(el => el.classList.remove('active'));
-      document.getElementById('bg-' + key).classList.add('active');
-      document.querySelectorAll('.debug-bar button').forEach(b => b.classList.remove('active'));
+    function showView(name){
+      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-' + name).classList.add('active');
+      if(name === 'active'){ resetHold(); }
     }
 
-    function getTimeSlot(hour){
-      if(hour >= 5 && hour < 8) return 'aube';
-      if(hour >= 8 && hour < 18) return 'journee';
-      if(hour >= 18 && hour < 21) return 'crepuscule';
-      return 'nuit';
+    const HOLD_DURATION = 8000;
+    let holdInterval = null, holdStart = null, isHolding = false;
+    const fillCircle = document.getElementById('holdFill');
+    const timerLabel = document.getElementById('holdTimer');
+    const encourageMsg = document.getElementById('encourageMsg');
+    const CIRCUM = 2 * Math.PI * 60;
+
+    const ENCOURAGEMENTS = [
+      "Ne lâche pas. Prends une inspiration, et recommence.",
+      "C'est normal de vouloir lâcher. Respire, et reviens à ta phrase.",
+      "Encore un peu. Reste avec toi, et continue."
+    ];
+
+    function resetHold(){
+      clearInterval(holdInterval);
+      isHolding = false;
+      fillCircle.style.strokeDashoffset = CIRCUM;
+      timerLabel.textContent = '8s';
+      document.getElementById('holdBtn').classList.remove('collapsing');
+      encourageMsg.classList.remove('show');
     }
 
-    // Sélection automatique selon l'heure réelle au chargement
-    const hour = new Date().getHours();
-    setBg(getTimeSlot(hour));
+    function startHold(e){
+      e.preventDefault();
+      if(isHolding) return;
+      isHolding = true;
+      encourageMsg.classList.remove('show');
+      holdStart = Date.now();
+      holdInterval = setInterval(() => {
+        if(!isHolding) return;
+        const elapsed = Date.now() - holdStart;
+        const progress = Math.min(elapsed / HOLD_DURATION, 1);
+        fillCircle.style.strokeDashoffset = CIRCUM * (1 - progress);
+        const remaining = Math.ceil((HOLD_DURATION - elapsed) / 1000);
+        timerLabel.textContent = remaining > 0 ? remaining + 's' : '✓';
+        if(progress >= 1){
+          clearInterval(holdInterval);
+          isHolding = false;
+          document.getElementById('holdBtn').classList.add('collapsing');
+          burstParticles();
+          setTimeout(() => showView('done'), 1600);
+        }
+      }, 30);
+    }
+
+    function cancelHold(){
+      if(!isHolding) return;
+      const elapsed = Date.now() - holdStart;
+      isHolding = false;
+      clearInterval(holdInterval);
+      fillCircle.style.strokeDashoffset = CIRCUM;
+      timerLabel.textContent = '8s';
+      if(elapsed < HOLD_DURATION){
+        const msg = ENCOURAGEMENTS[Math.floor(Math.random()*ENCOURAGEMENTS.length)];
+        encourageMsg.textContent = msg;
+        encourageMsg.classList.add('show');
+      }
+    }
+
+    const holdBtn = document.getElementById('holdBtn');
+    holdBtn.style.touchAction = 'none';
+    holdBtn.addEventListener('pointerdown', startHold);
+    holdBtn.addEventListener('pointerup', cancelHold);
+    holdBtn.addEventListener('pointercancel', cancelHold);
+    holdBtn.addEventListener('pointerleave', cancelHold);
+
+    function burstParticles(){
+      const container = document.getElementById('particles');
+      for(let i=0;i<36;i++){
+        const b = document.createElement('div');
+        b.className = 'bubble';
+        const size = 4 + Math.random()*10;
+        b.style.width = size+'px';
+        b.style.height = size+'px';
+        b.style.left = (Math.random()*100) + '%';
+        b.style.top = (40 + Math.random()*50) + '%';
+        b.style.animation = 'floatUp ' + (1.8 + Math.random()*1.6) + 's ease-out forwards';
+        b.style.animationDelay = (Math.random()*0.7)+'s';
+        container.appendChild(b);
+        setTimeout(() => b.remove(), 4000);
+      }
+    }
+
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = '@keyframes floatUp { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(-260px) scale(1.1); opacity: 0; } }';
+    document.head.appendChild(styleSheet);
+
+    showView('explain');
   </script>
-<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script>
-<script>
-function pickJourneyExercise(){
-  // Pool des exercices abonnés tirés au hasard (la Lettre de libération sera ajoutée
-  // ici une fois son écran construit — voir note de livraison).
-  var pool = ['hooponopono', 'envol', 'echo', 'dialogue', 'source', 'pendule_explain'];
-  var choice = pool[Math.floor(Math.random() * pool.length)];
-  naeoraNav(choice);
-}
-</script>
-</body>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
 </html>
