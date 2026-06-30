@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Naéora</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;overflow:hidden;background:#05060f;}
+  #app-frame{width:100%;height:100%;border:none;display:block;}
+
+  #sound-toggle{
+    position:fixed;top:max(14px, env(safe-area-inset-top));right:14px;z-index:1000;
+    width:34px;height:34px;border-radius:50%;
+    background:rgba(8,6,24,0.55);border:1px solid rgba(217,176,111,0.35);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    backdrop-filter:blur(6px);
+  }
+  #sound-toggle svg{width:16px;height:16px;}
+</style>
+</head>
+<body>
+  <iframe id="app-frame" src="naeora-splash-final.html" title="Naéora"></iframe>
+
+  <div id="sound-toggle" onclick="toggleSound()" title="Activer/couper la musique">
+    <svg id="soundIcon" viewBox="0 0 24 24" fill="none" stroke="#d9b06f" stroke-width="1.4">
+      <path d="M4 9v6h4l5 4V5L8 9H4Z" stroke-linejoin="round"/>
+      <path id="soundWave1" d="M16.5 9a4.5 4.5 0 0 1 0 6" stroke-linecap="round"/>
+      <path id="soundWave2" d="M19 6.5a8 8 0 0 1 0 11" stroke-linecap="round" opacity="0.6"/>
+    </svg>
+  </div>
+
+  <audio id="bgMusic" src="naeora-ambient.mp3" preload="auto"></audio>
+  <audio id="bgMusicMatin" src="naeora-ambient-matin.mp3" preload="auto"></audio>
+  <audio id="bgMusicSoir" src="naeora-ambient-soir.mp3" preload="auto"></audio>
+  <audio id="bgMusicJournee" src="naeora-ambient-journee.mp3" preload="auto"></audio>
+
+  <script>
+    const ROUTES = {
+      splash:            'naeora-splash-final.html',
+      avertissement:      'naeora-avertissement-preview.html',
+      onb1:               'naeora-onboarding-slide1-preview.html',
+      onb2:               'naeora-onboarding-slide2-preview.html',
+      onb3:               'naeora-onboarding-slide3-preview.html',
+      onb4:               'naeora-onboarding-slide4-preview.html',
+      onb5:               'naeora-onboarding-slide5-preview.html',
+      onb6:               'naeora-onboarding-slide6-preview.html',
+      inscription:        'naeora-inscription-preview.html',
+      accueil:            'naeora-accueil-preview.html',
+      ciel:               'naeora-ciel-preview.html',
+      boutique:           'naeora-boutique-preview.html',
+      profil:             'naeora-profil-preview.html',
+      matin:              'naeora-matin-preview.html',
+      soir:               'naeora-soir-preview.html',
+      coherence:          'naeora-coherence-preview.html',
+      hooponopono:        'naeora-hooponopono-preview.html',
+      envol:              'naeora-envol-preview.html',
+      echo:               'naeora-echo-preview.html',
+      dialogue:           'naeora-dialogue-preview.html',
+      source:             'naeora-source-preview.html',
+      pendule_explain:    'naeora-pendule-explication-preview.html',
+      pendule_tuto:       'naeora-pendule-tuto-guide-preview.html',
+      pendule_resume:     'naeora-pendule-tuto-resume-preview.html',
+      pendule_exercice:   'naeora-pendule-exercice-preview.html'
+    };
+
+    // Écrans répartis selon l'ambiance sonore qui leur correspond
+    const MATIN_ROUTES = new Set(['matin']);
+    const SOIR_ROUTES = new Set(['soir']);
+    const JOURNEE_ROUTES = new Set([
+      'coherence', 'hooponopono', 'envol', 'echo', 'dialogue', 'source',
+      'pendule_explain', 'pendule_tuto', 'pendule_resume', 'pendule_exercice'
+    ]);
+    // Tout le reste (splash, avertissement, onboarding, inscription, accueil,
+    // ciel, boutique, profil) utilise l'ambiance générale.
+
+    const frame = document.getElementById('app-frame');
+    const tracks = {
+      general: document.getElementById('bgMusic'),
+      matin:   document.getElementById('bgMusicMatin'),
+      soir:    document.getElementById('bgMusicSoir'),
+      journee: document.getElementById('bgMusicJournee')
+    };
+    const BASE_VOLUME = 0.35;
+    const FADE_DURATION = 2.5; // secondes de fondu en sortie/entrée (bouclage)
+    const CROSSFADE_DURATION = 900; // ms, transition entre deux ambiances différentes
+
+    Object.values(tracks).forEach(t => { t.volume = 0; });
+
+    function trackKeyForRoute(route){
+      if(MATIN_ROUTES.has(route)) return 'matin';
+      if(SOIR_ROUTES.has(route)) return 'soir';
+      if(JOURNEE_ROUTES.has(route)) return 'journee';
+      return 'general';
+    }
+
+    // Bouclage manuel avec fondu doux (au lieu du loop natif qui coupe net),
+    // appliqué à chacune des 4 pistes.
+    Object.entries(tracks).forEach(([key, track]) => {
+      track.addEventListener('timeupdate', () => {
+        if(!track.duration || activeTrackKey !== key) return;
+        const remaining = track.duration - track.currentTime;
+        if(remaining <= FADE_DURATION && remaining > 0){
+          const ratio = Math.max(remaining / FADE_DURATION, 0);
+          track.volume = BASE_VOLUME * ratio;
+        }
+      });
+      track.addEventListener('ended', () => {
+        track.currentTime = 0;
+        track.volume = 0;
+        track.play().catch(() => {});
+        if(activeTrackKey === key) fadeTrackIn(track);
+      });
+    });
+
+    let fadeInterval = null;
+    function fadeTrackIn(track){
+      clearInterval(fadeInterval);
+      const steps = 30;
+      let i = 0;
+      fadeInterval = setInterval(() => {
+        i++;
+        track.volume = Math.min(BASE_VOLUME * (i / steps), BASE_VOLUME);
+        if(i >= steps) clearInterval(fadeInterval);
+      }, (FADE_DURATION * 1000) / steps);
+    }
+
+    let soundEnabled = (localStorage.getItem('naeora_sound') !== 'off');
+    let userHasInteracted = false;
+
+    function updateSoundIcon(){
+      document.getElementById('soundWave1').style.opacity = soundEnabled ? '1' : '0';
+      document.getElementById('soundWave2').style.opacity = soundEnabled ? '0.6' : '0';
+    }
+
+    let activeTrackKey = null;
+
+    function stopTrack(track){
+      clearInterval(fadeOutIntervals[track === tracks.general ? 'general' : Object.keys(tracks).find(k => tracks[k] === track)]);
+      const steps = 15;
+      let i = steps;
+      const startVol = track.volume;
+      const id = setInterval(() => {
+        i--;
+        track.volume = Math.max(startVol * (i / steps), 0);
+        if(i <= 0){
+          clearInterval(id);
+          track.pause();
+        }
+      }, CROSSFADE_DURATION / steps);
+    }
+
+    const fadeOutIntervals = {};
+
+    function applyMusicForRoute(route){
+      const targetKey = trackKeyForRoute(route);
+
+      if(!soundEnabled){
+        Object.values(tracks).forEach(t => t.pause());
+        activeTrackKey = targetKey;
+        return;
+      }
+
+      if(targetKey === activeTrackKey){
+        // Même ambiance : ne rien interrompre si déjà en lecture
+        if(userHasInteracted && tracks[targetKey].paused){
+          tracks[targetKey].volume = BASE_VOLUME;
+          tracks[targetKey].play().catch(() => {});
+        }
+        return;
+      }
+
+      // Changement d'ambiance : fondu sortant sur l'ancienne, fondu entrant sur la nouvelle
+      if(activeTrackKey && tracks[activeTrackKey]){
+        stopTrack(tracks[activeTrackKey]);
+      }
+      activeTrackKey = targetKey;
+
+      if(userHasInteracted){
+        const newTrack = tracks[targetKey];
+        newTrack.volume = 0;
+        newTrack.play().catch(() => {});
+        const steps = 15;
+        let i = 0;
+        const id = setInterval(() => {
+          i++;
+          newTrack.volume = Math.min(BASE_VOLUME * (i / steps), BASE_VOLUME);
+          if(i >= steps) clearInterval(id);
+        }, CROSSFADE_DURATION / steps);
+      }
+    }
+
+    function toggleSound(){
+      soundEnabled = !soundEnabled;
+      localStorage.setItem('naeora_sound', soundEnabled ? 'on' : 'off');
+      updateSoundIcon();
+      applyMusicForRoute(currentRoute);
+    }
+
+    let currentRoute = 'splash';
+
+    function goTo(route){
+      const path = ROUTES[route];
+      if(!path){
+        console.warn('Route inconnue :', route);
+        return;
+      }
+      currentRoute = route;
+      frame.src = path;
+      applyMusicForRoute(route);
+    }
+
+    window.addEventListener('message', (event) => {
+      if(event.data && event.data.naeoraNav){
+        goTo(event.data.naeoraNav);
+      }
+    });
+
+    // L'autoplay sonore est bloqué par les navigateurs tant qu'il n'y a pas
+    // eu d'interaction utilisateur : on démarre la musique au premier clic/tap.
+    function unlockAudioOnce(){
+      if(userHasInteracted) return;
+      userHasInteracted = true;
+      applyMusicForRoute(currentRoute);
+      window.removeEventListener('pointerdown', unlockAudioOnce);
+    }
+    window.addEventListener('pointerdown', unlockAudioOnce);
+
+    updateSoundIcon();
+
+    goTo('splash');
+  </script>
+</body>
+</html>

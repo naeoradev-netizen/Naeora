@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Naéora — Accueil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;background:#0a0820;overflow:hidden;font-family:'Jost',sans-serif;}
+  .stage{position:relative;width:100%;height:100vh;overflow:hidden;display:flex;flex-direction:column;}
+  .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;opacity:0;transition:opacity 1.2s ease;}
+  .bg.active{opacity:1;}
+  .vignette{position:absolute;inset:0;background:radial-gradient(circle at 50% 38%, rgba(0,0,0,0) 0%, rgba(8,6,24,0.35) 70%, rgba(8,6,24,0.6) 100%);z-index:1;}
+
+  .content{position:relative;z-index:2;flex:1;min-height:0;display:flex;flex-direction:column;padding:7vh 7vw 0;overflow:hidden;}
+
+  .greeting{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:1.85rem;
+    color:#f7f2e9;
+    text-shadow:0 2px 12px rgba(0,0,0,0.5);
+  }
+
+  .quote-card{
+    margin-top:4vh;
+    padding:22px 24px 18px;
+    border-radius:20px;
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(6px);
+    border:1px solid rgba(217,176,111,0.28);
+    box-shadow:0 8px 24px rgba(0,0,0,0.25);
+  }
+  .quote-text{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:1.12rem;
+    line-height:1.6;
+    color:#ede8f5;
+    text-align:center;
+  }
+  .quote-mark{color:#d9b06f;font-size:1.3rem;}
+  .quote-author{
+    font-family:'Cormorant Garamond', serif;
+    font-style:italic;
+    font-size:0.86rem;
+    color:#d9b06f;
+    text-align:right;
+    margin-top:10px;
+  }
+
+  .arc-wrap{flex:1;display:flex;align-items:center;justify-content:center;}
+
+  .calm-access{
+    display:flex;align-items:center;justify-content:center;gap:9px;
+    padding:11px 22px;border-radius:30px;margin-bottom:2.5vh;
+    background:rgba(255,255,255,0.04);border:1px solid rgba(217,176,111,0.25);
+    color:#cfc9e6;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.9rem;
+    cursor:pointer;align-self:center;
+  }
+  .calm-access svg{width:16px;height:16px;flex-shrink:0;}
+  .arc-svg{width:100%;max-width:380px;}
+
+  .node-glow{filter:drop-shadow(0 0 10px rgba(217,176,111,0.45));}
+  .node-circle-outer{fill:none;stroke:rgba(217,176,111,0.35);stroke-width:1;}
+  .node-circle{fill:#1c1a4a;stroke:#d9b06f;stroke-width:1.3;}
+  .ritual-node.done .node-circle{fill:#26224f;stroke:#8a82ad;opacity:0.6;}
+  .ritual-node.done .node-circle-outer{stroke:rgba(140,130,170,0.25);}
+  .ritual-node.done .icon-stroke{stroke:#9b94bd !important;}
+  .node-label{font-family:'Jost',sans-serif;font-size:11px;font-weight:400;letter-spacing:0.03em;fill:#e3ddf0;text-anchor:middle;}
+  .icon-stroke{stroke:#e8c889;}
+  .check-badge{fill:#3fae6a;stroke:#0e2a18;stroke-width:0.5;}
+  .check-badge text{fill:#0e2a18;font-size:9px;text-anchor:middle;font-family:'Jost',sans-serif;font-weight:500;}
+
+  .bottom-nav{
+    position:relative;z-index:5;
+    display:flex;justify-content:space-around;align-items:center;
+    padding:16px 7vw max(16px, env(safe-area-inset-bottom));
+    border-top:1px solid rgba(217,176,111,0.2);
+    background:rgba(8,6,24,0.6);
+    backdrop-filter:blur(10px);
+    margin:0 -7vw;
+    flex-shrink:0;
+  }
+  .nav-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;color:#8b84ab;}
+  .nav-item.active{color:#d9b06f;}
+  .nav-icon-circle{
+    width:34px;height:34px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    border:1px solid rgba(217,176,111,0.25);
+    background:rgba(217,176,111,0.04);
+  }
+  .nav-item.active .nav-icon-circle{
+    border-color:#d9b06f;
+    background:rgba(217,176,111,0.12);
+    box-shadow:0 0 10px rgba(217,176,111,0.3);
+  }
+  .nav-item svg{width:16px;height:16px;}
+  .nav-item span{font-size:0.64rem;letter-spacing:0.04em;font-weight:400;}
+
+  .debug-bar{
+    position:absolute;top:8px;right:8px;z-index:10;
+    display:flex;gap:4px;background:rgba(0,0,0,0.4);padding:4px;border-radius:8px;
+  }
+  .debug-bar button{
+    font-size:0.6rem;padding:4px 7px;border-radius:5px;border:1px solid rgba(217,176,111,0.4);
+    background:transparent;color:#d9b06f;cursor:pointer;font-family:'Jost',sans-serif;
+  }
+  .debug-bar button.active{background:rgba(217,176,111,0.3);}
+
+  .ritual-node .check-badge, .ritual-node .check-badge + text{ opacity:0; transition:opacity 0.4s ease; }
+  .ritual-node.done .check-badge, .ritual-node.done .check-badge + text{ opacity:1; }
+</style>
+</head>
+<body>
+  <div class="stage">
+    <img class="bg" id="bg-aube" src="aube.webp" alt="">
+    <img class="bg" id="bg-journee" src="journee.webp" alt="">
+    <img class="bg" id="bg-crepuscule" src="crepuscule.webp" alt="">
+    <img class="bg" id="bg-nuit" src="nuit.webp" alt="">
+    <div class="vignette"></div>
+
+    <!-- Barre de test pour prévisualiser les 4 ambiances (à retirer en prod) -->
+    <div class="debug-bar">
+      <button onclick="setBg('aube')">Aube</button>
+      <button onclick="setBg('journee')">Jour</button>
+      <button onclick="setBg('crepuscule')">Soir</button>
+      <button onclick="setBg('nuit')">Nuit</button>
+    </div>
+
+    <div class="content">
+      <div class="greeting">Bonjour Floriane</div>
+
+      <div class="quote-card">
+        <div class="quote-text"><span class="quote-mark">“</span>Chaque petit pas compte, même quand tu ne le vois pas encore.<span class="quote-mark">”</span></div>
+        <div class="quote-author">— Anonyme</div>
+      </div>
+
+      <div class="arc-wrap">
+        <svg class="arc-svg" viewBox="0 0 360 260">
+          <path d="M 40 200 A 140 140 0 0 1 320 200" fill="none" stroke="rgba(217,176,111,0.3)" stroke-width="1.2" stroke-dasharray="1 7"/>
+
+          <g class="ritual-node node-glow" data-ritual="matin" transform="translate(40,200)" onclick="naeoraNav('matin')" style="cursor:pointer;">
+            <circle class="node-circle-outer" r="40"/>
+            <circle class="node-circle" r="34"/>
+            <g transform="translate(-13,-13)" class="icon-stroke" stroke-width="1.2" fill="none">
+              <circle cx="13" cy="16" r="6.5"/>
+              <path d="M13 4.5v2.3M13 27.5v0M2 16H0M26 16h-2M5.2 8.2L3.7 6.7M20.8 8.2l1.5-1.5" stroke-linecap="round"/>
+              <path d="M5 23c2.5 1.8 5 2.2 8 2.2s5.5-.4 8-2.2" stroke-linecap="round" opacity="0.5"/>
+            </g>
+            <circle class="check-badge" cx="13" cy="-27" r="9.5"/>
+            <text x="13" y="-24">✓</text>
+            <text class="node-label" y="50">Le matin</text>
+          </g>
+
+          <g class="ritual-node node-glow" data-ritual="journee" transform="translate(180,72)" onclick="pickJourneyExercise()" style="cursor:pointer;">
+            <circle class="node-circle-outer" r="44"/>
+            <circle class="node-circle" r="38"/>
+            <g transform="translate(-13,-15)" class="icon-stroke" stroke-width="1.2" fill="none">
+              <path d="M13 24c-5-2.8-8-6.8-8-11.2C5 7.3 8.6 3.5 13 3.5s8 3.8 8 9.3c0 4.4-3 8.4-8 11.2Z"/>
+              <path d="M13 24v-8.5" stroke-linecap="round"/>
+              <path d="M9.5 13.5c1 1.3 2.2 2 3.5 2.3" opacity="0.6" stroke-linecap="round"/>
+              <circle cx="13" cy="10" r="1" fill="#e8c889" stroke="none"/>
+            </g>
+            <circle class="check-badge" cx="13" cy="-31" r="9.5"/>
+            <text x="13" y="-28">✓</text>
+            <text class="node-label" y="58">Dans la journée</text>
+          </g>
+
+          <g class="ritual-node node-glow" data-ritual="soir" transform="translate(320,200)" onclick="naeoraNav('soir')" style="cursor:pointer;">
+            <circle class="node-circle-outer" r="40"/>
+            <circle class="node-circle" r="34"/>
+            <g transform="translate(-12,-14)" class="icon-stroke" stroke-width="1.2" fill="none">
+              <path d="M21 16.8A8.5 8.5 0 1 1 12.8 5a6.8 6.8 0 0 0 8.2 11.8Z"/>
+              <path d="M16 2.5l0.7 1.6L18.3 4.8l-1.6 0.7L16 7.1l-0.7-1.6L13.7 4.8l1.6-0.7L16 2.5Z" fill="#e8c889" stroke="none" opacity="0.85"/>
+            </g>
+            <circle class="check-badge" cx="13" cy="-27" r="9.5"/>
+            <text x="13" y="-24">✓</text>
+            <text class="node-label" y="50">Le soir</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="calm-access" onclick="naeoraNav('coherence')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#d9b06f" stroke-width="1.2">
+          <circle cx="12" cy="13" r="6"/>
+          <path d="M12 3v2.3M12 21.5v0M3 13H1M23 13h-2M5.5 6.5L4 5M18.5 6.5L20 5" stroke-linecap="round"/>
+        </svg>
+        Un instant pour souffler
+      </div>
+    </div>
+
+    <div class="bottom-nav">
+      <div class="nav-item active" onclick="naeoraNav('accueil')">
+        <div class="nav-icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+            <path d="M4 11.5 12 4l8 7.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6 10v10h12V10" stroke-linejoin="round"/>
+            <path d="M10 20v-5h4v5" stroke-linejoin="round"/>
+            <circle cx="12" cy="4" r="0.7" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <span>Accueil</span>
+      </div>
+      <div class="nav-item" onclick="naeoraNav('ciel')">
+        <div class="nav-icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1">
+            <path d="M12 2.5l1.6 5.4L19 6.2l-2 5.1L23 13l-5.1 2-0.8 5.5L12 17l-5.1 3.5-0.8-5.5L1 13l6-1.7-2-5.1 5.4 1.7L12 2.5Z" stroke-linejoin="round"/>
+            <circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/>
+          </svg>
+        </div>
+        <span>Ciel</span>
+      </div>
+      <div class="nav-item" onclick="naeoraNav('boutique')">
+        <div class="nav-icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+            <path d="M5 8.5h14l-1.3 11.2a1.3 1.3 0 0 1-1.3 1.1H7.6a1.3 1.3 0 0 1-1.3-1.1L5 8.5Z" stroke-linejoin="round"/>
+            <path d="M8.5 8.5v-2a3.5 3.5 0 0 1 7 0v2"/>
+            <path d="M9 12c0 1.6 1.3 2.6 3 2.6s3-1 3-2.6" opacity="0.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span>Boutique</span>
+      </div>
+      <div class="nav-item" onclick="naeoraNav('profil')">
+        <div class="nav-icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3">
+            <circle cx="12" cy="7.8" r="3.2"/>
+            <path d="M4.8 20c1-4 4-6 7.2-6s6.2 2 7.2 6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <span>Profil</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function setBg(key){
+      document.querySelectorAll('.bg').forEach(el => el.classList.remove('active'));
+      document.getElementById('bg-' + key).classList.add('active');
+      document.querySelectorAll('.debug-bar button').forEach(b => b.classList.remove('active'));
+    }
+
+    function getTimeSlot(hour){
+      if(hour >= 5 && hour < 8) return 'aube';
+      if(hour >= 8 && hour < 18) return 'journee';
+      if(hour >= 18 && hour < 21) return 'crepuscule';
+      return 'nuit';
+    }
+
+    // Sélection automatique selon l'heure réelle au chargement
+    const hour = new Date().getHours();
+    setBg(getTimeSlot(hour));
+  </script>
+<script src="naeora-state.js"></script>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script>
+<script>
+function pickJourneyExercise(){
+  naeoraPickJourneyExercise();
+}
+
+// Applique les coches "validé" selon ce qui a déjà été fait aujourd'hui
+function applyDoneStates(){
+  var matinNode = document.querySelector('[data-ritual="matin"]');
+  var journeeNode = document.querySelector('[data-ritual="journee"]');
+  var soirNode = document.querySelector('[data-ritual="soir"]');
+  if(naeoraIsDone('matin') && matinNode) matinNode.classList.add('done');
+  if(naeoraIsDone('journee') && journeeNode) journeeNode.classList.add('done');
+  if(naeoraIsDone('soir') && soirNode) soirNode.classList.add('done');
+}
+document.addEventListener('DOMContentLoaded', applyDoneStates);
+if(document.readyState !== 'loading'){ applyDoneStates(); }
+</script>
+</body>
+</html>
