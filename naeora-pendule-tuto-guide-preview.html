@@ -151,6 +151,11 @@
     <img class="bg" src="coherence.webp" alt="">
     <div class="overlay"></div>
 
+    <div class="testbar">
+      <button onclick="showView('explain')">Explication</button>
+      <button onclick="returnToExerciseIfAlreadyDone()">Revenir plus tard</button>
+    </div>
+
     <!-- VUE 1 : EXPLICATION -->
     <div class="view" id="view-explain">
       <div class="ex-title">L'envol</div>
@@ -190,7 +195,7 @@
     <div class="view" id="view-done">
       <div class="done-msg">Tu as fait le tri.</div>
       <div class="done-sub">Ce qui restait à porter, tu l'as posé. Ce qui reste, c'est sur quoi tu peux agir aujourd'hui.</div>
-      <button onclick="naeoraMarkDone('journee'); naeoraNav('accueil')" style="margin-top:5vh;padding:13px 30px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.92rem;cursor:pointer;opacity:0;transition:opacity 2.2s ease;transition-delay:1.2s;" class="return-home-fade">Retour à l'accueil</button>
+      <button onclick="naeoraNav('accueil')" style="margin-top:5vh;padding:13px 30px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.92rem;cursor:pointer;opacity:0;transition:opacity 2.2s ease;transition-delay:1.2s;" class="return-home-fade">Retour à l'accueil</button>
 
       <div class="done-defis-list" id="doneDefisList"></div>
     </div>
@@ -427,6 +432,5 @@
 
     showView('explain');
   </script>
-<script src="naeora-state.js"></script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
 </html>

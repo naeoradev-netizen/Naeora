@@ -70,6 +70,13 @@
     <div class="vignette"></div>
     <div class="sky-stars" id="skyStars"></div>
 
+    <div class="testbar">
+      <button onclick="setStars(8)">8 étoiles</button>
+      <button onclick="setStars(49)">49 étoiles</button>
+      <button onclick="setStars(50)">50 étoiles</button>
+      <button onclick="setStars(127)">127 étoiles</button>
+    </div>
+
     <div class="spacer-top"></div>
 
     <div class="spacer"></div>

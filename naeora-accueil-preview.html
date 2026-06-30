@@ -98,6 +98,10 @@
     <img class="bg" src="echo.webp" alt="">
     <div class="overlay"></div>
 
+    <div class="testbar">
+      <button onclick="restart()">Recommencer</button>
+    </div>
+
     <div class="view" id="view-active">
       <div class="help-icon" onclick="naeoraNav('pendule_resume')">?</div>
 
@@ -114,7 +118,7 @@
       <div class="final-text" id="finalText"></div>
 
       <button class="continue-btn" id="continueBtn" onclick="nextStep()">Continuer</button>
-      <button class="finish-btn" id="finishBtn" onclick="naeoraMarkDone('journee'); naeoraNav('accueil')">J'ai terminé</button>
+      <button class="finish-btn" id="finishBtn" onclick="naeoraNav('accueil')">J'ai terminé</button>
     </div>
   </div>
 
@@ -189,6 +193,5 @@
 
     showStep(0);
   </script>
-<script src="naeora-state.js"></script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
 </html>

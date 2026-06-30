@@ -175,7 +175,7 @@
     <div class="title">Crée ton espace</div>
     <div class="subtitle">Quelques informations pour commencer</div>
 
-    <form id="inscriptionForm" onsubmit="return handleInscription(event)">
+    <form onsubmit="event.preventDefault(); naeoraNav('accueil');">
       <div class="field">
         <label for="prenom">Prénom</label>
         <input type="text" id="prenom" placeholder="Ton prénom" required>
@@ -198,7 +198,7 @@
 
       <div class="checkbox-row">
         <input type="checkbox" id="cgu" required>
-        <label for="cgu">J'accepte les <a href="naeora-cgu.html" target="_blank">conditions d'utilisation</a> et la <a href="naeora-confidentialite.html" target="_blank">politique de confidentialité</a></label>
+        <label for="cgu">J'accepte les <a href="#">conditions d'utilisation</a> et la <a href="#">politique de confidentialité</a></label>
       </div>
 
       <button type="submit" class="submit-btn">Créer mon compte</button>
@@ -206,35 +206,5 @@
 
     <div class="login-link">Déjà un compte ? <a href="#">Se connecter</a></div>
   </div>
-<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script>
-<script>
-  // Limite la date de naissance sélectionnable à 18 ans minimum
-  (function(){
-    var champ = document.getElementById('naissance');
-    var limite = new Date();
-    limite.setFullYear(limite.getFullYear() - 18);
-    champ.max = limite.toISOString().split('T')[0];
-  })();
-
-  function handleInscription(event){
-    event.preventDefault();
-    var prenom = document.getElementById('prenom').value.trim();
-    var naissance = document.getElementById('naissance').value;
-    var email = document.getElementById('email').value.trim();
-
-    var limite = new Date();
-    limite.setFullYear(limite.getFullYear() - 18);
-    if(new Date(naissance) > limite){
-      alert("Il faut avoir au moins 18 ans pour créer un compte Naéora.");
-      return false;
-    }
-
-    var profil = { prenom: prenom, email: email, naissance: naissance };
-    localStorage.setItem('naeora_profile', JSON.stringify(profil));
-
-    naeoraNav('accueil');
-    return false;
-  }
-</script>
-</body>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
 </html>

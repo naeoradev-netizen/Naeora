@@ -58,7 +58,7 @@
   }
   .hold-center .lbl{font-size:0.72rem;letter-spacing:0.08em;color:#cfc9e6;text-transform:uppercase;}
   .hold-center .timer{font-family:'Cormorant Garamond',serif;font-size:1.6rem;margin-top:4px;}
-  .hold-instruction{margin-top:5vh;font-size:0.86rem;color:#e3ddf0;max-width:300px;}
+  .hold-instruction{margin-top:5vh;font-size:0.86rem;color:#a89fc4;max-width:300px;}
   .encourage-msg{
     margin-top:3vh;font-size:0.88rem;color:#f3d9a8;max-width:300px;
     font-family:'Cormorant Garamond',serif;font-style:italic;
@@ -91,16 +91,18 @@
 
   .testbar{position:absolute;top:8px;left:8px;z-index:50;display:flex;gap:4px;}
   .testbar button{font-size:0.6rem;padding:4px 7px;border-radius:5px;border:1px solid rgba(217,176,111,0.4);background:rgba(0,0,0,0.4);color:#d9b06f;cursor:pointer;}
-
-  .hold-wrap, .hold-wrap *{
-    user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;
-  }
 </style>
 </head>
 <body>
   <div class="stage">
     <img class="bg" src="aube.webp" alt="">
     <div class="vignette"></div>
+
+    <div class="testbar">
+      <button onclick="showView('explain')">Explication</button>
+      <button onclick="showView('active')">Exercice</button>
+      <button onclick="showView('done')">Infusion</button>
+    </div>
 
     <div class="view" id="view-explain">
       <div class="ex-title">L'ouverture des possibles</div>
@@ -186,8 +188,7 @@
           isHolding = false;
           document.getElementById('holdBtn').classList.add('collapsing');
           burstParticles();
-          naeoraMarkDone('matin');
-setTimeout(() => showView('done'), 1600);
+          setTimeout(() => showView('done'), 1600);
         }
       }, 30);
     }
@@ -236,6 +237,5 @@ setTimeout(() => showView('done'), 1600);
 
     showView('explain');
   </script>
-<script src="naeora-state.js"></script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
 </html>

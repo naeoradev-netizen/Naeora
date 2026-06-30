@@ -118,6 +118,13 @@
 
     <div class="sky-stars" id="skyStars"></div>
 
+    <div class="testbar">
+      <button onclick="showView('explain')">Explication</button>
+      <button onclick="showView('write')">Écriture</button>
+      <button onclick="showView('limit')">Limite atteinte</button>
+      <button id="togglePlan" onclick="togglePlan()">Mode: Gratuit</button>
+    </div>
+
     <!-- VUE 1 : EXPLICATION -->
     <div class="view" id="view-explain">
       <div class="ex-title">La gratitude du soir</div>
@@ -264,7 +271,6 @@
 
       setTimeout(() => {
         if(gratitudeCount >= maxGratitudes){
-          naeoraMarkDone('soir');
           showView('limit');
         } else {
           card.classList.remove('closing');
@@ -277,6 +283,5 @@
     renderCounter();
     showView('explain');
   </script>
-<script src="naeora-state.js"></script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
 </html>

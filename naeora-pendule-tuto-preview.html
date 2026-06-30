@@ -104,6 +104,12 @@
     <img class="bg" src="coherence.webp" alt="">
     <div class="overlay"></div>
 
+    <div class="testbar">
+      <button onclick="showView('explain')">Explication</button>
+      <button onclick="startExercise()">Exercice</button>
+      <button onclick="toggleKit()">Basculer coffret</button>
+    </div>
+
     <!-- VUE 1 : EXPLICATION -->
     <div class="view" id="view-explain">
       <div class="ex-title">La source</div>
@@ -216,12 +222,10 @@
     }
 
     function returnHomeSource(){
-      naeoraMarkDone('journee');
       naeoraNav('accueil');
     }
 
     showView('explain');
   </script>
-<script src="naeora-state.js"></script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
 </html>

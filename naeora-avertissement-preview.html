@@ -133,6 +133,10 @@
     <img class="bg" src="nuit.webp" alt="">
     <div class="vignette"></div>
 
+    <div class="testbar">
+      <button onclick="togglePlan()">Basculer abonnement</button>
+    </div>
+
     <div class="content">
       <div class="profile-header">
         <svg class="emblem" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -147,7 +151,7 @@
             <path d="M0,-17 L2.5,-3 L17,0 L2.5,3 L0,17 L-2.5,3 L-17,0 L-2.5,-3 Z" fill="#fff7e6" transform="rotate(45)"/>
           </g>
         </svg>
-        <div class="profile-name" id="profileName">Floriane</div>
+        <div class="profile-name">Floriane</div>
         <div class="plan-badge" id="planBadge">Offre gratuite</div>
         <div class="plan-action" id="planAction" onclick="goToShop()">Découvrir Horizon</div>
       </div>
@@ -157,7 +161,7 @@
         <div class="field-row">
           <div>
             <span class="field-label">Adresse e-mail</span>
-            <span class="field-value" id="profileEmail">floriane@exemple.com</span>
+            <span class="field-value">floriane@exemple.com</span>
           </div>
           <div class="field-edit" onclick="openModal('email')">Modifier</div>
         </div>
@@ -171,7 +175,7 @@
         <div class="field-row">
           <div>
             <span class="field-label">Date de naissance</span>
-            <span class="field-value" id="profileBirthdate">12 mars 1990</span>
+            <span class="field-value">12 mars 1990</span>
           </div>
           <div class="field-edit" onclick="openModal('birthdate')">Modifier</div>
         </div>
@@ -275,21 +279,5 @@
       closeModal();
     }
   </script>
-<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script>
-<script>
-  (function(){
-    var raw = localStorage.getItem('naeora_profile');
-    if(!raw) return;
-    var profil = JSON.parse(raw);
-    if(profil.prenom){ document.getElementById('profileName').textContent = profil.prenom; }
-    if(profil.email){ document.getElementById('profileEmail').textContent = profil.email; }
-    if(profil.naissance){
-      var d = new Date(profil.naissance);
-      var moisNoms = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
-      var texte = d.getDate() + ' ' + moisNoms[d.getMonth()] + ' ' + d.getFullYear();
-      document.getElementById('profileBirthdate').textContent = texte;
-    }
-  })();
-</script>
-</body>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
 </html>
