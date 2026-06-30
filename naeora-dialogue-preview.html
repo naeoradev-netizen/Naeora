@@ -2,258 +2,98 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Naéora — Dialogue avec soi</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Naéora — Onboarding Slide 2</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
-  html,body{width:100%;height:100%;background:#14123a;overflow:hidden;font-family:'Jost',sans-serif;}
-  .stage{position:relative;width:100%;height:100vh;overflow:hidden;}
+  html,body{width:100%;height:100%;background:#14123a;overflow:hidden;font-family:'Helvetica Neue',Arial,sans-serif;}
+  .stage{position:relative;width:100%;height:100vh;background:#14123a;overflow:hidden;}
   .bg{position:absolute;top:0;left:0;width:100%;height:42%;object-fit:cover;object-position:top;}
-  .overlay{position:absolute;top:0;left:0;width:100%;height:42%;background:linear-gradient(to bottom, transparent 55%, #14123a 100%);}
+  .overlay{position:absolute;top:0;left:0;width:100%;height:42%;background:linear-gradient(to bottom, transparent 60%, #14123a 100%);}
 
-  .view{position:absolute;inset:0;z-index:3;display:none;flex-direction:column;}
-  .view.active{display:flex;}
+  .medallion{
+    position:absolute;
+    top:42%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    width:64px;height:64px;
+    border-radius:50%;
+    background:#1c1a4a;
+    box-shadow:0 0 18px rgba(217,176,111,0.35);
+    display:flex;align-items:center;justify-content:center;
+    z-index:3;
+  }
+  .medallion svg{width:30px;height:30px;}
 
-  /* ---------- Explication ---------- */
-  #view-explain{padding-top:46%;padding-left:8vw;padding-right:8vw;padding-bottom:5vh;align-items:center;text-align:center;overflow-y:auto;}
-  .ex-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.6rem;color:#f7f2e9;margin-bottom:6px;flex-shrink:0;}
-  .ex-divider{width:70px;height:1.5px;background:linear-gradient(to right, transparent, #d9b06f, transparent);margin:14px 0 18px;flex-shrink:0;}
-  .ex-text{font-size:0.9rem;line-height:1.65;color:#e3ddf0;max-width:380px;margin-bottom:12px;}
-  .ex-text b{color:#f3d9a8;font-weight:500;}
-  .ex-tip{
-    margin-top:6px;padding:13px 15px;border-radius:14px;
-    background:rgba(217,176,111,0.08);border:1px solid rgba(217,176,111,0.3);
-    font-size:0.82rem;line-height:1.5;color:#f3d9a8;max-width:380px;
+  .content{
+    position:absolute;
+    top:46%;
+    left:0;right:0;
+    bottom:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:0 9vw;
+    text-align:center;
+    z-index:3;
   }
-  .ex-btn{
-    margin-top:3.5vh;padding:14px 38px;border-radius:30px;border:1px solid #d9b06f;
-    background:rgba(217,176,111,0.1);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.12em;
-    text-transform:uppercase;cursor:pointer;font-family:inherit;flex-shrink:0;
+  .title{
+    font-family:Georgia,'Times New Roman',serif;
+    font-size:1.6rem;
+    color:#f7f2e9;
+    margin-bottom:18px;
+    margin-top:7vh;
   }
-
-  .centered-view{padding-top:46%;padding-left:8vw;padding-right:8vw;align-items:center;justify-content:flex-start;text-align:center;position:relative;height:100%;}
-  .help-icon{
-    position:absolute;top:6vh;right:7vw;width:30px;height:30px;border-radius:50%;
-    border:1px solid rgba(217,176,111,0.4);display:flex;align-items:center;justify-content:center;
-    color:#d9b06f;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;cursor:pointer;
-    background:rgba(255,255,255,0.04);z-index:4;
-  }
-
-  /* ---------- Choix ---------- */
-  .choice-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:#f7f2e9;margin-top:6vh;margin-bottom:5vh;max-width:340px;}
-  .choice-btns{display:flex;flex-direction:column;gap:18px;width:100%;max-width:320px;}
-  .choice-btn{
-    padding:20px;border-radius:18px;border:1px solid rgba(217,176,111,0.4);
-    background:rgba(255,255,255,0.05);color:#f7f2e9;cursor:pointer;font-family:inherit;
-    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;
-    transition:background 0.3s ease, border-color 0.3s ease;
-  }
-  .choice-btn:hover{background:rgba(217,176,111,0.12);border-color:#d9b06f;}
-
-  /* ---------- Écriture ---------- */
-  .step-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:#f7f2e9;margin-top:6vh;margin-bottom:3vh;max-width:360px;}
-  .step-card{
-    width:100%;max-width:380px;border-radius:18px;
-    background:rgba(255,255,255,0.06);backdrop-filter:blur(6px);
-    border:1px solid rgba(217,176,111,0.3);padding:18px;margin-bottom:4vh;
-    transition:transform 1.1s ease-in, opacity 1.1s ease-in;
-  }
-  .step-card textarea{
-    width:100%;min-height:120px;background:transparent;border:none;outline:none;resize:none;
-    color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;line-height:1.6;
-  }
-  .step-card textarea::placeholder{color:#7d76a0;font-size:0.92rem;}
-  .step-btn{
-    padding:13px 36px;border-radius:30px;border:1px solid #d9b06f;
-    background:rgba(217,176,111,0.12);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.1em;
-    text-transform:uppercase;cursor:pointer;font-family:inherit;
-    transition:opacity 0.5s ease;
-  }
-  .step-card.fading-past{
-    animation: fadeToPast 1.4s ease-in forwards;
-  }
-  @keyframes fadeToPast{
-    0%{ transform:scale(1); opacity:1; filter:saturate(1); }
-    100%{ transform:scale(0.85) translateY(20px); opacity:0; filter:saturate(0.3) sepia(0.4); }
-  }
-  .step-card.locking-future{
-    animation: lockFuture 1.2s ease-in forwards;
-  }
-  @keyframes lockFuture{
-    0%{ transform:scale(1); opacity:1; }
-    60%{ transform:scale(0.92); opacity:1; }
-    100%{ transform:scale(0.7); opacity:0; }
+  .text{
+    font-size:0.98rem;
+    line-height:1.65;
+    color:#cfc9e6;
+    max-width:380px;
   }
 
-  /* ---------- Résultat passé ---------- */
-  #view-past{align-items:center;justify-content:center;padding:8vw;text-align:center;}
-  .past-msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:#f7f2e9;margin-bottom:2vh;max-width:380px;opacity:0;transition:opacity 2.2s ease, transform 2.2s ease;transform:translateY(10px);}
-  .past-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:#cfc9e6;max-width:330px;line-height:1.65;opacity:0;transition:opacity 2.2s ease;transition-delay:0.6s;}
-  #view-past.show-content .past-msg{opacity:1;transform:translateY(0);}
-  #view-past.show-content .past-sub{opacity:1;}
-  .past-divider{
-    width:50px;height:1px;background:linear-gradient(to right, transparent, rgba(217,176,111,0.4), transparent);
-    margin:4.5vh 0 4.5vh;
-    opacity:0;transition:opacity 1.8s ease;transition-delay:1.3s;
+  .dots{
+    position:absolute;
+    bottom:6vh;
+    left:0;right:0;
+    display:flex;
+    justify-content:center;
+    gap:8px;
+    z-index:3;
   }
-  #view-past.show-content .past-divider{opacity:1;}
-  .past-return-btn{
-    padding:16px 34px;border-radius:30px;border:1px solid #d9b06f;
-    background:linear-gradient(135deg, rgba(217,176,111,0.22), rgba(217,176,111,0.08));
-    color:#f7f2e9;font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:1.02rem;cursor:pointer;max-width:300px;
-    box-shadow:0 0 18px rgba(217,176,111,0.28);
-    opacity:0;transition:opacity 2.2s ease, transform 0.2s ease;transition-delay:1.7s;
-    display:flex;align-items:center;gap:9px;
-  }
-  .past-return-btn:active{transform:scale(0.97);}
-  #view-past.show-content .past-return-btn{opacity:1;}
+  .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.25);}
+  .dot.active{background:#d9b06f;width:18px;border-radius:4px;}
 
-  /* ---------- Résultat futur ---------- */
-  #view-future{align-items:center;justify-content:center;padding:8vw;text-align:center;}
-  .lock-icon{
-    width:64px;height:64px;margin-bottom:3vh;
-    opacity:0;transition:opacity 1.8s ease;
-  }
-  #view-future.show-content .lock-icon{opacity:1;}
-  .future-msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:#f7f2e9;margin-bottom:2vh;max-width:380px;opacity:0;transition:opacity 2.2s ease, transform 2.2s ease;transform:translateY(10px);transition-delay:0.5s;}
-  #view-future.show-content .future-msg{opacity:1;transform:translateY(0);}
-  .future-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:#cfc9e6;max-width:330px;line-height:1.65;opacity:0;transition:opacity 2.2s ease;transition-delay:1.4s;}
-  #view-future.show-content .future-sub{opacity:1;}
-  #view-future.show-content #futureDivider{opacity:1;transition-delay:2.1s;}
-  #view-future.show-content #futureReturnBtn{opacity:1;transition-delay:2.5s;}
-
-  .testbar{position:absolute;top:8px;left:8px;z-index:50;display:flex;gap:4px;flex-wrap:wrap;}
-  .testbar button{font-size:0.6rem;padding:4px 7px;border-radius:5px;border:1px solid rgba(217,176,111,0.4);background:rgba(0,0,0,0.5);color:#d9b06f;cursor:pointer;}
+  .tap-zone{position:absolute;inset:0;z-index:10;cursor:pointer;}
 </style>
 </head>
 <body>
   <div class="stage">
-    <img class="bg" src="echo.webp" alt="">
+    <img class="bg" src="slide2.webp" alt="">
     <div class="overlay"></div>
 
-    <div class="testbar">
-      <button onclick="showView('explain')">Explication</button>
-      <button onclick="restart()">Choix</button>
-    </div>
-
-    <!-- VUE 1 : EXPLICATION -->
-    <div class="view" id="view-explain">
-      <div class="ex-title">Dialogue avec soi</div>
-      <div class="ex-divider"></div>
-      <div class="ex-text">Parler à son moi du passé ou du futur aide à prendre du recul sur l'instant présent. On se souvient qu'on a déjà traversé des choses difficiles — ou on se rassure sur ce qui nous attend.</div>
-      <div class="ex-text">Choisis d'abord à qui tu veux écrire, puis laisse les mots venir, sans trop réfléchir.</div>
-      <div class="ex-tip">💡 Il n'y a pas de bonne réponse entre passé et futur — suis simplement ce qui t'appelle aujourd'hui.</div>
-      <button class="ex-btn" onclick="restart()">J'ai compris</button>
-    </div>
-
-    <!-- VUE 2 : CHOIX -->
-    <div class="view centered-view" id="view-choice">
-      <div class="help-icon" onclick="showView('explain')">?</div>
-      <div class="choice-title">À qui veux-tu écrire aujourd'hui ?</div>
-      <div class="choice-btns">
-        <button class="choice-btn" onclick="selectMode('passe')">Mon moi du passé</button>
-        <button class="choice-btn" onclick="selectMode('futur')">Mon moi du futur</button>
-      </div>
-    </div>
-
-    <!-- VUE 3 : ÉCRITURE -->
-    <div class="view centered-view" id="view-write">
-      <div class="help-icon" onclick="showView('explain')">?</div>
-      <div class="step-title" id="writeTitle"></div>
-      <div class="step-card" id="writeCard">
-        <textarea id="letterInput" placeholder="Laisse les mots venir..."></textarea>
-      </div>
-      <button class="step-btn" id="sendBtn" onclick="sendLetter()"></button>
-    </div>
-
-    <!-- VUE 4 : RÉSULTAT PASSÉ -->
-    <div class="view" id="view-past">
-      <div class="past-msg">Message envoyé dans tes souvenirs.</div>
-      <div class="past-sub">Regarde tout ce que tu as surmonté alors que tu te croyais bloqué. Tu es plus fort·e que tu ne le penses.</div>
-      <div class="past-divider"></div>
-      <button class="past-return-btn" id="pastReturnBtn" onclick="returnHome()">C'est vrai ! Merci pour ce rappel.</button>
-    </div>
-
-    <!-- VUE 5 : RÉSULTAT FUTUR -->
-    <div class="view" id="view-future">
-      <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="#d9b06f" stroke-width="1.1">
-        <path d="M12 3l1.4 6.6L20 11l-6.6 1.4L12 19l-1.4-6.6L4 11l6.6-1.4L12 3Z" fill="rgba(217,176,111,0.25)"/>
+    <div class="medallion">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#d9b06f" stroke-width="1.3">
+        <path d="M9 18c-1.5-1-2.5-2.5-2.5-4.5C6.5 10 8.5 8 11 8c.5-1.2 1.7-2 3-2 1.8 0 3.3 1.5 3.3 3.3 0 .4-.05.8-.15 1.2 1.4.5 2.35 1.85 2.35 3.4 0 2-1.6 3.6-3.6 3.6"/>
+        <path d="M11 8v10M9 18h6"/>
+        <circle cx="11" cy="11" r="0.5" fill="#d9b06f"/>
+        <circle cx="14" cy="14" r="0.5" fill="#d9b06f"/>
       </svg>
-      <div class="future-msg">Ton moi du futur vient de recevoir ta lettre.</div>
-      <div class="future-sub">Il sourit en la lisant, car il sait déjà que ce problème est résolu. Il t'envoie toute sa sérénité pour t'aider à traverser ces derniers instants — tu as déjà surmonté le plus dur.</div>
-      <div class="past-divider" id="futureDivider"></div>
-      <button class="past-return-btn" id="futureReturnBtn" onclick="returnHome()">Maintenant je sais que je vais surmonter tout ça.</button>
     </div>
+
+    <div class="content">
+      <div class="title">Le pourquoi</div>
+      <div class="text">Environ 95% de tes pensées sont automatiques, façonnées depuis l'enfance.<br>Elles tournent en boucle sans que tu les choisisses vraiment.<br>Naéora t'aide à reprendre la main, un peu chaque jour.</div>
+    </div>
+
+    <div class="dots">
+      <div class="dot"></div>
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+
+    <div class="tap-zone" onclick="naeoraNav('onb3')"></div>
   </div>
-
-  <script>
-    let currentMode = null;
-
-    function showView(name){
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.getElementById('view-' + name).classList.add('active');
-    }
-
-    function restart(){
-      document.getElementById('letterInput').value = '';
-      const card = document.getElementById('writeCard');
-      card.classList.remove('fading-past','locking-future');
-      card.style.opacity = '1';
-      card.style.transform = 'none';
-      const btn = document.getElementById('sendBtn');
-      btn.style.opacity = '1';
-      showView('choice');
-    }
-
-    function selectMode(mode){
-      currentMode = mode;
-      const title = document.getElementById('writeTitle');
-      const btn = document.getElementById('sendBtn');
-      if(mode === 'passe'){
-        title.textContent = "Qu'aimerais-tu dire à la version de toi qui traversait une période difficile ?";
-        btn.textContent = 'Envoyer dans mes souvenirs';
-      } else {
-        title.textContent = "Qu'aimerais-tu dire à la version de toi que tu seras plus tard ?";
-        btn.textContent = 'Envoyer';
-      }
-      showView('write');
-    }
-
-    function sendLetter(){
-      const text = document.getElementById('letterInput').value.trim();
-      if(!text){ document.getElementById('letterInput').focus(); return; }
-
-      const card = document.getElementById('writeCard');
-      const btn = document.getElementById('sendBtn');
-      btn.style.opacity = '0';
-
-      if(currentMode === 'passe'){
-        card.classList.add('fading-past');
-        setTimeout(() => {
-          showView('past');
-          const v = document.getElementById('view-past');
-          v.classList.remove('show-content');
-          setTimeout(() => v.classList.add('show-content'), 50);
-        }, 1500);
-      } else {
-        card.classList.add('locking-future');
-        setTimeout(() => {
-          showView('future');
-          const v = document.getElementById('view-future');
-          v.classList.remove('show-content');
-          setTimeout(() => v.classList.add('show-content'), 50);
-        }, 1300);
-      }
-    }
-
-    function returnHome(){
-      naeoraNav('accueil');
-    }
-
-    showView('explain');
-  </script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
 </html>

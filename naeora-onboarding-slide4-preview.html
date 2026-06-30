@@ -2,97 +2,70 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Naéora — Onboarding Slide 4</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Naéora</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
-  html,body{width:100%;height:100%;background:#14123a;overflow:hidden;font-family:'Helvetica Neue',Arial,sans-serif;}
-  .stage{position:relative;width:100%;height:100vh;background:#14123a;overflow:hidden;}
-  .bg{position:absolute;top:0;left:0;width:100%;height:42%;object-fit:cover;object-position:top;}
-  .overlay{position:absolute;top:0;left:0;width:100%;height:42%;background:linear-gradient(to bottom, transparent 60%, #14123a 100%);}
-
-  .medallion{
-    position:absolute;
-    top:42%;
-    left:50%;
-    transform:translate(-50%,-50%);
-    width:64px;height:64px;
-    border-radius:50%;
-    background:#1c1a4a;
-    box-shadow:0 0 18px rgba(217,176,111,0.35);
-    display:flex;align-items:center;justify-content:center;
-    z-index:3;
-  }
-  .medallion svg{width:30px;height:30px;}
-
-  .content{
-    position:absolute;
-    top:46%;
-    left:0;right:0;
-    bottom:0;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:0 9vw;
-    text-align:center;
-    z-index:3;
-  }
-  .title{
-    font-family:Georgia,'Times New Roman',serif;
-    font-size:1.6rem;
-    color:#f7f2e9;
-    margin-bottom:18px;
-    margin-top:7vh;
-  }
-  .text{
-    font-size:0.98rem;
-    line-height:1.65;
-    color:#cfc9e6;
-    max-width:380px;
-  }
-
-  .dots{
-    position:absolute;
-    bottom:6vh;
-    left:0;right:0;
-    display:flex;
-    justify-content:center;
-    gap:8px;
-    z-index:3;
-  }
-  .dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.25);}
-  .dot.active{background:#d9b06f;width:18px;border-radius:4px;}
-
-  .tap-zone{position:absolute;inset:0;z-index:10;cursor:pointer;}
+  html,body{width:100%;height:100%;overflow:hidden;background:#05060f;}
+  #app-frame{width:100%;height:100%;border:none;display:block;}
 </style>
 </head>
 <body>
-  <div class="stage">
-    <img class="bg" src="slide4.webp" alt="">
-    <div class="overlay"></div>
+  <iframe id="app-frame" src="naeora-splash-final.html" title="Naéora"></iframe>
 
-    <div class="medallion">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#d9b06f" stroke-width="1.3">
-        <path d="M12 21c-4.5-2.5-7-6-7-10a7 7 0 0 1 14 0c0 4-2.5 7.5-7 10Z"/>
-        <path d="M12 21v-7"/>
-        <path d="M12 14c1.5-1 2.5-2.5 2.5-4"/>
-      </svg>
-    </div>
+  <script>
+    // ---------------------------------------------------------------
+    // Table de routage : nom de route -> fichier dans /pages
+    // ---------------------------------------------------------------
+    const ROUTES = {
+      splash:            'naeora-splash-final.html',
+      avertissement:      'naeora-avertissement-preview.html',
+      onb1:               'naeora-onboarding-slide1-preview.html',
+      onb2:               'naeora-onboarding-slide2-preview.html',
+      onb3:               'naeora-onboarding-slide3-preview.html',
+      onb4:               'naeora-onboarding-slide4-preview.html',
+      onb5:               'naeora-onboarding-slide5-preview.html',
+      onb6:               'naeora-onboarding-slide6-preview.html',
+      inscription:        'naeora-inscription-preview.html',
+      accueil:            'naeora-accueil-preview.html',
+      ciel:               'naeora-ciel-preview.html',
+      boutique:           'naeora-boutique-preview.html',
+      profil:             'naeora-profil-preview.html',
+      matin:              'naeora-matin-preview.html',
+      soir:               'naeora-soir-preview.html',
+      coherence:          'naeora-coherence-preview.html',
+      hooponopono:        'naeora-hooponopono-preview.html',
+      envol:              'naeora-envol-preview.html',
+      echo:               'naeora-echo-preview.html',
+      dialogue:           'naeora-dialogue-preview.html',
+      source:             'naeora-source-preview.html',
+      pendule_explain:    'naeora-pendule-explication-preview.html',
+      pendule_tuto:       'naeora-pendule-tuto-guide-preview.html',
+      pendule_resume:     'naeora-pendule-tuto-resume-preview.html',
+      pendule_exercice:   'naeora-pendule-exercice-preview.html'
+    };
 
-    <div class="content">
-      <div class="title">Dans la journée</div>
-      <div class="text">Dans la journée, un exercice pour créer de la place en toi.<br>Naéora s'inspire de pratiques de développement personnel reconnues, pour t'aider à avancer plus légère.</div>
-    </div>
+    const frame = document.getElementById('app-frame');
 
-    <div class="dots">
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-      <div class="dot active"></div>
-      <div class="dot"></div>
-      <div class="dot"></div>
-    </div>
+    function goTo(route){
+      const path = ROUTES[route];
+      if(!path){
+        console.warn('Route inconnue :', route);
+        return;
+      }
+      frame.src = path;
+    }
 
-    <div class="tap-zone" onclick="naeoraNav('onb5')"></div>
-  </div>
-<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
+    window.addEventListener('message', (event) => {
+      if(event.data && event.data.naeoraNav){
+        goTo(event.data.naeoraNav);
+      }
+    });
+
+    // Point d'entrée : pour une démo "première utilisation", on démarre au splash.
+    // Pour simuler un utilisateur déjà inscrit, changer la ligne ci-dessous en :
+    // goTo('accueil');
+    goTo('splash');
+  </script>
+</body>
 </html>
