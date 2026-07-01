@@ -260,6 +260,16 @@
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script>
 <script>
 function pickJourneyExercise(){
+  var sub = (localStorage.getItem('naeora_subscriber') === 'true');
+  var count = naeoraJourneeCount();
+  var max = sub ? 2 : 1;
+  if(count >= max){
+    var msg = sub
+      ? "Tu as fait tes 2 exercices du jour. Reviens demain !"
+      : "Tu as déjà fait ton exercice du jour. Reviens demain !\nL'abonnement Horizon te permet d'en faire 2 par jour.";
+    alert(msg);
+    return;
+  }
   naeoraPickJourneyExercise();
 }
 

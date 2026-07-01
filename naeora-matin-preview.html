@@ -264,6 +264,7 @@ setTimeout(() => showView('done'), 1600);
     document.getElementById('phrase-text').textContent = phrase;
     var donePhrase = document.querySelector('.done-phrase');
     if(donePhrase) donePhrase.textContent = phrase;
+    localStorage.setItem('naeora_matin_phrase_du_jour', phrase);
   }
 
   function startMatin(domain){
@@ -272,25 +273,39 @@ setTimeout(() => showView('done'), 1600);
     showView('explain');
   }
 
+  function buildDomainView(){
+    var container = document.getElementById('domainBtns');
+    container.innerHTML = '';
+    var domains = ['Abondance','Relation','Evolution Personnelle','Santé','Amour'];
+    var btnAl = document.createElement('button');
+    btnAl.textContent = 'Aléatoire';
+    btnAl.style.cssText = 'padding:14px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:inherit;font-size:0.88rem;cursor:pointer;';
+    btnAl.onclick = function(){ startMatin('Gratuit'); };
+    container.appendChild(btnAl);
+    domains.forEach(function(d){
+      var btn = document.createElement('button');
+      btn.textContent = DOMAIN_LABELS[d];
+      btn.style.cssText = 'padding:14px;border-radius:30px;border:1px solid rgba(217,176,111,0.35);background:rgba(255,255,255,0.04);color:#e3ddf0;font-family:inherit;font-size:0.88rem;cursor:pointer;';
+      btn.onclick = function(){ startMatin(d); };
+      container.appendChild(btn);
+    });
+  }
+
   function initMatin(){
+    // Vérifier si déjà fait aujourd'hui
+    if(typeof naeoraIsDone !== 'undefined' && naeoraIsDone('matin')){
+      var savedPhrase = localStorage.getItem('naeora_matin_phrase_du_jour') || '';
+      document.getElementById('already-phrase').textContent = savedPhrase;
+      showView('already');
+      return;
+    }
+    var explainVu = localStorage.getItem('naeora_matin_explain_vu');
+    if(!explainVu){
+      showView('explain');
+      return;
+    }
     if(IS_SUBSCRIBER){
-      // Afficher le choix du domaine d'abord
-      var container = document.getElementById('domainBtns');
-      container.innerHTML = '';
-      var domains = ['Abondance','Relation','Evolution Personnelle','Santé','Amour'];
-      // Bouton Aléatoire en premier
-      var btnAl = document.createElement('button');
-      btnAl.textContent = 'Aléatoire';
-      btnAl.style.cssText = 'padding:14px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:inherit;font-size:0.88rem;cursor:pointer;';
-      btnAl.onclick = function(){ startMatin('Gratuit'); };
-      container.appendChild(btnAl);
-      domains.forEach(function(d){
-        var btn = document.createElement('button');
-        btn.textContent = DOMAIN_LABELS[d];
-        btn.style.cssText = 'padding:14px;border-radius:30px;border:1px solid rgba(217,176,111,0.35);background:rgba(255,255,255,0.04);color:#e3ddf0;font-family:inherit;font-size:0.88rem;cursor:pointer;';
-        btn.onclick = function(){ startMatin(d); };
-        container.appendChild(btn);
-      });
+      buildDomainView();
       showView('domain');
     } else {
       startMatin('Gratuit');

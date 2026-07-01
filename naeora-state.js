@@ -1,9 +1,12 @@
-// Naéora — état partagé du jour (rituels accomplis, dernier exercice tiré)
-// Stocké en localStorage, réinitialisé automatiquement chaque nouveau jour.
+// Naéora — état partagé du jour
 
 function naeoraTodayStr(){
   var d = new Date();
   return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
+}
+
+function naeoraIsSubscriber(){
+  return localStorage.getItem('naeora_subscriber') === 'true';
 }
 
 function naeoraGetState(){
@@ -11,7 +14,13 @@ function naeoraGetState(){
   var state = raw ? JSON.parse(raw) : null;
   var today = naeoraTodayStr();
   if(!state || state.date !== today){
-    state = { date: today, matin: false, journee: false, soir: false, lastJournee: state ? state.lastJournee : null };
+    state = {
+      date: today,
+      matin: false,
+      journeeCount: 0,   // nb d'exercices journée faits aujourd'hui
+      soir: false,
+      lastJourneeList: state ? (state.lastJourneeList || []) : []
+    };
     localStorage.setItem('naeora_day_state', JSON.stringify(state));
   }
   return state;
@@ -19,25 +28,38 @@ function naeoraGetState(){
 
 function naeoraMarkDone(key){
   var state = naeoraGetState();
-  state[key] = true;
+  if(key === 'journee'){
+    state.journeeCount = (state.journeeCount || 0) + 1;
+  } else {
+    state[key] = true;
+  }
   localStorage.setItem('naeora_day_state', JSON.stringify(state));
 }
 
 function naeoraIsDone(key){
-  return !!naeoraGetState()[key];
+  var state = naeoraGetState();
+  var sub = naeoraIsSubscriber();
+  if(key === 'journee'){
+    var max = sub ? 2 : 1;
+    return (state.journeeCount || 0) >= max;
+  }
+  return !!state[key];
+}
+
+function naeoraJourneeCount(){
+  return naeoraGetState().journeeCount || 0;
 }
 
 function naeoraPickJourneyExercise(){
-  // Pool des exercices abonnés tirés au hasard (la Lettre de libération sera ajoutée
-  // ici une fois son écran construit).
   var pool = ['hooponopono', 'envol', 'echo', 'dialogue', 'source', 'pendule_explain'];
   var state = naeoraGetState();
-  var choices = pool;
-  if(state.lastJournee && pool.length > 1){
-    choices = pool.filter(function(p){ return p !== state.lastJournee; });
-  }
+  var lastList = state.lastJourneeList || [];
+  var choices = pool.filter(function(p){ return lastList.indexOf(p) === -1; });
+  if(choices.length === 0) choices = pool;
   var choice = choices[Math.floor(Math.random() * choices.length)];
-  state.lastJournee = choice;
+  lastList.push(choice);
+  if(lastList.length > 2) lastList.shift();
+  state.lastJourneeList = lastList;
   localStorage.setItem('naeora_day_state', JSON.stringify(state));
   naeoraNav(choice);
 }

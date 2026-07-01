@@ -153,19 +153,10 @@
   </div>
 
   <script>
-    let isSubscriber = false;
+    const isSubscriber = (localStorage.getItem('naeora_subscriber') === 'true');
     let gratitudeCount = 0;
-    let maxGratitudes = 1;
+    let maxGratitudes = isSubscriber ? 5 : 1;
     let totalStars = parseInt(localStorage.getItem('naeora_total_stars') || '0');
-
-    function togglePlan(){
-      isSubscriber = !isSubscriber;
-      maxGratitudes = isSubscriber ? 3 : 1;
-      gratitudeCount = 0;
-      document.getElementById('togglePlan').textContent = 'Mode: ' + (isSubscriber ? 'Abonné' : 'Gratuit');
-      renderCounter();
-      showView('write');
-    }
 
     function renderCounter(){
       const el = document.getElementById('gratCounter');
@@ -279,5 +270,15 @@
     showView('explain');
   </script>
 <script src="naeora-state.js"></script>
-<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script>
+<script>
+  (function(){
+    if(typeof naeoraIsDone !== 'undefined' && naeoraIsDone('soir')){
+      document.querySelector('.stage').insertAdjacentHTML('beforeend', '    <div id="view-soir-already" style="position:absolute;inset:0;z-index:5;display:none;flex-direction:column;align-items:center;justify-content:center;padding:8vw;text-align:center;">      <div style="font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:1.3rem;color:#f7f2e9;margin-bottom:2vh;">Ton ciel s\'est déjà enrichi ce soir.</div>      <div style="font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:0.95rem;color:#cfc9e6;max-width:330px;line-height:1.6;margin-bottom:4vh;">Tu peux le contempler dans l\'onglet Ciel. Reviens demain pour continuer à le construire.</div>      <button onclick="naeoraNav(\'accueil\')" style="padding:13px 30px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:\'Cormorant Garamond\',serif;font-style:italic;font-size:0.92rem;cursor:pointer;">Retour à l\'accueil</button>    </div>');
+      document.getElementById('view-soir-already').style.display='flex';
+    }
+  })();
+</script>
+
+</body>
 </html>

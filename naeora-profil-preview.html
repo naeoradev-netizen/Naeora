@@ -184,6 +184,7 @@
         <div class="link-row" onclick="window.open('mailto:contact@naeora.fr')" style="cursor:pointer;"><span>Contacter le support</span><span class="chevron">›</span></div>
       </div>
 
+      <div style="text-align:center;margin:2vh 0;font-size:0.8rem;color:#7d76a0;cursor:pointer;text-decoration:underline;" onclick="togglePlan()">Basculer mode Horizon (test)</div>
       <button class="logout-btn" onclick="localStorage.clear();naeoraNav('inscription')">Se déconnecter</button>
     </div>
 
@@ -225,10 +226,11 @@
   </div>
 
   <script>
-    let isSubscriber = false;
+    let isSubscriber = (localStorage.getItem('naeora_subscriber') === 'true');
 
     function togglePlan(){
       isSubscriber = !isSubscriber;
+      localStorage.setItem('naeora_subscriber', isSubscriber ? 'true' : 'false');
       const badge = document.getElementById('planBadge');
       const action = document.getElementById('planAction');
       if(isSubscriber){
@@ -241,6 +243,16 @@
         action.textContent = 'Découvrir Horizon';
       }
     }
+    // Initialisation : afficher le bon état au chargement
+    (function(){
+      const badge = document.getElementById('planBadge');
+      const action = document.getElementById('planAction');
+      if(isSubscriber){
+        badge.textContent = 'Horizon — Abonnée';
+        badge.classList.add('subscriber');
+        action.textContent = 'Gérer mon abonnement';
+      }
+    })();
 
     document.querySelectorAll('.domain-chip').forEach(chip => {
       chip.addEventListener('click', () => {

@@ -196,5 +196,17 @@
     showView('explain');
   </script>
 <script src="naeora-state.js"></script>
-<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script><script>
+  (function(){
+    if(typeof naeoraIsDone === 'undefined') return;
+    var sub = (localStorage.getItem('naeora_subscriber') === 'true');
+    var count = typeof naeoraJourneeCount !== 'undefined' ? naeoraJourneeCount() : 0;
+    var max = sub ? 2 : 1;
+    if(count >= max){
+      var msg = sub ? 'Tu as fait tes 2 exercices du jour. Reviens demain !' : 'Tu as déjà fait ton exercice du jour. Reviens demain !';
+      document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;inset:0;z-index:9999;background:rgba(5,4,16,0.96);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8vw;text-align:center;"><div style=\"font-family:Georgia,serif;font-style:italic;font-size:1.2rem;color:#f7f2e9;margin-bottom:3vh;max-width:320px;line-height:1.6\">' + msg + '</div><button onclick=\"naeoraNav('accueil')\" style=\"padding:13px 30px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:Georgia,serif;font-style:italic;font-size:0.92rem;cursor:pointer;\">Retour à l'accueil</button></div>');
+    }
+  })();
+</script>
+</body>
 </html>
