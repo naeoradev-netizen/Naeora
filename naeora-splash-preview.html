@@ -2,207 +2,22 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Naéora — Boutique</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<title>Naéora — Écran d'ouverture (aperçu)</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
-  html,body{width:100%;height:100%;background:#0a0820;overflow:hidden;font-family:'Jost',sans-serif;}
-  .stage{position:relative;width:100%;height:100vh;overflow:hidden;display:flex;flex-direction:column;}
-  .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;}
-  .vignette{position:absolute;inset:0;background:radial-gradient(circle at 50% 14%, rgba(0,0,0,0) 0%, rgba(8,6,24,0.5) 55%, rgba(8,6,24,0.85) 100%);z-index:1;}
-
-  .content{position:relative;z-index:2;flex:1;min-height:0;overflow-y:auto;padding:6vh 7vw 3vh;}
-
-  .page-title{
-    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
-    font-size:1.7rem;color:#f7f2e9;text-align:center;margin-bottom:0.8vh;
-    text-shadow:0 2px 10px rgba(0,0,0,0.4);
-  }
-  .page-sub{
-    font-size:0.82rem;color:#a89fc4;text-align:center;margin-bottom:4vh;
-  }
-
-  .offer-card{
-    border-radius:20px;background:rgba(255,255,255,0.05);backdrop-filter:blur(6px);
-    border:1px solid rgba(217,176,111,0.28);padding:22px;margin-bottom:3vh;
-  }
-  .offer-card.highlight{
-    border-color:#d9b06f;background:linear-gradient(160deg, rgba(217,176,111,0.14), rgba(217,176,111,0.04));
-    box-shadow:0 0 24px rgba(217,176,111,0.18);
-  }
-  .offer-name{
-    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.25rem;color:#f7f2e9;
-  }
-  .offer-price{
-    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:#d9b06f;margin-top:4px;
-  }
-  .offer-price span{font-size:0.72rem;color:#a89fc4;}
-  .offer-list{margin:16px 0 18px;padding:0;list-style:none;}
-  .offer-list li{
-    font-size:0.85rem;color:#e3ddf0;padding:6px 0 6px 22px;position:relative;line-height:1.4;
-  }
-  .offer-list li::before{
-    content:'✦';position:absolute;left:0;top:6px;color:#d9b06f;font-size:0.75rem;
-  }
-  .offer-btn{
-    width:100%;padding:14px;border-radius:30px;border:1px solid #d9b06f;
-    background:rgba(217,176,111,0.14);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.08em;
-    text-transform:uppercase;cursor:pointer;font-family:inherit;
-  }
-  .offer-btn.subscribed{
-    background:rgba(63,174,106,0.16);border-color:#3fae6a;color:#cdeedc;cursor:default;
-  }
-
-  .kit-header{display:flex;align-items:center;justify-content:space-between;cursor:pointer;}
-  .kit-description{
-    margin-top:14px;font-size:0.85rem;line-height:1.6;color:#e3ddf0;
-  }
-  .kit-toggle{font-size:0.78rem;color:#d9b06f;text-decoration:underline;}
-  .kit-items{
-    max-height:0;overflow:hidden;transition:max-height 0.5s ease;
-  }
-  .kit-items.open{max-height:600px;}
-  .kit-items ul{margin:14px 0 4px;padding:0;list-style:none;}
-  .kit-items li{
-    font-size:0.83rem;color:#cfc9e6;padding:7px 0;border-bottom:1px solid rgba(217,176,111,0.1);
-  }
-  .kit-bonus{
-    margin-top:14px;padding:12px 14px;border-radius:12px;
-    background:rgba(217,176,111,0.08);border:1px solid rgba(217,176,111,0.25);
-    font-size:0.8rem;color:#f3d9a8;line-height:1.5;
-  }
-
-  .testbar{position:absolute;top:8px;left:8px;z-index:50;display:flex;gap:4px;}
-  .testbar button{font-size:0.6rem;padding:4px 7px;border-radius:5px;border:1px solid rgba(217,176,111,0.4);background:rgba(0,0,0,0.5);color:#d9b06f;cursor:pointer;}
-
-  .bottom-nav{
-    position:relative;z-index:2;flex-shrink:0;
-    display:flex;justify-content:space-around;align-items:center;
-    padding:16px 7vw max(16px, env(safe-area-inset-bottom));
-    border-top:1px solid rgba(217,176,111,0.2);
-    background:rgba(8,6,24,0.6);backdrop-filter:blur(10px);
-  }
-  .nav-item{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;color:#8b84ab;}
-  .nav-item.active{color:#d9b06f;}
-  .nav-icon-circle{
-    width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-    border:1px solid rgba(217,176,111,0.25);background:rgba(217,176,111,0.04);
-  }
-  .nav-item.active .nav-icon-circle{
-    border-color:#d9b06f;background:rgba(217,176,111,0.12);box-shadow:0 0 10px rgba(217,176,111,0.3);
-  }
-  .nav-item svg{width:16px;height:16px;}
-  .nav-item span{font-size:0.64rem;letter-spacing:0.04em;}
+  html,body{width:100%;height:100%;background:#05060f;overflow:hidden;}
+  .stage{position:relative;width:100%;height:100vh;display:flex;align-items:center;justify-content:center;background:#05060f;}
+  .splash-img{width:100%;height:100%;object-fit:cover;object-position:center;opacity:0;transform:scale(1.06);animation:reveal 4.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;}
+  @keyframes reveal{0%{opacity:0;transform:scale(1.06);}60%{opacity:0.85;}100%{opacity:1;transform:scale(1);}}
+  .glow-pulse{position:absolute;inset:0;background:radial-gradient(circle at 50% 78%, rgba(255,210,140,0.10) 0%, transparent 35%);animation:pulse 7s ease-in-out infinite;pointer-events:none;}
+  @keyframes pulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
+  @media (prefers-reduced-motion: reduce){.splash-img{animation:none;opacity:1;transform:none;}.glow-pulse{animation:none;}}
 </style>
 </head>
 <body>
   <div class="stage">
-    <img class="bg" src="nuit.webp" alt="">
-    <div class="vignette"></div>
-
-    <div class="testbar">
-      <button onclick="toggleSub()">Basculer abonnement</button>
-    </div>
-
-    <div class="content">
-      <div class="page-title">La boutique</div>
-      <div class="page-sub">Pour aller plus loin dans ton chemin</div>
-
-      <!-- Offre Horizon -->
-      <div class="offer-card highlight">
-        <div class="offer-name">Horizon</div>
-        <div class="offer-price">8,99 € <span>/ mois, sans engagement</span></div>
-        <ul class="offer-list">
-          <li>Choix de ton domaine avant l'ouverture des possibles</li>
-          <li>Accès aux 6 exercices, tirés au hasard chaque jour</li>
-          <li>Jusqu'à 3 gratitudes par soir</li>
-          <li>Un ciel qui scintille, en couleurs</li>
-        </ul>
-        <a class="offer-btn" id="subBtn" href="https://naeora.fr/abonnement" target="_blank" style="display:block;text-align:center;text-decoration:none;">Découvrir Horizon</a>
-      </div>
-
-      <!-- Kit physique -->
-      <div class="offer-card">
-        <div class="kit-header" onclick="toggleKit()">
-          <div>
-            <div class="offer-name">Le Coffret Naéora</div>
-            <div class="offer-price">79 € <span>· 6 mois d'Horizon offerts</span></div>
-          </div>
-          <div class="kit-toggle" id="kitToggleLabel">Voir le contenu</div>
-        </div>
-
-        <div class="kit-description">Au-delà de l'écran, ce coffret t'accompagne dans le réel. Chaque objet est pensé pour prolonger un rituel de l'application dans ton quotidien — un geste à poser, un parfum à respirer, une matière à tenir entre les mains. C'est un complément tangible à ton chemin, pour ancrer dans le concret ce que tu travailles chaque jour dans l'app.</div>
-
-        <div class="kit-items" id="kitItems">
-          <ul>
-            <li>Un carnet pour poser tes pensées</li>
-            <li>Un bracelet en amazonite</li>
-            <li>Une fleur de vie, pour recharger ton bracelet</li>
-            <li>Un bâton de palo santo</li>
-            <li>Une enveloppe, pour garder ce qui compte</li>
-            <li>Un tube en verre, pour ton eau de lune</li>
-            <li>Une boule feng shui, pour harmoniser ton intérieur</li>
-            <li>Un pendule, avec accès à une vidéo pour apprendre à l'utiliser</li>
-            <li>Un ruban de satin, qui donne accès à 3 mois d'Horizon</li>
-          </ul>
-          <div class="kit-bonus">💡 Le tube en verre donne accès à un exercice supplémentaire, basé sur la mémoire de l'eau.</div>
-        </div>
-
-        <a class="offer-btn" href="https://naeora.fr/coffret" target="_blank" style="display:block;text-align:center;text-decoration:none;margin-top:18px;">Découvrir le coffret</a>
-      </div>
-    </div>
-
-    <div class="bottom-nav">
-      <div class="nav-item" onclick="naeoraNav('accueil')">
-        <div class="nav-icon-circle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M4 11.5 12 4l8 7.5" stroke-linecap="round" stroke-linejoin="round"/><path d="M6 10v10h12V10" stroke-linejoin="round"/><path d="M10 20v-5h4v5" stroke-linejoin="round"/></svg>
-        </div>
-        <span>Accueil</span>
-      </div>
-      <div class="nav-item" onclick="naeoraNav('ciel')">
-        <div class="nav-icon-circle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.1"><path d="M12 2.5l1.6 5.4L19 6.2l-2 5.1L23 13l-5.1 2-0.8 5.5L12 17l-5.1 3.5-0.8-5.5L1 13l6-1.7-2-5.1 5.4 1.7L12 2.5Z" stroke-linejoin="round"/></svg>
-        </div>
-        <span>Ciel</span>
-      </div>
-      <div class="nav-item active" onclick="naeoraNav('boutique')">
-        <div class="nav-icon-circle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M5 8.5h14l-1.3 11.2a1.3 1.3 0 0 1-1.3 1.1H7.6a1.3 1.3 0 0 1-1.3-1.1L5 8.5Z" stroke-linejoin="round"/><path d="M8.5 8.5v-2a3.5 3.5 0 0 1 7 0v2"/></svg>
-        </div>
-        <span>Boutique</span>
-      </div>
-      <div class="nav-item" onclick="naeoraNav('profil')">
-        <div class="nav-icon-circle">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="12" cy="7.8" r="3.2"/><path d="M4.8 20c1-4 4-6 7.2-6s6.2 2 7.2 6" stroke-linecap="round"/></svg>
-        </div>
-        <span>Profil</span>
-      </div>
-    </div>
+    <img class="splash-img" src="splash.webp" alt="Naéora — Ouvrir un nouveau champ des possibles">
+    <div class="glow-pulse"></div>
   </div>
-
-  <script>
-    let isSubscriber = false;
-    let kitOpen = false;
-
-    function toggleSub(){
-      isSubscriber = !isSubscriber;
-      const btn = document.getElementById('subBtn');
-      if(isSubscriber){
-        btn.textContent = 'Tu es déjà abonnée';
-        btn.classList.add('subscribed');
-      } else {
-        btn.textContent = 'Découvrir Horizon';
-        btn.classList.remove('subscribed');
-      }
-    }
-
-    function toggleKit(){
-      kitOpen = !kitOpen;
-      document.getElementById('kitItems').classList.toggle('open', kitOpen);
-      document.getElementById('kitToggleLabel').textContent = kitOpen ? 'Réduire' : 'Voir le contenu';
-    }
-  </script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
 </html>

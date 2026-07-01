@@ -2,258 +2,281 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Naéora — Dialogue avec soi</title>
+<title>Naéora — Le soir</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
-  html,body{width:100%;height:100%;background:#14123a;overflow:hidden;font-family:'Jost',sans-serif;}
+  html,body{width:100%;height:100%;background:#0a0820;overflow:hidden;font-family:'Jost',sans-serif;}
   .stage{position:relative;width:100%;height:100vh;overflow:hidden;}
-  .bg{position:absolute;top:0;left:0;width:100%;height:42%;object-fit:cover;object-position:top;}
-  .overlay{position:absolute;top:0;left:0;width:100%;height:42%;background:linear-gradient(to bottom, transparent 55%, #14123a 100%);}
+  .bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:top;}
+  .vignette{position:absolute;inset:0;background:radial-gradient(circle at 50% 30%, rgba(0,0,0,0) 0%, rgba(8,6,24,0.5) 65%, rgba(8,6,24,0.82) 100%);z-index:1;}
 
   .view{position:absolute;inset:0;z-index:3;display:none;flex-direction:column;}
   .view.active{display:flex;}
 
-  /* ---------- Explication ---------- */
-  #view-explain{padding-top:46%;padding-left:8vw;padding-right:8vw;padding-bottom:5vh;align-items:center;text-align:center;overflow-y:auto;}
+  /* Explication */
+  #view-explain{padding:7vh 8vw 5vh;align-items:center;text-align:center;overflow-y:auto;}
   .ex-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.6rem;color:#f7f2e9;margin-bottom:6px;flex-shrink:0;}
-  .ex-divider{width:70px;height:1.5px;background:linear-gradient(to right, transparent, #d9b06f, transparent);margin:14px 0 18px;flex-shrink:0;}
-  .ex-text{font-size:0.9rem;line-height:1.65;color:#e3ddf0;max-width:380px;margin-bottom:12px;}
+  .ex-divider{width:70px;height:1.5px;background:linear-gradient(to right, transparent, #d9b06f, transparent);margin:14px 0 20px;flex-shrink:0;}
+  .ex-text{font-size:0.92rem;line-height:1.7;color:#e3ddf0;max-width:380px;margin-bottom:14px;}
   .ex-text b{color:#f3d9a8;font-weight:500;}
   .ex-tip{
-    margin-top:6px;padding:13px 15px;border-radius:14px;
+    margin-top:8px;padding:14px 16px;border-radius:14px;
     background:rgba(217,176,111,0.08);border:1px solid rgba(217,176,111,0.3);
-    font-size:0.82rem;line-height:1.5;color:#f3d9a8;max-width:380px;
+    font-size:0.84rem;line-height:1.55;color:#f3d9a8;max-width:380px;
   }
   .ex-btn{
-    margin-top:3.5vh;padding:14px 38px;border-radius:30px;border:1px solid #d9b06f;
+    margin-top:4vh;padding:14px 38px;border-radius:30px;border:1px solid #d9b06f;
     background:rgba(217,176,111,0.1);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.12em;
     text-transform:uppercase;cursor:pointer;font-family:inherit;flex-shrink:0;
   }
 
-  .centered-view{padding-top:46%;padding-left:8vw;padding-right:8vw;align-items:center;justify-content:flex-start;text-align:center;position:relative;height:100%;}
+  /* Écriture */
+  #view-write{align-items:center;justify-content:flex-end;padding:8vw 8vw 10vh;text-align:center;position:relative;}
   .help-icon{
     position:absolute;top:6vh;right:7vw;width:30px;height:30px;border-radius:50%;
     border:1px solid rgba(217,176,111,0.4);display:flex;align-items:center;justify-content:center;
     color:#d9b06f;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;cursor:pointer;
-    background:rgba(255,255,255,0.04);z-index:4;
+    background:rgba(255,255,255,0.04);
   }
-
-  /* ---------- Choix ---------- */
-  .choice-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:#f7f2e9;margin-top:6vh;margin-bottom:5vh;max-width:340px;}
-  .choice-btns{display:flex;flex-direction:column;gap:18px;width:100%;max-width:320px;}
-  .choice-btn{
-    padding:20px;border-radius:18px;border:1px solid rgba(217,176,111,0.4);
-    background:rgba(255,255,255,0.05);color:#f7f2e9;cursor:pointer;font-family:inherit;
-    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;
-    transition:background 0.3s ease, border-color 0.3s ease;
+  .write-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;color:#f7f2e9;margin-bottom:3vh;}
+  .gratitude-counter{
+    position:absolute;top:6vh;left:7vw;display:flex;gap:6px;
   }
-  .choice-btn:hover{background:rgba(217,176,111,0.12);border-color:#d9b06f;}
+  .counter-dot{width:9px;height:9px;border-radius:50%;border:1px solid rgba(217,176,111,0.5);background:transparent;}
+  .counter-dot.filled{background:#d9b06f;}
 
-  /* ---------- Écriture ---------- */
-  .step-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:#f7f2e9;margin-top:6vh;margin-bottom:3vh;max-width:360px;}
-  .step-card{
+  .gratitude-card{
     width:100%;max-width:380px;border-radius:18px;
     background:rgba(255,255,255,0.06);backdrop-filter:blur(6px);
-    border:1px solid rgba(217,176,111,0.3);padding:18px;margin-bottom:4vh;
-    transition:transform 1.1s ease-in, opacity 1.1s ease-in;
+    border:1px solid rgba(217,176,111,0.3);padding:18px;
+    margin-bottom:5vh;
+    transition:transform 0.6s ease, opacity 0.6s ease;
   }
-  .step-card textarea{
-    width:100%;min-height:120px;background:transparent;border:none;outline:none;resize:none;
-    color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;line-height:1.6;
+  .gratitude-card textarea{
+    width:100%;min-height:90px;background:transparent;border:none;outline:none;resize:none;
+    color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;
+    line-height:1.5;
   }
-  .step-card textarea::placeholder{color:#7d76a0;font-size:0.92rem;}
-  .step-btn{
+  .gratitude-card textarea::placeholder{color:#7d76a0;}
+
+  .gratitude-card.closing{
+    animation: closeCard 0.7s ease-in forwards;
+  }
+  @keyframes closeCard{
+    0%{ transform:scale(1); opacity:1; }
+    60%{ transform:scale(0.3); opacity:0.9; }
+    100%{ transform:scale(0); opacity:0; }
+  }
+
+  .validate-btn{
     padding:13px 36px;border-radius:30px;border:1px solid #d9b06f;
     background:rgba(217,176,111,0.12);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.1em;
     text-transform:uppercase;cursor:pointer;font-family:inherit;
-    transition:opacity 0.5s ease;
   }
-  .step-card.fading-past{
-    animation: fadeToPast 1.4s ease-in forwards;
+  .validate-btn:disabled{opacity:0.3;cursor:not-allowed;}
+
+  .write-sub{margin-top:3vh;font-size:0.84rem;color:#a89fc4;max-width:320px;}
+
+  /* étoiles fixes accumulées dans le ciel */
+  .sky-stars{position:absolute;inset:0;z-index:2;pointer-events:none;}
+  .fixed-star{
+    position:absolute;border-radius:50%;
+    box-shadow:0 0 6px 1px currentColor;
   }
-  @keyframes fadeToPast{
-    0%{ transform:scale(1); opacity:1; filter:saturate(1); }
-    100%{ transform:scale(0.85) translateY(20px); opacity:0; filter:saturate(0.3) sepia(0.4); }
+  .fixed-star.subscriber{
+    animation:twinkleStar 2.4s ease-in-out infinite alternate;
   }
-  .step-card.locking-future{
-    animation: lockFuture 1.2s ease-in forwards;
+  @keyframes twinkleStar{
+    0%{ opacity:0.6; transform:scale(0.85); }
+    100%{ opacity:1; transform:scale(1.15); }
   }
-  @keyframes lockFuture{
-    0%{ transform:scale(1); opacity:1; }
-    60%{ transform:scale(0.92); opacity:1; }
-    100%{ transform:scale(0.7); opacity:0; }
+  .traveling-light{
+    position:fixed;width:10px;height:10px;border-radius:50%;
+    background:radial-gradient(circle, #fff 0%, #d9b06f 60%, transparent 100%);
+    z-index:20;pointer-events:none;
   }
 
-  /* ---------- Résultat passé ---------- */
-  #view-past{align-items:center;justify-content:center;padding:8vw;text-align:center;}
-  .past-msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:#f7f2e9;margin-bottom:2vh;max-width:380px;opacity:0;transition:opacity 2.2s ease, transform 2.2s ease;transform:translateY(10px);}
-  .past-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:#cfc9e6;max-width:330px;line-height:1.65;opacity:0;transition:opacity 2.2s ease;transition-delay:0.6s;}
-  #view-past.show-content .past-msg{opacity:1;transform:translateY(0);}
-  #view-past.show-content .past-sub{opacity:1;}
-  .past-divider{
-    width:50px;height:1px;background:linear-gradient(to right, transparent, rgba(217,176,111,0.4), transparent);
-    margin:4.5vh 0 4.5vh;
-    opacity:0;transition:opacity 1.8s ease;transition-delay:1.3s;
-  }
-  #view-past.show-content .past-divider{opacity:1;}
-  .past-return-btn{
-    padding:16px 34px;border-radius:30px;border:1px solid #d9b06f;
-    background:linear-gradient(135deg, rgba(217,176,111,0.22), rgba(217,176,111,0.08));
-    color:#f7f2e9;font-family:'Cormorant Garamond',serif;
-    font-style:italic;font-size:1.02rem;cursor:pointer;max-width:300px;
-    box-shadow:0 0 18px rgba(217,176,111,0.28);
-    opacity:0;transition:opacity 2.2s ease, transform 0.2s ease;transition-delay:1.7s;
-    display:flex;align-items:center;gap:9px;
-  }
-  .past-return-btn:active{transform:scale(0.97);}
-  #view-past.show-content .past-return-btn{opacity:1;}
+  /* Limite atteinte */
+  #view-limit{align-items:center;justify-content:center;padding:8vw;text-align:center;}
+  .limit-msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:#f7f2e9;margin-bottom:2vh;max-width:380px;}
+  .limit-sub{font-size:0.86rem;color:#cfc9e6;max-width:320px;line-height:1.6;}
 
-  /* ---------- Résultat futur ---------- */
-  #view-future{align-items:center;justify-content:center;padding:8vw;text-align:center;}
-  .lock-icon{
-    width:64px;height:64px;margin-bottom:3vh;
-    opacity:0;transition:opacity 1.8s ease;
-  }
-  #view-future.show-content .lock-icon{opacity:1;}
-  .future-msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:#f7f2e9;margin-bottom:2vh;max-width:380px;opacity:0;transition:opacity 2.2s ease, transform 2.2s ease;transform:translateY(10px);transition-delay:0.5s;}
-  #view-future.show-content .future-msg{opacity:1;transform:translateY(0);}
-  .future-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:#cfc9e6;max-width:330px;line-height:1.65;opacity:0;transition:opacity 2.2s ease;transition-delay:1.4s;}
-  #view-future.show-content .future-sub{opacity:1;}
-  #view-future.show-content #futureDivider{opacity:1;transition-delay:2.1s;}
-  #view-future.show-content #futureReturnBtn{opacity:1;transition-delay:2.5s;}
-
-  .testbar{position:absolute;top:8px;left:8px;z-index:50;display:flex;gap:4px;flex-wrap:wrap;}
-  .testbar button{font-size:0.6rem;padding:4px 7px;border-radius:5px;border:1px solid rgba(217,176,111,0.4);background:rgba(0,0,0,0.5);color:#d9b06f;cursor:pointer;}
+  .testbar{position:absolute;top:8px;left:8px;z-index:50;display:flex;gap:4px;flex-wrap:wrap;max-width:90vw;}
+  .testbar button{font-size:0.6rem;padding:4px 7px;border-radius:5px;border:1px solid rgba(217,176,111,0.4);background:rgba(0,0,0,0.4);color:#d9b06f;cursor:pointer;}
+  .testbar button.on{background:rgba(217,176,111,0.4);}
 </style>
 </head>
 <body>
   <div class="stage">
-    <img class="bg" src="echo.webp" alt="">
-    <div class="overlay"></div>
+    <img class="bg" id="bgDefault" src="crepuscule.webp" alt="">
+    <img class="bg" id="bgWrite" src="ciel_silhouette.webp
+" alt="" style="display:none;">
+    <div class="vignette"></div>
 
-    <div class="testbar">
-      <button onclick="showView('explain')">Explication</button>
-      <button onclick="restart()">Choix</button>
-    </div>
+    <div class="sky-stars" id="skyStars"></div>
 
     <!-- VUE 1 : EXPLICATION -->
     <div class="view" id="view-explain">
-      <div class="ex-title">Dialogue avec soi</div>
+      <div class="ex-title">La gratitude du soir</div>
       <div class="ex-divider"></div>
-      <div class="ex-text">Parler à son moi du passé ou du futur aide à prendre du recul sur l'instant présent. On se souvient qu'on a déjà traversé des choses difficiles — ou on se rassure sur ce qui nous attend.</div>
-      <div class="ex-text">Choisis d'abord à qui tu veux écrire, puis laisse les mots venir, sans trop réfléchir.</div>
-      <div class="ex-tip">💡 Il n'y a pas de bonne réponse entre passé et futur — suis simplement ce qui t'appelle aujourd'hui.</div>
-      <button class="ex-btn" onclick="restart()">J'ai compris</button>
+      <div class="ex-text">Ton cerveau a une particularité étrange : il retient bien plus facilement ce qui va mal que ce qui va bien. C'est un <b>réflexe de survie ancien</b> — repérer le danger l'a longtemps emporté sur savourer le calme.</div>
+      <div class="ex-text">Le problème, c'est que ce réflexe n'a pas vraiment de fin. Il continue de <b>scanner ce qui manque</b>, même quand plus rien ne te menace vraiment.</div>
+      <div class="ex-text">Pratiquer la gratitude chaque soir, c'est entraîner ton attention à voir <b>aussi</b> ce qui va bien — pas à la place du reste, mais en plus. Avec le temps, ce réflexe s'installe à son tour, et ton regard sur tes journées change.</div>
+      <div class="ex-tip">💡 Un mot, une phrase ou un petit texte suffisent. Ce qui compte, c'est l'instant où tu y penses vraiment.</div>
+      <button class="ex-btn" onclick="showView('write')">J'ai compris</button>
     </div>
 
-    <!-- VUE 2 : CHOIX -->
-    <div class="view centered-view" id="view-choice">
+    <!-- VUE 2 : ÉCRITURE -->
+    <div class="view" id="view-write">
       <div class="help-icon" onclick="showView('explain')">?</div>
-      <div class="choice-title">À qui veux-tu écrire aujourd'hui ?</div>
-      <div class="choice-btns">
-        <button class="choice-btn" onclick="selectMode('passe')">Mon moi du passé</button>
-        <button class="choice-btn" onclick="selectMode('futur')">Mon moi du futur</button>
+      <div class="gratitude-counter" id="gratCounter"></div>
+
+      <div class="write-title">De quoi es-tu reconnaissante aujourd'hui ?</div>
+
+      <div class="gratitude-card" id="gratCard">
+        <textarea id="gratInput" placeholder="Un mot, une phrase, ou un peu plus..."></textarea>
       </div>
+
+      <button class="validate-btn" id="validateBtn" onclick="validateGratitude()">Laisser s'envoler</button>
+      <div class="write-sub" id="writeSub">Valide chaque gratitude pour pouvoir en écrire une nouvelle.</div>
     </div>
 
-    <!-- VUE 3 : ÉCRITURE -->
-    <div class="view centered-view" id="view-write">
-      <div class="help-icon" onclick="showView('explain')">?</div>
-      <div class="step-title" id="writeTitle"></div>
-      <div class="step-card" id="writeCard">
-        <textarea id="letterInput" placeholder="Laisse les mots venir..."></textarea>
-      </div>
-      <button class="step-btn" id="sendBtn" onclick="sendLetter()"></button>
-    </div>
-
-    <!-- VUE 4 : RÉSULTAT PASSÉ -->
-    <div class="view" id="view-past">
-      <div class="past-msg">Message envoyé dans tes souvenirs.</div>
-      <div class="past-sub">Regarde tout ce que tu as surmonté alors que tu te croyais bloqué. Tu es plus fort·e que tu ne le penses.</div>
-      <div class="past-divider"></div>
-      <button class="past-return-btn" id="pastReturnBtn" onclick="returnHome()">C'est vrai ! Merci pour ce rappel.</button>
-    </div>
-
-    <!-- VUE 5 : RÉSULTAT FUTUR -->
-    <div class="view" id="view-future">
-      <svg class="lock-icon" viewBox="0 0 24 24" fill="none" stroke="#d9b06f" stroke-width="1.1">
-        <path d="M12 3l1.4 6.6L20 11l-6.6 1.4L12 19l-1.4-6.6L4 11l6.6-1.4L12 3Z" fill="rgba(217,176,111,0.25)"/>
-      </svg>
-      <div class="future-msg">Ton moi du futur vient de recevoir ta lettre.</div>
-      <div class="future-sub">Il sourit en la lisant, car il sait déjà que ce problème est résolu. Il t'envoie toute sa sérénité pour t'aider à traverser ces derniers instants — tu as déjà surmonté le plus dur.</div>
-      <div class="past-divider" id="futureDivider"></div>
-      <button class="past-return-btn" id="futureReturnBtn" onclick="returnHome()">Maintenant je sais que je vais surmonter tout ça.</button>
+    <!-- VUE 3 : LIMITE ATTEINTE -->
+    <div class="view" id="view-limit">
+      <div class="limit-msg">Ton ciel s'est enrichi pour aujourd'hui.</div>
+      <div class="limit-sub">Tu as posé toutes tes gratitudes du jour. Reviens demain pour continuer à le faire briller.</div>
+      <button onclick="naeoraNav('accueil')" style="margin-top:5vh;padding:13px 30px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.92rem;cursor:pointer;">Retour à l'accueil</button>
     </div>
   </div>
 
   <script>
-    let currentMode = null;
+    let isSubscriber = false;
+    let gratitudeCount = 0;
+    let maxGratitudes = 1;
+    let totalStars = 0; // ciel cumulé (persisterait en base de données dans la vraie app)
+
+    function togglePlan(){
+      isSubscriber = !isSubscriber;
+      maxGratitudes = isSubscriber ? 3 : 1;
+      gratitudeCount = 0;
+      document.getElementById('togglePlan').textContent = 'Mode: ' + (isSubscriber ? 'Abonné' : 'Gratuit');
+      renderCounter();
+      showView('write');
+    }
+
+    function renderCounter(){
+      const el = document.getElementById('gratCounter');
+      el.innerHTML = '';
+      for(let i=0;i<maxGratitudes;i++){
+        const d = document.createElement('div');
+        d.className = 'counter-dot' + (i < gratitudeCount ? ' filled' : '');
+        el.appendChild(d);
+      }
+    }
 
     function showView(name){
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
       document.getElementById('view-' + name).classList.add('active');
-    }
-
-    function restart(){
-      document.getElementById('letterInput').value = '';
-      const card = document.getElementById('writeCard');
-      card.classList.remove('fading-past','locking-future');
-      card.style.opacity = '1';
-      card.style.transform = 'none';
-      const btn = document.getElementById('sendBtn');
-      btn.style.opacity = '1';
-      showView('choice');
-    }
-
-    function selectMode(mode){
-      currentMode = mode;
-      const title = document.getElementById('writeTitle');
-      const btn = document.getElementById('sendBtn');
-      if(mode === 'passe'){
-        title.textContent = "Qu'aimerais-tu dire à la version de toi qui traversait une période difficile ?";
-        btn.textContent = 'Envoyer dans mes souvenirs';
+      if(name === 'write'){
+        renderCounter();
+        document.getElementById('bgDefault').style.display = 'none';
+        document.getElementById('bgWrite').style.display = 'block';
       } else {
-        title.textContent = "Qu'aimerais-tu dire à la version de toi que tu seras plus tard ?";
-        btn.textContent = 'Envoyer';
-      }
-      showView('write');
-    }
-
-    function sendLetter(){
-      const text = document.getElementById('letterInput').value.trim();
-      if(!text){ document.getElementById('letterInput').focus(); return; }
-
-      const card = document.getElementById('writeCard');
-      const btn = document.getElementById('sendBtn');
-      btn.style.opacity = '0';
-
-      if(currentMode === 'passe'){
-        card.classList.add('fading-past');
-        setTimeout(() => {
-          showView('past');
-          const v = document.getElementById('view-past');
-          v.classList.remove('show-content');
-          setTimeout(() => v.classList.add('show-content'), 50);
-        }, 1500);
-      } else {
-        card.classList.add('locking-future');
-        setTimeout(() => {
-          showView('future');
-          const v = document.getElementById('view-future');
-          v.classList.remove('show-content');
-          setTimeout(() => v.classList.add('show-content'), 50);
-        }, 1300);
+        document.getElementById('bgDefault').style.display = 'block';
+        document.getElementById('bgWrite').style.display = 'none';
       }
     }
 
-    function returnHome(){
-      naeoraNav('accueil');
+    const STAR_COLORS = ['#ffffff','#f6a6c1','#9ecbff','#9be8b0','#f6e08a','#c79bf2'];
+
+    function placeFixedStar(x, y, color){
+      const star = document.createElement('div');
+      star.className = 'fixed-star' + (isSubscriber ? ' subscriber' : '');
+      const size = 3 + Math.random()*3;
+      star.style.width = size + 'px';
+      star.style.height = size + 'px';
+      star.style.left = x + '%';
+      star.style.top = y + '%';
+      star.style.background = color;
+      star.style.color = color;
+      star.style.opacity = '0';
+      document.getElementById('skyStars').appendChild(star);
+      requestAnimationFrame(() => {
+        star.style.transition = 'opacity 0.6s ease';
+        star.style.opacity = '1';
+      });
     }
 
+    function validateGratitude(){
+      const input = document.getElementById('gratInput');
+      const text = input.value.trim();
+      if(!text) { input.focus(); return; }
+
+      const card = document.getElementById('gratCard');
+      const cardRect = card.getBoundingClientRect();
+      card.classList.add('closing');
+
+      // Position cible dans le ciel : zone haute, en évitant la silhouette (bas-gauche)
+      const targetXPercent = 15 + Math.random()*70;   // 15% à 85% en largeur
+      const targetYPercent = 5 + Math.random()*42;    // 5% à 47% en hauteur (ciel haut)
+
+      const stage = document.querySelector('.stage').getBoundingClientRect();
+      const targetX = stage.left + (targetXPercent/100)*stage.width;
+      const targetY = stage.top + (targetYPercent/100)*stage.height;
+
+      const color = isSubscriber ? STAR_COLORS[Math.floor(Math.random()*STAR_COLORS.length)] : '#ffffff';
+
+      const light = document.createElement('div');
+      light.className = 'traveling-light';
+      light.style.left = (cardRect.left + cardRect.width/2 - 5) + 'px';
+      light.style.top = (cardRect.top + cardRect.height/2 - 5) + 'px';
+      light.style.background = 'radial-gradient(circle, #fff 0%, ' + color + ' 55%, transparent 100%)';
+      if(isSubscriber){ light.style.boxShadow = '0 0 14px 3px ' + color; }
+      document.body.appendChild(light);
+
+      const startX = cardRect.left + cardRect.width/2 - 5;
+      const startY = cardRect.top + cardRect.height/2 - 5;
+      const duration = 1100;
+      const startTime = performance.now();
+
+      function animateLight(now){
+        const t = Math.min((now - startTime)/duration, 1);
+        const ease = 1 - Math.pow(1-t, 3);
+        const curX = startX + (targetX - startX)*ease;
+        const curY = startY + (targetY - startY)*ease - Math.sin(t*Math.PI)*60;
+        light.style.left = curX + 'px';
+        light.style.top = curY + 'px';
+        light.style.opacity = (1 - t*0.2);
+        if(t < 1){
+          requestAnimationFrame(animateLight);
+        } else {
+          light.remove();
+          placeFixedStar(targetXPercent, targetYPercent, color);
+          totalStars++;
+        }
+      }
+      requestAnimationFrame(animateLight);
+
+      gratitudeCount++;
+
+      setTimeout(() => {
+        if(gratitudeCount >= maxGratitudes){
+          naeoraMarkDone('soir');
+          showView('limit');
+        } else {
+          card.classList.remove('closing');
+          input.value = '';
+          renderCounter();
+        }
+      }, 750);
+    }
+
+    renderCounter();
     showView('explain');
   </script>
+<script src="naeora-state.js"></script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
 </html>

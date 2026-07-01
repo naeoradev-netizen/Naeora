@@ -2,134 +2,157 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Naéora — Tuto pendule (1ère fois)</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Naéora</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
-  html,body{width:100%;height:100%;background:#14123a;overflow:hidden;font-family:'Jost',sans-serif;}
-  .stage{position:relative;width:100%;height:100vh;overflow:hidden;}
-  .bg{position:absolute;top:0;left:0;width:100%;height:42%;object-fit:cover;object-position:top;}
-  .overlay{position:absolute;top:0;left:0;width:100%;height:42%;background:linear-gradient(to bottom, transparent 55%, #14123a 100%);}
-
-  .view{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;}
-
-  #view-guide{padding-top:46%;padding-left:8vw;padding-right:8vw;align-items:center;justify-content:flex-start;text-align:center;height:100%;}
-
-  .guide-text{
-    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
-    font-size:1.25rem;line-height:1.6;color:#f7f2e9;text-shadow:0 2px 14px rgba(0,0,0,0.4);
-    max-width:380px;margin-top:7vh;
-    opacity:0;transition:opacity 1.6s ease, transform 1.6s ease;transform:translateY(8px);
+  html,body{width:100%;height:100%;overflow:hidden;background:#05060f;}
+  #app-frame{width:100%;height:100%;border:none;display:block;}
+  #sound-toggle{
+    position:fixed;top:max(14px,env(safe-area-inset-top));right:14px;z-index:1000;
+    width:34px;height:34px;border-radius:50%;
+    background:rgba(8,6,24,0.55);border:1px solid rgba(217,176,111,0.35);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    backdrop-filter:blur(6px);
   }
-  .guide-text.show{opacity:1;transform:translateY(0);}
-  .guide-text b{color:#f3d9a8;font-weight:500;}
-
-  .guide-example{
-    font-family:'Cormorant Garamond',serif;font-style:italic;
-    font-size:0.85rem;line-height:1.5;color:#cfc9e6;
-    max-width:340px;margin-top:2vh;
-    opacity:0;transition:opacity 1.6s ease;
-  }
-  .guide-example.show{opacity:1;}
-
-  .continue-btn{
-    margin-top:5vh;padding:14px 34px;border-radius:30px;border:1px solid #d9b06f;
-    background:rgba(217,176,111,0.12);color:#f7f2e9;font-size:0.8rem;letter-spacing:0.08em;
-    text-transform:uppercase;cursor:pointer;font-family:inherit;
-    opacity:0;transition:opacity 1.8s ease;
-  }
-  .continue-btn.show{opacity:1;}
-
-  .closing-text{
-    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:#cfc9e6;
-    line-height:1.6;max-width:360px;margin-top:7vh;
-    opacity:0;transition:opacity 2s ease;
-  }
-  .closing-text.show{opacity:1;}
+  #sound-toggle svg{width:16px;height:16px;}
 </style>
 </head>
 <body>
-  <div class="stage">
-    <img class="bg" src="echo.webp" alt="">
-    <div class="overlay"></div>
-
-    <div class="view" id="view-guide">
-      <div class="guide-text" id="guideText"></div>
-      <div class="guide-example" id="guideExample"></div>
-      <div class="closing-text" id="closingText"></div>
-      <button class="continue-btn" id="continueBtn" onclick="nextStep()">Continuer</button>
-    </div>
+  <iframe id="app-frame" src="naeora-splash-final.html" title="Naéora"></iframe>
+  <div id="sound-toggle" onclick="toggleSound()" title="Activer/couper la musique">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#d9b06f" stroke-width="1.4">
+      <path d="M4 9v6h4l5 4V5L8 9H4Z" stroke-linejoin="round"/>
+      <path id="soundWave1" d="M16.5 9a4.5 4.5 0 0 1 0 6" stroke-linecap="round"/>
+      <path id="soundWave2" d="M19 6.5a8 8 0 0 1 0 11" stroke-linecap="round" opacity="0.6"/>
+    </svg>
   </div>
-
+  <audio id="bgGeneral"  src="naeora-ambient.mp3"         loop preload="auto"></audio>
+  <audio id="bgMatin"    src="naeora-ambient-matin.mp3"   loop preload="auto"></audio>
+  <audio id="bgSoir"     src="naeora-ambient-soir.mp3"    loop preload="auto"></audio>
+  <audio id="bgJournee"  src="naeora-ambient-journee.mp3" loop preload="auto"></audio>
   <script>
-    const STEPS = [
-      { text: "Prends trois grandes inspirations, pour calmer ton mental et être présente." },
-      { text: "Sois prête à accepter n'importe quelle réponse, sans projeter tes désirs." },
-      { text: "Choisis un lieu calme, loin des ondes électromagnétiques fortes." },
-      { text: "Pose ton coude sur une surface plane. Tiens la chaîne entre le pouce et l'index, bras détendu." },
-      { text: "Laisse environ 5 à 8 cm entre tes doigts et le poids. Laisse le pendule s'immobiliser naturellement." },
-      { text: "Avant de poser des questions, tu dois comprendre comment ton corps fait réagir le pendule.", example: "C'est ce qu'on appelle « programmer » ou demander sa convention. Ce code est propre à chacune." },
-      { text: "Demande, à voix haute ou dans ta tête :<br><b>« Montre-moi un OUI »</b>", example: "Observe le mouvement, puis note-le sur la carte du coffret ou un papier libre." },
-      { text: "Arrête le pendule de l'autre main, puis demande :<br><b>« Montre-moi un NON »</b>", example: "Observe le nouveau mouvement, et note-le." },
-      { text: "Fais de même avec « peut-être » et « je ne sais pas »." },
-      { text: "Pose maintenant des questions dont tu connais déjà la réponse.", example: "Ex : « Est-ce que je m'appelle … ? », « Suis-je assise sur la lune ? »" },
-      { text: "Si le pendule répond juste 10 fois sur 10, ta connexion est stable — tu peux passer à des questions plus personnelles." }
-    ];
+    var ROUTES = {
+      splash:          'naeora-splash-final.html',
+      avertissement:   'naeora-avertissement-preview.html',
+      onb1:            'naeora-onboarding-slide1-preview.html',
+      onb2:            'naeora-onboarding-slide2-preview.html',
+      onb3:            'naeora-onboarding-slide3-preview.html',
+      onb4:            'naeora-onboarding-slide4-preview.html',
+      onb5:            'naeora-onboarding-slide5-preview.html',
+      onb6:            'naeora-onboarding-slide6-preview.html',
+      inscription:     'naeora-inscription-preview.html',
+      accueil:         'naeora-accueil-preview.html',
+      ciel:            'naeora-ciel-preview.html',
+      boutique:        'naeora-boutique-preview.html',
+      profil:          'naeora-profil-preview.html',
+      matin:           'naeora-matin-preview.html',
+      soir:            'naeora-soir-preview.html',
+      coherence:       'naeora-coherence-preview.html',
+      hooponopono:     'naeora-hooponopono-preview.html',
+      envol:           'naeora-envol-preview.html',
+      echo:            'naeora-echo-preview.html',
+      dialogue:        'naeora-dialogue-preview.html',
+      source:          'naeora-source-preview.html',
+      pendule_explain: 'naeora-pendule-explication-preview.html',
+      pendule_tuto:    'naeora-pendule-tuto-guide-preview.html',
+      pendule_resume:  'naeora-pendule-tuto-resume-preview.html',
+      pendule_exercice:'naeora-pendule-exercice-preview.html'
+    };
 
-    let currentStep = 0;
-    let finished = false;
+    var frame = document.getElementById('app-frame');
+    var BASE_VOL = 0.35;
+    var FADE_MS  = 800;
+    var tracks = {
+      general: document.getElementById('bgGeneral'),
+      matin:   document.getElementById('bgMatin'),
+      soir:    document.getElementById('bgSoir'),
+      journee: document.getElementById('bgJournee')
+    };
+    var currentTrackKey = null;
+    var currentRoute    = 'splash';
+    var soundOn = (localStorage.getItem('naeora_sound') !== 'off');
+    var unlocked = false;
 
-    function showStep(index){
-      const textEl = document.getElementById('guideText');
-      const exampleEl = document.getElementById('guideExample');
-      const closingEl = document.getElementById('closingText');
-      const btn = document.getElementById('continueBtn');
-
-      btn.classList.remove('show');
-
-      if(index >= STEPS.length){
-        textEl.classList.remove('show');
-        exampleEl.classList.remove('show');
-        finished = true;
-        setTimeout(() => {
-          closingEl.innerHTML = "Amuse-toi à apprendre à te connaître. Tu peux être surprise.<br><br>Le pendule n'est qu'un miroir. La réponse est déjà en toi.";
-          closingEl.classList.add('show');
-          btn.textContent = "J'ai terminé";
-          setTimeout(() => btn.classList.add('show'), 1200);
-        }, 700);
-        return;
-      }
-
-      closingEl.classList.remove('show');
-      textEl.classList.remove('show');
-      exampleEl.classList.remove('show');
-      setTimeout(() => {
-        const step = STEPS[index];
-        textEl.innerHTML = step.text;
-        textEl.classList.add('show');
-        if(step.example){
-          exampleEl.innerHTML = step.example;
-          setTimeout(() => exampleEl.classList.add('show'), 500);
-        } else {
-          exampleEl.innerHTML = '';
-        }
-        setTimeout(() => btn.classList.add('show'), 1000);
-      }, 700);
+    function trackForRoute(r){
+      if(r==='matin') return 'matin';
+      var j=['coherence','hooponopono','envol','echo','dialogue','source',
+             'pendule_explain','pendule_tuto','pendule_resume','pendule_exercice'];
+      if(j.indexOf(r)>=0) return 'journee';
+      if(r==='soir') return 'soir';
+      return 'general';
     }
 
-    function nextStep(){
-      if(finished){
-        naeoraNav('accueil');
-        return;
-      }
-      currentStep++;
-      showStep(currentStep);
+    function fadeOut(t, cb){
+      var steps=20, i=steps, vol=t.volume;
+      var id=setInterval(function(){
+        i--;
+        t.volume=Math.max(vol*(i/steps),0);
+        if(i<=0){clearInterval(id);t.pause();t.volume=vol;if(cb)cb();}
+      }, FADE_MS/steps);
+    }
+    function fadeIn(t){
+      t.volume=0;
+      t.play().catch(function(){});
+      var steps=20,i=0;
+      var id=setInterval(function(){
+        i++;
+        t.volume=Math.min(BASE_VOL*(i/steps),BASE_VOL);
+        if(i>=steps)clearInterval(id);
+      }, FADE_MS/steps);
     }
 
-    document.getElementById('continueBtn').textContent = 'Continuer';
-    showStep(0);
+    function switchTrack(key){
+      if(!soundOn||!unlocked){
+        Object.values(tracks).forEach(function(t){t.pause();});
+        currentTrackKey=key; return;
+      }
+      if(key===currentTrackKey){
+        if(tracks[key].paused){tracks[key].volume=BASE_VOL;tracks[key].play().catch(function(){});}
+        return;
+      }
+      var prev=currentTrackKey;
+      currentTrackKey=key;
+      if(prev && !tracks[prev].paused){
+        fadeOut(tracks[prev], function(){ fadeIn(tracks[key]); });
+      } else {
+        fadeIn(tracks[key]);
+      }
+    }
+
+    function updateIcon(){
+      document.getElementById('soundWave1').style.opacity=soundOn?'1':'0';
+      document.getElementById('soundWave2').style.opacity=soundOn?'0.6':'0';
+    }
+    function toggleSound(){
+      soundOn=!soundOn;
+      localStorage.setItem('naeora_sound',soundOn?'on':'off');
+      updateIcon();
+      if(!soundOn){Object.values(tracks).forEach(function(t){t.pause();});}
+      else{switchTrack(currentTrackKey||trackForRoute(currentRoute));}
+    }
+
+    function goTo(route){
+      if(!ROUTES[route]){console.warn('Route inconnue:',route);return;}
+      currentRoute=route;
+      frame.src=ROUTES[route];
+      switchTrack(trackForRoute(route));
+    }
+
+    window.addEventListener('message',function(e){
+      if(e.data&&e.data.naeoraNav) goTo(e.data.naeoraNav);
+    });
+
+    function unlock(){
+      if(unlocked)return;
+      unlocked=true;
+      switchTrack(trackForRoute(currentRoute));
+      window.removeEventListener('pointerdown',unlock);
+    }
+    window.addEventListener('pointerdown',unlock);
+
+    updateIcon();
+    goTo('splash');
   </script>
-<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
+</body>
 </html>

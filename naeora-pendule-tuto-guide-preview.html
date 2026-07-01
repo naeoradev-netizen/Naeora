@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>Naéora — L'envol</title>
+<title>Naéora — Tuto pendule (1ère fois)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
@@ -13,424 +13,124 @@
   .bg{position:absolute;top:0;left:0;width:100%;height:42%;object-fit:cover;object-position:top;}
   .overlay{position:absolute;top:0;left:0;width:100%;height:42%;background:linear-gradient(to bottom, transparent 55%, #14123a 100%);}
 
-  .view{position:absolute;inset:0;z-index:3;display:none;flex-direction:column;}
-  .view.active{display:flex;}
+  .view{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;}
 
-  /* ---------- Explication ---------- */
-  #view-explain{padding-top:46%;padding-left:8vw;padding-right:8vw;padding-bottom:5vh;align-items:center;text-align:center;overflow-y:auto;}
-  .ex-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.6rem;color:#f7f2e9;margin-bottom:6px;flex-shrink:0;}
-  .ex-divider{width:70px;height:1.5px;background:linear-gradient(to right, transparent, #d9b06f, transparent);margin:14px 0 18px;flex-shrink:0;}
-  .ex-text{font-size:0.9rem;line-height:1.65;color:#e3ddf0;max-width:380px;margin-bottom:12px;}
-  .ex-text b{color:#f3d9a8;font-weight:500;}
-  .ex-tip{
-    margin-top:6px;padding:13px 15px;border-radius:14px;
-    background:rgba(217,176,111,0.08);border:1px solid rgba(217,176,111,0.3);
-    font-size:0.82rem;line-height:1.5;color:#f3d9a8;max-width:380px;
-  }
-  .ex-btn{
-    margin-top:3.5vh;padding:14px 38px;border-radius:30px;border:1px solid #d9b06f;
-    background:rgba(217,176,111,0.1);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.12em;
-    text-transform:uppercase;cursor:pointer;font-family:inherit;flex-shrink:0;
-  }
+  #view-guide{padding-top:46%;padding-left:8vw;padding-right:8vw;align-items:center;justify-content:flex-start;text-align:center;height:100%;}
 
-  /* ---------- Écriture ---------- */
-  #view-write{padding-top:46%;padding-left:8vw;padding-right:8vw;padding-bottom:6vh;align-items:center;text-align:center;}
-  .help-icon{
-    position:absolute;top:6vh;right:7vw;width:30px;height:30px;border-radius:50%;
-    border:1px solid rgba(217,176,111,0.4);display:flex;align-items:center;justify-content:center;
-    color:#d9b06f;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;cursor:pointer;
-    background:rgba(255,255,255,0.04);z-index:4;
-  }
-  .write-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:#f7f2e9;margin-bottom:3vh;}
-  .write-card{
-    width:100%;max-width:380px;border-radius:18px;
-    background:rgba(255,255,255,0.06);backdrop-filter:blur(6px);
-    border:1px solid rgba(217,176,111,0.3);padding:18px;margin-bottom:4vh;
-  }
-  .write-card textarea{
-    width:100%;min-height:130px;background:transparent;border:none;outline:none;resize:none;
-    color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;line-height:1.6;
-  }
-  .write-card textarea::placeholder{color:#7d76a0;font-size:0.92rem;}
-  .write-btn{
-    padding:13px 36px;border-radius:30px;border:1px solid #d9b06f;
-    background:rgba(217,176,111,0.12);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.1em;
-    text-transform:uppercase;cursor:pointer;font-family:inherit;
-  }
-
-  /* ---------- Bulles ---------- */
-  #view-bubbles{position:absolute;inset:0;}
-  .bubble-zone{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;}
-  .bubble-instruction{
-    position:absolute;bottom:4vh;left:0;width:100%;text-align:center;z-index:5;
+  .guide-text{
     font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;
-    font-size:1.05rem;color:#cfc9e6;padding:0 10vw;
-    text-shadow:0 2px 10px rgba(0,0,0,0.4);
-    pointer-events:none;
-    transition:opacity 0.8s ease;
+    font-size:1.25rem;line-height:1.6;color:#f7f2e9;text-shadow:0 2px 14px rgba(0,0,0,0.4);
+    max-width:380px;margin-top:7vh;
+    opacity:0;transition:opacity 1.6s ease, transform 1.6s ease;transform:translateY(8px);
   }
-  .bubble-instruction.hidden{opacity:0;}
-  .bubble{
-    position:absolute;border-radius:50%;
-    background:radial-gradient(circle at 35% 30%, rgba(255,255,255,0.5), rgba(217,176,111,0.25) 60%, rgba(217,176,111,0.12) 100%);
-    border:1px solid rgba(217,176,111,0.4);
-    display:flex;align-items:center;justify-content:center;
-    padding:10px;text-align:center;cursor:pointer;
-    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.78rem;color:#f7f2e9;
-    animation:floatBubble 6s ease-in-out infinite;
-    touch-action:none;
-    transition:opacity 0.4s ease;
-  }
-  @keyframes floatBubble{
-    0%,100%{ transform:translateY(0); }
-    50%{ transform:translateY(-10px); }
-  }
-  .bubble.dimmed{opacity:0.35;}
-  .bubble.releasing{
-    transition:transform 0.9s ease-out, opacity 0.9s ease-out;
-    animation:none;
-  }
+  .guide-text.show{opacity:1;transform:translateY(0);}
+  .guide-text b{color:#f3d9a8;font-weight:500;}
 
-  .question-panel{
-    position:absolute;left:50%;bottom:8vh;transform:translateX(-50%);
-    width:88%;max-width:380px;background:rgba(20,18,58,0.92);
-    border:1px solid rgba(217,176,111,0.35);border-radius:16px;padding:18px;
-    text-align:center;z-index:10;display:none;
+  .guide-example{
+    font-family:'Cormorant Garamond',serif;font-style:italic;
+    font-size:0.85rem;line-height:1.5;color:#cfc9e6;
+    max-width:340px;margin-top:2vh;
+    opacity:0;transition:opacity 1.6s ease;
   }
-  .question-panel.show{display:block;}
-  .question-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:#cfc9e6;margin-bottom:14px;}
-  .question-btns{display:flex;gap:10px;justify-content:center;}
-  .q-btn{
-    padding:10px 22px;border-radius:25px;border:1px solid #d9b06f;
-    background:rgba(217,176,111,0.12);color:#f7f2e9;font-size:0.8rem;cursor:pointer;font-family:inherit;
+  .guide-example.show{opacity:1;}
+
+  .continue-btn{
+    margin-top:5vh;padding:14px 34px;border-radius:30px;border:1px solid #d9b06f;
+    background:rgba(217,176,111,0.12);color:#f7f2e9;font-size:0.8rem;letter-spacing:0.08em;
+    text-transform:uppercase;cursor:pointer;font-family:inherit;
+    opacity:0;transition:opacity 1.8s ease;
   }
+  .continue-btn.show{opacity:1;}
 
-  .release-hint{
-    position:absolute;left:50%;bottom:10vh;transform:translateX(-50%);
-    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.92rem;color:#f3d9a8;
-    text-align:center;width:80%;max-width:340px;display:none;z-index:9;
+  .closing-text{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:#cfc9e6;
+    line-height:1.6;max-width:360px;margin-top:7vh;
+    opacity:0;transition:opacity 2s ease;
   }
-  .release-hint.show{display:block;}
-
-  .defis-zone{
-    position:absolute;bottom:0;left:0;width:100%;height:32%;
-    background:rgba(8,6,24,0.55);backdrop-filter:blur(8px);
-    border-top:1px solid rgba(217,176,111,0.25);
-    display:flex;flex-direction:column;align-items:center;padding:3vh 6vw;
-  }
-  .defis-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:#d9b06f;margin-bottom:1.5vh;}
-  .defis-list{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:400px;overflow-y:auto;max-height:11vh;}
-  .defi-chip{
-    padding:7px 14px;border-radius:20px;background:rgba(217,176,111,0.15);
-    border:1px solid rgba(217,176,111,0.3);font-size:0.74rem;color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;
-  }
-
-  /* particules de libération */
-  .confetti{position:fixed;width:5px;height:5px;border-radius:50%;background:#fff;pointer-events:none;z-index:20;}
-
-  /* ---------- Terminé ---------- */
-  #view-done{align-items:center;justify-content:center;padding:8vw;text-align:center;}
-  .done-msg{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:#f7f2e9;margin-bottom:2vh;max-width:380px;opacity:0;transition:opacity 2.2s ease, transform 2.2s ease;transform:translateY(10px);}
-  .done-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:#cfc9e6;max-width:320px;line-height:1.6;opacity:0;transition:opacity 2.2s ease;transition-delay:0.6s;}
-  #view-done.show-content .done-msg{opacity:1;transform:translateY(0);}
-  #view-done.show-content .done-sub{opacity:1;}
-  .done-defis-list{
-    margin-top:3vh;display:flex;flex-direction:column;gap:8px;align-items:center;max-width:380px;
-    opacity:0;transition:opacity 2.2s ease;transition-delay:1.1s;
-  }
-  #view-done.show-content .done-defis-list{opacity:1;}
-
-  .testbar{position:absolute;top:8px;left:8px;z-index:50;display:flex;gap:4px;}
-  .testbar button{font-size:0.6rem;padding:4px 7px;border-radius:5px;border:1px solid rgba(217,176,111,0.4);background:rgba(0,0,0,0.5);color:#d9b06f;cursor:pointer;}
-
-  #view-done.show-content .return-home-fade{opacity:1 !important;}
+  .closing-text.show{opacity:1;}
 </style>
 </head>
 <body>
   <div class="stage">
-    <img class="bg" src="coherence.webp" alt="">
+    <img class="bg" src="echo.webp" alt="">
     <div class="overlay"></div>
 
-    <div class="testbar">
-      <button onclick="showView('explain')">Explication</button>
-      <button onclick="returnToExerciseIfAlreadyDone()">Revenir plus tard</button>
-    </div>
-
-    <!-- VUE 1 : EXPLICATION -->
-    <div class="view" id="view-explain">
-      <div class="ex-title">L'envol</div>
-      <div class="ex-divider"></div>
-      <div class="ex-text">On porte souvent plus de poids qu'on ne le pense, en mélangeant deux choses très différentes : ce qu'on peut changer, et ce qui ne dépend pas de nous. Ce mélange, c'est ce qui épuise — on s'agite sur des choses qu'on ne contrôlera jamais, et on perd l'énergie qu'il faudrait mettre ailleurs.</div>
-      <div class="ex-text"><b>Comment ça se déroule :</b> écris d'abord tout ce qui te prend la tête, une pensée par ligne. Chacune devient une bulle. Ensuite, touche une bulle à la fois : une question t'est posée — est-ce que cette chose dépend de toi, de tes choix, de tes actions ?</div>
-      <div class="ex-text">Si <b>oui</b>, elle rejoint tes défis du jour : c'est sur elle que tu peux agir. Si <b>non</b>, tu la fais glisser vers le haut pour la laisser s'envoler — un geste physique qui matérialise le lâcher-prise, même si l'idée reste abstraite.</div>
-      <div class="ex-tip">💡 Sois honnête avec toi-même : certaines bulles te surprendront. Le but n'est pas de bien répondre, mais de voir clairement où va vraiment ton énergie.</div>
-      <button class="ex-btn" onclick="showView('write')">J'ai compris</button>
-    </div>
-
-    <!-- VUE 2 : ÉCRITURE -->
-    <div class="view" id="view-write">
-      <div class="help-icon" onclick="showView('explain')">?</div>
-      <div class="write-title">Qu'est-ce qui te prend la tête en ce moment ?</div>
-      <div class="write-card">
-        <textarea id="thoughtsInput" placeholder="Écris une pensée par ligne, en appuyant sur Entrée après chacune..."></textarea>
-      </div>
-      <button class="write-btn" onclick="createBubbles()">Voir mes bulles</button>
-    </div>
-
-    <!-- VUE 3 : BULLES -->
-    <div class="view" id="view-bubbles">
-      <div class="bubble-instruction">Maintenant, clique sur chacune des bulles l'une après l'autre pour agir.</div>
-      <div class="bubble-zone" id="bubbleZone"></div>
-      <div class="question-panel" id="questionPanel">
-        <div class="question-text">Est-ce que ça dépend de toi, de tes choix, de tes actions ?</div>
-        <div class="question-btns">
-          <button class="q-btn" onclick="answerBubble(true)">Oui</button>
-          <button class="q-btn" onclick="answerBubble(false)">Non</button>
-        </div>
-      </div>
-      <div class="release-hint" id="releaseHint">Puisque tu ne peux rien y faire, glisse cette bulle vers le haut pour la laisser partir.</div>
-    </div>
-
-    <!-- VUE 4 : TERMINÉ -->
-    <div class="view" id="view-done">
-      <div class="done-msg">Tu as fait le tri.</div>
-      <div class="done-sub">Ce qui restait à porter, tu l'as posé. Ce qui reste, c'est sur quoi tu peux agir aujourd'hui.</div>
-      <button onclick="naeoraNav('accueil')" style="margin-top:5vh;padding:13px 30px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.92rem;cursor:pointer;opacity:0;transition:opacity 2.2s ease;transition-delay:1.2s;" class="return-home-fade">Retour à l'accueil</button>
-
-      <div class="done-defis-list" id="doneDefisList"></div>
+    <div class="view" id="view-guide">
+      <div class="guide-text" id="guideText"></div>
+      <div class="guide-example" id="guideExample"></div>
+      <div class="closing-text" id="closingText"></div>
+      <button class="continue-btn" id="continueBtn" onclick="nextStep()">Continuer</button>
     </div>
   </div>
 
   <script>
-    let bubbles = [];
-    let activeBubbleId = null;
+    const STEPS = [
+      { text: "Prends trois grandes inspirations, pour calmer ton mental et être présente." },
+      { text: "Sois prête à accepter n'importe quelle réponse, sans projeter tes désirs." },
+      { text: "Choisis un lieu calme, loin des ondes électromagnétiques fortes." },
+      { text: "Pose ton coude sur une surface plane. Tiens la chaîne entre le pouce et l'index, bras détendu." },
+      { text: "Laisse environ 5 à 8 cm entre tes doigts et le poids. Laisse le pendule s'immobiliser naturellement." },
+      { text: "Avant de poser des questions, tu dois comprendre comment ton corps fait réagir le pendule.", example: "C'est ce qu'on appelle « programmer » ou demander sa convention. Ce code est propre à chacune." },
+      { text: "Demande, à voix haute ou dans ta tête :<br><b>« Montre-moi un OUI »</b>", example: "Observe le mouvement, puis note-le sur la carte du coffret ou un papier libre." },
+      { text: "Arrête le pendule de l'autre main, puis demande :<br><b>« Montre-moi un NON »</b>", example: "Observe le nouveau mouvement, et note-le." },
+      { text: "Fais de même avec « peut-être » et « je ne sais pas »." },
+      { text: "Pose maintenant des questions dont tu connais déjà la réponse.", example: "Ex : « Est-ce que je m'appelle … ? », « Suis-je assise sur la lune ? »" },
+      { text: "Si le pendule répond juste 10 fois sur 10, ta connexion est stable — tu peux passer à des questions plus personnelles." }
+    ];
 
-    function showView(name){
-      document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-      document.getElementById('view-' + name).classList.add('active');
-    }
+    let currentStep = 0;
+    let finished = false;
 
-    function createBubbles(){
-      const text = document.getElementById('thoughtsInput').value;
-      let lines = text.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+    function showStep(index){
+      const textEl = document.getElementById('guideText');
+      const exampleEl = document.getElementById('guideExample');
+      const closingEl = document.getElementById('closingText');
+      const btn = document.getElementById('continueBtn');
 
-      // Si l'utilisateur n'a pas fait de retours à la ligne, on découpe sur la ponctuation
-      if(lines.length < 3){
-        const sentences = text.split(/[.!?]+/).map(l => l.trim()).filter(l => l.length > 0);
-        if(sentences.length > lines.length) lines = sentences;
-      }
-      if(lines.length === 0) return;
+      btn.classList.remove('show');
 
-      bubbles = lines.map((l, i) => ({ id: i, text: l, resolved: false }));
-
-      const zone = document.getElementById('bubbleZone');
-      zone.innerHTML = '';
-      const positions = generatePositions(lines.length);
-
-      bubbles.forEach((b, i) => {
-        const size = 78 + Math.random()*36;
-        const el = document.createElement('div');
-        el.className = 'bubble';
-        el.id = 'bubble-' + b.id;
-        el.style.width = size + 'px';
-        el.style.height = size + 'px';
-        el.style.left = positions[i].x + '%';
-        el.style.top = positions[i].y + '%';
-        el.style.transform = 'translate(-50%, -50%)';
-        el.style.animationDelay = (Math.random()*2) + 's';
-        el.textContent = b.text;
-        el.addEventListener('click', () => openQuestion(b.id));
-        zone.appendChild(el);
-      });
-
-      document.getElementById('doneDefisList').innerHTML = '';
-      document.querySelector('.bubble-instruction').classList.remove('hidden');
-      showView('bubbles');
-    }
-
-    function generatePositions(n){
-      // Dispose les bulles en cercle autour du centre de l'écran entier
-      const positions = [];
-      const centerX = 50, centerY = 48;
-      const radius = n <= 1 ? 0 : 20 + Math.min(n,6)*2.2;
-      for(let i=0;i<n;i++){
-        const angle = (i / n) * Math.PI * 2 + (Math.random()*0.4 - 0.2);
-        const r = radius * (0.6 + Math.random()*0.5);
-        positions.push({
-          x: centerX + Math.cos(angle) * r,
-          y: centerY + Math.sin(angle) * r * 0.95
-        });
-      }
-      return positions;
-    }
-
-    function openQuestion(id){
-      if(bubbles.find(b => b.id === id).resolved) return;
-      activeBubbleId = id;
-      document.querySelector('.bubble-instruction').classList.add('hidden');
-      document.querySelectorAll('.bubble').forEach(el => el.classList.add('dimmed'));
-      document.getElementById('bubble-' + id).classList.remove('dimmed');
-      document.getElementById('questionPanel').classList.add('show');
-      document.getElementById('releaseHint').classList.remove('show');
-    }
-
-    function closeQuestion(){
-      document.querySelectorAll('.bubble').forEach(el => el.classList.remove('dimmed'));
-      document.getElementById('questionPanel').classList.remove('show');
-    }
-
-    function answerBubble(canControl){
-      const id = activeBubbleId;
-      const el = document.getElementById('bubble-' + id);
-      document.getElementById('questionPanel').classList.remove('show');
-
-      if(canControl){
-        document.getElementById('releaseHint').textContent = "Glisse cette bulle vers le bas pour l'ajouter à tes défis.";
-        document.getElementById('releaseHint').classList.add('show');
-        enableSwipeGesture(el, id, 'down');
-      } else {
-        document.getElementById('releaseHint').textContent = "Puisque tu ne peux rien y faire, glisse cette bulle vers le haut pour la laisser partir.";
-        document.getElementById('releaseHint').classList.add('show');
-        enableSwipeGesture(el, id, 'up');
-      }
-    }
-
-    function enableSwipeGesture(el, id, direction){
-      let startY = null;
-      el.style.zIndex = 15;
-      el.style.animation = 'none';
-
-      function onPointerDown(e){
-        startY = e.clientY;
-        el.setPointerCapture && el.setPointerCapture(e.pointerId);
-      }
-      function onPointerMove(e){
-        if(startY === null) return;
-        const rawDy = startY - e.clientY; // positif si on glisse vers le haut
-        const dy = direction === 'up' ? rawDy : -rawDy;
-        if(dy > 0){
-          const visualDy = direction === 'up' ? -dy : dy;
-          el.style.transform = 'translate(-50%, calc(-50% + ' + visualDy + 'px))';
-          el.style.opacity = Math.max(1 - dy/250, 0.2);
-        }
-      }
-      function onPointerUp(e){
-        const rawDy = startY - e.clientY;
-        const dy = direction === 'up' ? rawDy : -rawDy;
-        if(dy > 80){
-          if(direction === 'up'){
-            releaseBubbleUp(el, id);
-          } else {
-            releaseBubbleDown(el, id);
-          }
-        } else {
-          el.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-          el.style.transform = 'translate(-50%, -50%)';
-          el.style.opacity = '1';
-          setTimeout(() => { el.style.transition=''; }, 300);
-        }
-        startY = null;
-      }
-
-      el.addEventListener('pointerdown', onPointerDown);
-      el.addEventListener('pointermove', onPointerMove);
-      el.addEventListener('pointerup', onPointerUp);
-    }
-
-    function releaseBubbleDown(el, id){
-      document.getElementById('releaseHint').classList.remove('show');
-      document.querySelectorAll('.bubble').forEach(e => e.classList.remove('dimmed'));
-      const b = bubbles.find(x => x.id === id);
-      b.resolved = true;
-      b.controllable = true;
-
-      el.style.transition = 'transform 0.7s ease-out, opacity 0.7s ease-out';
-      el.style.transform = 'translate(-50%, calc(-50% + 140px)) scale(0.5)';
-      el.style.opacity = '0';
-
-      setTimeout(() => {
-        el.remove();
-        checkAllResolved();
-      }, 700);
-    }
-
-    function releaseBubbleUp(el, id){
-      document.getElementById('releaseHint').classList.remove('show');
-      document.querySelectorAll('.bubble').forEach(e => e.classList.remove('dimmed'));
-      const b = bubbles.find(x => x.id === id);
-      b.resolved = true;
-
-      const rect = el.getBoundingClientRect();
-      el.style.transition = 'transform 0.7s ease-out, opacity 0.7s ease-out';
-      el.style.transform = 'translate(-50%, calc(-50% - 50vh)) scale(0.3)';
-      el.style.opacity = '0';
-
-      burstConfetti(rect.left + rect.width/2, rect.top);
-
-      setTimeout(() => {
-        el.remove();
-        checkAllResolved();
-      }, 700);
-    }
-
-    function burstConfetti(x, y){
-      for(let i=0;i<20;i++){
-        const c = document.createElement('div');
-        c.className = 'confetti';
-        c.style.left = x + 'px';
-        c.style.top = y + 'px';
-        const angle = Math.random()*Math.PI*2;
-        const dist = 40 + Math.random()*60;
-        const dx = Math.cos(angle)*dist;
-        const dy = Math.sin(angle)*dist;
-        c.style.background = ['#fff','#f3d9a8','#d9b06f'][Math.floor(Math.random()*3)];
-        document.body.appendChild(c);
-        c.animate([
-          { transform: 'translate(0,0)', opacity: 1 },
-          { transform: 'translate(' + dx + 'px,' + dy + 'px)', opacity: 0 }
-        ], { duration: 800 + Math.random()*400, easing: 'ease-out' });
-        setTimeout(() => c.remove(), 1300);
-      }
-    }
-
-    function buildDoneList(){
-      const doneList = document.getElementById('doneDefisList');
-      doneList.innerHTML = '';
-      bubbles.filter(b => b.controllable).forEach(b => {
-        const chip = document.createElement('div');
-        chip.className = 'defi-chip';
-        chip.textContent = b.text;
-        doneList.appendChild(chip);
-      });
-    }
-
-    function checkAllResolved(){
-      if(bubbles.every(b => b.resolved)){
+      if(index >= STEPS.length){
+        textEl.classList.remove('show');
+        exampleEl.classList.remove('show');
+        finished = true;
         setTimeout(() => {
-          buildDoneList();
-          showView('done');
-          const doneView = document.getElementById('view-done');
-          doneView.classList.remove('show-content');
-          setTimeout(() => doneView.classList.add('show-content'), 50);
-        }, 500);
+          closingEl.innerHTML = "Amuse-toi à apprendre à te connaître. Tu peux être surprise.<br><br>Le pendule n'est qu'un miroir. La réponse est déjà en toi.";
+          closingEl.classList.add('show');
+          btn.textContent = "J'ai terminé";
+          setTimeout(() => btn.classList.add('show'), 1200);
+        }, 700);
+        return;
       }
+
+      closingEl.classList.remove('show');
+      textEl.classList.remove('show');
+      exampleEl.classList.remove('show');
+      setTimeout(() => {
+        const step = STEPS[index];
+        textEl.innerHTML = step.text;
+        textEl.classList.add('show');
+        if(step.example){
+          exampleEl.innerHTML = step.example;
+          setTimeout(() => exampleEl.classList.add('show'), 500);
+        } else {
+          exampleEl.innerHTML = '';
+        }
+        setTimeout(() => btn.classList.add('show'), 1000);
+      }, 700);
     }
 
-    // Simule le retour dans la journée : si l'exercice est déjà fait, on retombe directement
-    // sur l'écran "terminé" avec les défis encore visibles, plutôt que de recommencer.
-    function returnToExerciseIfAlreadyDone(){
-      buildDoneList();
-      showView('done');
-      const doneView = document.getElementById('view-done');
-      doneView.classList.add('show-content');
-      doneView.querySelectorAll('.done-msg,.done-sub,.done-defis-list').forEach(el => {
-        el.style.transition = 'none';
-        el.style.opacity = '1';
-        el.style.transform = 'none';
-      });
+    function nextStep(){
+      if(finished){
+        naeoraNav('accueil');
+        return;
+      }
+      currentStep++;
+      showStep(currentStep);
     }
 
-    showView('explain');
+    document.getElementById('continueBtn').textContent = 'Continuer';
+    showStep(0);
   </script>
+<script src="naeora-state.js"></script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
 </html>
