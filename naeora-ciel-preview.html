@@ -141,7 +141,8 @@
       document.getElementById('modalOverlay').classList.remove('show');
     }
 
-    setStars(8);
+    var savedStars = parseInt(localStorage.getItem('naeora_total_stars') || '0');
+    setStars(savedStars);
   </script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
 </html>

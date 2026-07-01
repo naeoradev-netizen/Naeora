@@ -156,7 +156,7 @@
     let isSubscriber = false;
     let gratitudeCount = 0;
     let maxGratitudes = 1;
-    let totalStars = 0; // ciel cumulé (persisterait en base de données dans la vraie app)
+    let totalStars = parseInt(localStorage.getItem('naeora_total_stars') || '0');
 
     function togglePlan(){
       isSubscriber = !isSubscriber;
@@ -256,6 +256,7 @@
           light.remove();
           placeFixedStar(targetXPercent, targetYPercent, color);
           totalStars++;
+          localStorage.setItem('naeora_total_stars', totalStars);
         }
       }
       requestAnimationFrame(animateLight);

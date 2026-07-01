@@ -255,6 +255,7 @@
     const hour = new Date().getHours();
     setBg(getTimeSlot(hour));
   </script>
+<script src="naeora-data.js"></script>
 <script src="naeora-state.js"></script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script>
 <script>
@@ -274,5 +275,20 @@ function applyDoneStates(){
 document.addEventListener('DOMContentLoaded', applyDoneStates);
 if(document.readyState !== 'loading'){ applyDoneStates(); }
 </script>
+
+<script>
+  (function(){
+    if(typeof NAEORA_CITATIONS === 'undefined') return;
+    var now = new Date();
+    var start = new Date(now.getFullYear(), 0, 0);
+    var diff = now - start;
+    var dayOfYear = Math.floor(diff / (1000*60*60*24));
+    var idx = (dayOfYear - 1) % NAEORA_CITATIONS.length;
+    var cit = NAEORA_CITATIONS[idx];
+    document.getElementById('quoteText').textContent = cit.phrase;
+    document.getElementById('quoteAuthor').textContent = '— ' + cit.auteur;
+  })();
+</script>
+
 </body>
 </html>

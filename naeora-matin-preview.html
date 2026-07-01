@@ -239,6 +239,70 @@ setTimeout(() => showView('done'), 1600);
 
     showView('explain');
   </script>
+<script src="naeora-data.js"></script>
 <script src="naeora-state.js"></script>
-<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script>
+<script>
+  // Détermine si l'utilisateur est abonné (localStorage pour la démo)
+  var IS_SUBSCRIBER = (localStorage.getItem('naeora_subscriber') === 'true');
+
+  var DOMAIN_LABELS = {
+    'Gratuit': 'Aléatoire',
+    'Abondance': 'Abondance',
+    'Relation': 'Relations',
+    'Evolution Personnelle': 'Évolution personnelle',
+    'Santé': 'Santé & Légèreté',
+    'Amour': 'Amour'
+  };
+
+  function getPhrase(domain){
+    var pool = NAEORA_PHRASES_MATIN[domain] || NAEORA_PHRASES_MATIN['Gratuit'];
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  function setPhrase(phrase){
+    document.getElementById('phrase-text').textContent = phrase;
+    var donePhrase = document.querySelector('.done-phrase');
+    if(donePhrase) donePhrase.textContent = phrase;
+  }
+
+  function startMatin(domain){
+    var phrase = getPhrase(domain || 'Gratuit');
+    setPhrase(phrase);
+    showView('explain');
+  }
+
+  function initMatin(){
+    if(IS_SUBSCRIBER){
+      // Afficher le choix du domaine d'abord
+      var container = document.getElementById('domainBtns');
+      container.innerHTML = '';
+      var domains = ['Abondance','Relation','Evolution Personnelle','Santé','Amour'];
+      // Bouton Aléatoire en premier
+      var btnAl = document.createElement('button');
+      btnAl.textContent = 'Aléatoire';
+      btnAl.style.cssText = 'padding:14px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:inherit;font-size:0.88rem;cursor:pointer;';
+      btnAl.onclick = function(){ startMatin('Gratuit'); };
+      container.appendChild(btnAl);
+      domains.forEach(function(d){
+        var btn = document.createElement('button');
+        btn.textContent = DOMAIN_LABELS[d];
+        btn.style.cssText = 'padding:14px;border-radius:30px;border:1px solid rgba(217,176,111,0.35);background:rgba(255,255,255,0.04);color:#e3ddf0;font-family:inherit;font-size:0.88rem;cursor:pointer;';
+        btn.onclick = function(){ startMatin(d); };
+        container.appendChild(btn);
+      });
+      showView('domain');
+    } else {
+      startMatin('Gratuit');
+    }
+  }
+
+  // Surcharger l'initialisation au chargement
+  document.addEventListener('DOMContentLoaded', function(){
+    initMatin();
+  });
+  if(document.readyState !== 'loading'){ initMatin(); }
+</script>
+
+</body>
 </html>
