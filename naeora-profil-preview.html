@@ -179,12 +179,12 @@
 
       <div class="section">
         <div class="section-title">À propos</div>
-        <div class="link-row"><span>Conditions d'utilisation</span><span class="chevron">›</span></div>
-        <div class="link-row"><span>Politique de confidentialité</span><span class="chevron">›</span></div>
-        <div class="link-row"><span>Contacter le support</span><span class="chevron">›</span></div>
+        <div class="link-row" onclick="window.open('naeora-cgu.html','_blank')" style="cursor:pointer;"><span>Conditions d'utilisation</span><span class="chevron">›</span></div>
+        <div class="link-row" onclick="window.open('naeora-confidentialite.html','_blank')" style="cursor:pointer;"><span>Politique de confidentialité</span><span class="chevron">›</span></div>
+        <div class="link-row" onclick="window.open('mailto:contact@naeora.fr')" style="cursor:pointer;"><span>Contacter le support</span><span class="chevron">›</span></div>
       </div>
 
-      <button class="logout-btn" onclick="alert('Déconnexion (à brancher plus tard)')">Se déconnecter</button>
+      <button class="logout-btn" onclick="localStorage.clear();naeoraNav('inscription')">Se déconnecter</button>
     </div>
 
     <div class="bottom-nav">
