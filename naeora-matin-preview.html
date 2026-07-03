@@ -101,6 +101,8 @@
 </style>
 </head>
 <body>
+<script src="naeora-data.js"></script>
+<script src="naeora-state.js"></script>
   <div class="stage">
     <img class="bg" src="aube.webp" alt="">
     <div class="vignette"></div>
@@ -254,8 +256,6 @@ setTimeout(() => showView('done'), 1600);
 
     showView('explain');
   </script>
-<script src="naeora-data.js"></script>
-<script src="naeora-state.js"></script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script>
 <script>
   // Détermine si l'utilisateur est abonné (localStorage pour la démo)

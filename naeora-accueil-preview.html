@@ -133,6 +133,8 @@
 </style>
 </head>
 <body>
+<script src="naeora-data.js"></script>
+<script src="naeora-state.js"></script>
   <div class="stage">
     <img class="bg" id="bg-aube" src="aube.webp" alt="">
     <img class="bg" id="bg-journee" src="journee.webp" alt="">
@@ -157,7 +159,7 @@
         <svg class="arc-svg" viewBox="0 0 360 260">
           <path d="M 40 200 A 140 140 0 0 1 320 200" fill="none" stroke="rgba(217,176,111,0.3)" stroke-width="1.2" stroke-dasharray="1 7"/>
 
-          <g class="ritual-node node-glow" data-ritual="matin" transform="translate(40,200)" onclick="(function(){ if(typeof naeoraIsDone!=='undefined' && naeoraIsDone('matin')){ naeoraShowNotif('✦','Tu as déjà ouvert les possibles ce matin.<br>Reviens demain.'); } else { naeoraNav('matin'); }})()" style="cursor:pointer;">
+          <g class="ritual-node node-glow" data-ritual="matin" transform="translate(40,200)" onclick="goMatin()" style="cursor:pointer;">
             <circle class="node-circle-outer" r="40"/>
             <circle class="node-circle" r="34"/>
             <g transform="translate(-13,-13)" class="icon-stroke" stroke-width="1.2" fill="none">
@@ -184,7 +186,7 @@
             <text class="node-label" y="58">Dans la journée</text>
           </g>
 
-          <g class="ritual-node node-glow" data-ritual="soir" transform="translate(320,200)" onclick="(function(){ if(typeof naeoraIsDone!=='undefined' && naeoraIsDone('soir')){ naeoraShowNotif('✦','Ton ciel s\'est enrichi pour ce soir.<br>Reviens demain pour ajouter de nouvelles étoiles.'); } else { naeoraNav('soir'); }})()" style="cursor:pointer;">
+          <g class="ritual-node node-glow" data-ritual="soir" transform="translate(320,200)" onclick="goSoir()" style="cursor:pointer;">
             <circle class="node-circle-outer" r="40"/>
             <circle class="node-circle" r="34"/>
             <g transform="translate(-12,-14)" class="icon-stroke" stroke-width="1.2" fill="none">
@@ -268,43 +270,72 @@
     const hour = new Date().getHours();
     setBg(getTimeSlot(hour));
   </script>
-<script src="naeora-data.js"></script>
-<script src="naeora-state.js"></script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script>
 <script>
-
-  function naeoraShowNotif(icon, msg, onClose){
-    var overlay = document.createElement('div');
-    overlay.className = 'naeora-notif';
-    overlay.innerHTML = '<div class="naeora-notif-card"><div class="naeora-notif-icon">' + icon + '</div><div class="naeora-notif-title">' + msg + '</div><button class="naeora-notif-btn" onclick="this.closest('.naeora-notif').remove()">Fermer</button></div>';
-    document.body.appendChild(overlay);
+  function naeoraShowNotif(msg){
+    var d = document.createElement('div');
+    d.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(5,4,16,0.88);display:flex;align-items:center;justify-content:center;padding:8vw;';
+    var card = document.createElement('div');
+    card.style.cssText = 'background:linear-gradient(160deg,rgba(25,22,58,0.98),rgba(20,18,45,0.98));border:1px solid rgba(217,176,111,0.35);border-radius:22px;padding:30px 24px;max-width:340px;width:100%;text-align:center;';
+    var icon = document.createElement('div');
+    icon.style.cssText = 'font-size:1.8rem;margin-bottom:14px;';
+    icon.textContent = '✦';
+    var txt = document.createElement('div');
+    txt.style.cssText = 'font-family:Georgia,serif;font-style:italic;font-size:1.1rem;color:#f7f2e9;margin-bottom:16px;line-height:1.55;';
+    txt.innerHTML = msg;
+    var btn = document.createElement('button');
+    btn.style.cssText = 'padding:12px 28px;border-radius:25px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:Georgia,serif;font-style:italic;font-size:0.92rem;cursor:pointer;';
+    btn.textContent = 'Fermer';
+    btn.onclick = function(){ document.body.removeChild(d); };
+    card.appendChild(icon); card.appendChild(txt); card.appendChild(btn);
+    d.appendChild(card);
+    document.body.appendChild(d);
   }
 
   function pickJourneyExercise(){
-    var sub = (localStorage.getItem('naeora_subscriber') === 'true');
-    var count = naeoraJourneeCount();
-    var max = sub ? 2 : 1;
-    if(count >= max){
-      var msg = sub
-        ? "Tu as fait tes 2 exercices du jour.<br>Reviens demain pour en découvrir d'autres."
-        : "Tu as déjà fait ton exercice du jour.<br>Reviens demain pour continuer.";
-      naeoraShowNotif('✦', msg);
-      return;
-    }
-    naeoraPickJourneyExercise();
+    try {
+      var sub = (localStorage.getItem('naeora_subscriber') === 'true');
+      var count = (typeof naeoraJourneeCount !== 'undefined') ? naeoraJourneeCount() : 0;
+      var max = sub ? 2 : 1;
+      if(count >= max){
+        naeoraShowNotif(sub
+          ? 'Tu as fait tes 2 exercices du jour.<br>Reviens demain pour en découvrir d'autres.'
+          : 'Tu as déjà fait ton exercice du jour.<br>Reviens demain pour continuer.');
+        return;
+      }
+      naeoraPickJourneyExercise();
+    } catch(e){ naeoraPickJourneyExercise(); }
   }
 
-// Applique les coches "validé" selon ce qui a déjà été fait aujourd'hui
-function applyDoneStates(){
-  var matinNode = document.querySelector('[data-ritual="matin"]');
-  var journeeNode = document.querySelector('[data-ritual="journee"]');
-  var soirNode = document.querySelector('[data-ritual="soir"]');
-  if(naeoraIsDone('matin') && matinNode) matinNode.classList.add('done');
-  if(naeoraIsDone('journee') && journeeNode) journeeNode.classList.add('done');
-  if(naeoraIsDone('soir') && soirNode) soirNode.classList.add('done');
-}
-document.addEventListener('DOMContentLoaded', applyDoneStates);
-if(document.readyState !== 'loading'){ applyDoneStates(); }
+  function goMatin(){
+    try {
+      if(typeof naeoraIsDone !== 'undefined' && naeoraIsDone('matin')){
+        naeoraShowNotif('Tu as déjà ouvert les possibles ce matin.<br>Reviens demain.');
+      } else { naeoraNav('matin'); }
+    } catch(e){ naeoraNav('matin'); }
+  }
+
+  function goSoir(){
+    try {
+      if(typeof naeoraIsDone !== 'undefined' && naeoraIsDone('soir')){
+        naeoraShowNotif('Ton ciel s'est enrichi pour ce soir.<br>Reviens demain pour ajouter de nouvelles étoiles.');
+      } else { naeoraNav('soir'); }
+    } catch(e){ naeoraNav('soir'); }
+  }
+
+  function applyDoneStates(){
+    try {
+      if(typeof naeoraIsDone === 'undefined') return;
+      var matinNode = document.querySelector('[data-ritual="matin"]');
+      var journeeNode = document.querySelector('[data-ritual="journee"]');
+      var soirNode = document.querySelector('[data-ritual="soir"]');
+      if(naeoraIsDone('matin') && matinNode) matinNode.classList.add('done');
+      if(naeoraIsDone('journee') && journeeNode) journeeNode.classList.add('done');
+      if(naeoraIsDone('soir') && soirNode) soirNode.classList.add('done');
+    } catch(e){}
+  }
+  document.addEventListener('DOMContentLoaded', applyDoneStates);
+  if(document.readyState !== 'loading'){ applyDoneStates(); }
 </script>
 
 <script>
