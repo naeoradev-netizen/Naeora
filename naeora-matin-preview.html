@@ -105,6 +105,21 @@
     <img class="bg" src="aube.webp" alt="">
     <div class="vignette"></div>
 
+
+    <!-- VUE DÉJÀ FAIT -->
+    <div class="view" id="view-already" style="padding-top:46%;padding-left:8vw;padding-right:8vw;align-items:center;text-align:center;">
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:#f7f2e9;margin-bottom:3vh;">Tu as déjà ouvert les possibles ce matin.</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:#cfc9e6;max-width:340px;line-height:1.6;margin-bottom:2vh;">Ta phrase du jour était :</div>
+      <div id="already-phrase" style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:#f3d9a8;max-width:340px;line-height:1.6;margin-bottom:5vh;"></div>
+      <button onclick="naeoraNav('accueil')" style="padding:13px 30px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.92rem;cursor:pointer;">Retour à l'accueil</button>
+    </div>
+
+    <!-- VUE CHOIX DOMAINE (abonnées Horizon) -->
+    <div class="view" id="view-domain" style="padding-top:46%;padding-left:8vw;padding-right:8vw;align-items:center;text-align:center;">
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.3rem;color:#f7f2e9;margin-bottom:5vh;max-width:320px;">Sur quoi veux-tu te concentrer aujourd'hui ?</div>
+      <div id="domainBtns" style="display:flex;flex-direction:column;gap:14px;width:100%;max-width:320px;"></div>
+    </div>
+
     <div class="view" id="view-explain">
       <div class="ex-title">L'ouverture des possibles</div>
       <div class="ex-divider"></div>
@@ -270,7 +285,7 @@ setTimeout(() => showView('done'), 1600);
   function startMatin(domain){
     var phrase = getPhrase(domain || 'Gratuit');
     setPhrase(phrase);
-    showView('explain');
+    showView('active');
   }
 
   function buildDomainView(){

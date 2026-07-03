@@ -114,6 +114,22 @@
 
   .ritual-node .check-badge, .ritual-node .check-badge + text{ opacity:0; transition:opacity 0.4s ease; }
   .ritual-node.done .check-badge, .ritual-node.done .check-badge + text{ opacity:1; }
+
+  .naeora-notif{
+    position:fixed;inset:0;z-index:9999;background:rgba(5,4,16,0.88);
+    display:flex;align-items:center;justify-content:center;padding:8vw;
+    animation:fadeInNotif 0.4s ease;
+  }
+  @keyframes fadeInNotif{from{opacity:0;}to{opacity:1;}}
+  .naeora-notif-card{
+    background:linear-gradient(160deg,rgba(25,22,58,0.98),rgba(20,18,45,0.98));
+    border:1px solid rgba(217,176,111,0.35);border-radius:22px;
+    padding:30px 24px;max-width:340px;width:100%;text-align:center;
+    box-shadow:0 8px 32px rgba(0,0,0,0.5);
+  }
+  .naeora-notif-icon{font-size:2rem;margin-bottom:14px;}
+  .naeora-notif-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.2rem;color:#f7f2e9;margin-bottom:12px;line-height:1.5;}
+  .naeora-notif-btn{margin-top:20px;padding:12px 28px;border-radius:25px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.92rem;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -141,7 +157,7 @@
         <svg class="arc-svg" viewBox="0 0 360 260">
           <path d="M 40 200 A 140 140 0 0 1 320 200" fill="none" stroke="rgba(217,176,111,0.3)" stroke-width="1.2" stroke-dasharray="1 7"/>
 
-          <g class="ritual-node node-glow" data-ritual="matin" transform="translate(40,200)" onclick="naeoraNav('matin')" style="cursor:pointer;">
+          <g class="ritual-node node-glow" data-ritual="matin" transform="translate(40,200)" onclick="(function(){ if(typeof naeoraIsDone!=='undefined' && naeoraIsDone('matin')){ naeoraShowNotif('✦','Tu as déjà ouvert les possibles ce matin.<br>Reviens demain.'); } else { naeoraNav('matin'); }})()" style="cursor:pointer;">
             <circle class="node-circle-outer" r="40"/>
             <circle class="node-circle" r="34"/>
             <g transform="translate(-13,-13)" class="icon-stroke" stroke-width="1.2" fill="none">
@@ -168,7 +184,7 @@
             <text class="node-label" y="58">Dans la journée</text>
           </g>
 
-          <g class="ritual-node node-glow" data-ritual="soir" transform="translate(320,200)" onclick="naeoraNav('soir')" style="cursor:pointer;">
+          <g class="ritual-node node-glow" data-ritual="soir" transform="translate(320,200)" onclick="(function(){ if(typeof naeoraIsDone!=='undefined' && naeoraIsDone('soir')){ naeoraShowNotif('✦','Ton ciel s\'est enrichi pour ce soir.<br>Reviens demain pour ajouter de nouvelles étoiles.'); } else { naeoraNav('soir'); }})()" style="cursor:pointer;">
             <circle class="node-circle-outer" r="40"/>
             <circle class="node-circle" r="34"/>
             <g transform="translate(-12,-14)" class="icon-stroke" stroke-width="1.2" fill="none">
@@ -256,19 +272,27 @@
 <script src="naeora-state.js"></script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script>
 <script>
-function pickJourneyExercise(){
-  var sub = (localStorage.getItem('naeora_subscriber') === 'true');
-  var count = naeoraJourneeCount();
-  var max = sub ? 2 : 1;
-  if(count >= max){
-    var msg = sub
-      ? "Tu as fait tes 2 exercices du jour. Reviens demain !"
-      : "Tu as déjà fait ton exercice du jour. Reviens demain !\nL'abonnement Horizon te permet d'en faire 2 par jour.";
-    alert(msg);
-    return;
+
+  function naeoraShowNotif(icon, msg, onClose){
+    var overlay = document.createElement('div');
+    overlay.className = 'naeora-notif';
+    overlay.innerHTML = '<div class="naeora-notif-card"><div class="naeora-notif-icon">' + icon + '</div><div class="naeora-notif-title">' + msg + '</div><button class="naeora-notif-btn" onclick="this.closest('.naeora-notif').remove()">Fermer</button></div>';
+    document.body.appendChild(overlay);
   }
-  naeoraPickJourneyExercise();
-}
+
+  function pickJourneyExercise(){
+    var sub = (localStorage.getItem('naeora_subscriber') === 'true');
+    var count = naeoraJourneeCount();
+    var max = sub ? 2 : 1;
+    if(count >= max){
+      var msg = sub
+        ? "Tu as fait tes 2 exercices du jour.<br>Reviens demain pour en découvrir d'autres."
+        : "Tu as déjà fait ton exercice du jour.<br>Reviens demain pour continuer.";
+      naeoraShowNotif('✦', msg);
+      return;
+    }
+    naeoraPickJourneyExercise();
+  }
 
 // Applique les coches "validé" selon ce qui a déjà été fait aujourd'hui
 function applyDoneStates(){

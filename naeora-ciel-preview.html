@@ -103,14 +103,30 @@
       updateShareVisibility();
     }
 
+    function getStarPositions(n){
+      var raw = localStorage.getItem('naeora_star_positions');
+      var positions = raw ? JSON.parse(raw) : [];
+      while(positions.length < n){
+        positions.push({
+          x: 5 + Math.random()*90,
+          y: 5 + Math.random()*90,
+          size: 2.5 + Math.random()*3,
+          subscriber: Math.random() > 0.5
+        });
+      }
+      localStorage.setItem('naeora_star_positions', JSON.stringify(positions));
+      return positions.slice(0, n);
+    }
+
     function renderSky(n){
       const sky = document.getElementById('skyStars');
       sky.innerHTML = '';
+      const positions = getStarPositions(n);
       for(let i=0;i<n;i++){
         const star = document.createElement('div');
-        const subscriber = Math.random() > 0.4; // simulation mixte pour la démo
-        star.className = 'fixed-star' + (subscriber ? ' subscriber' : '');
-        const size = 2.5 + Math.random()*3;
+        const pos = positions[i];
+        star.className = 'fixed-star' + (pos.subscriber ? ' subscriber' : '');
+        const size = pos.size;
         star.style.width = size+'px';
         star.style.height = size+'px';
         star.style.left = (10 + Math.random()*78) + '%';
