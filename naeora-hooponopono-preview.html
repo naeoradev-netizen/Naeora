@@ -196,31 +196,37 @@
     showView('explain');
   </script>
 <script src="naeora-state.js"></script>
-<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script><script>
-  (function(){
-    if(typeof naeoraIsDone === 'undefined') return;
-    var sub = (localStorage.getItem('naeora_subscriber') === 'true');
-    var count = typeof naeoraJourneeCount !== 'undefined' ? naeoraJourneeCount() : 0;
-    var max = sub ? 2 : 1;
-    if(count >= max){
-      var msg = sub ? 'Tu as fait tes 2 exercices du jour. Reviens demain !' : 'Tu as déjà fait ton exercice du jour. Reviens demain !';
-      document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;inset:0;z-index:9999;background:rgba(5,4,16,0.96);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8vw;text-align:center;"><div style=\"font-family:Georgia,serif;font-style:italic;font-size:1.2rem;color:#f7f2e9;margin-bottom:3vh;max-width:320px;line-height:1.6\">' + msg + '</div><button onclick=\"naeoraNav('accueil')\" style=\"padding:13px 30px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:Georgia,serif;font-style:italic;font-size:0.92rem;cursor:pointer;\">Retour à l'accueil</button></div>');
-    }
-  })();
-</script>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script>
+
 <script>
-  (function(){
-    if(typeof naeoraIsDone === 'undefined') return;
-    var sub = (localStorage.getItem('naeora_subscriber') === 'true');
-    var count = typeof naeoraJourneeCount !== 'undefined' ? naeoraJourneeCount() : 0;
-    var max = sub ? 2 : 1;
-    if(count >= max){
-      var msg = sub ? 'Tu as fait tes 2 exercices du jour.<br>Reviens demain pour en découvrir d\'autres.' : 'Tu as déjà fait ton exercice du jour.<br>Reviens demain pour continuer.';
-      document.body.insertAdjacentHTML('beforeend',
-        '<div style="position:fixed;inset:0;z-index:9999;background:rgba(5,4,16,0.88);display:flex;align-items:center;justify-content:center;padding:8vw;"><div style=\"background:linear-gradient(160deg,rgba(25,22,58,0.98),rgba(20,18,45,0.98));border:1px solid rgba(217,176,111,0.35);border-radius:22px;padding:30px 24px;max-width:340px;width:100%;text-align:center;\"><div style=\"font-size:1.8rem;margin-bottom:14px;\">✦</div><div style=\"font-family:Georgia,serif;font-style:italic;font-size:1.1rem;color:#f7f2e9;margin-bottom:16px;line-height:1.55;\">' + msg + '</div><button onclick=\"naeoraNav('accueil')\" style=\"padding:12px 28px;border-radius:25px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:Georgia,serif;font-style:italic;font-size:0.92rem;cursor:pointer;\">Retour à l\'accueil</button></div></div>'
-      );
-    }
-  })();
+(function(){
+  var sub = localStorage.getItem('naeora_subscriber') === 'true';
+  var count = 0;
+  try { 
+    var raw = localStorage.getItem('naeora_day_state');
+    if(raw){ var st = JSON.parse(raw); count = st.journeeCount || 0; }
+  } catch(e){}
+  var max = sub ? 2 : 1;
+  if(count >= max){
+    var msg = sub ? 'Tu as fait tes 2 exercices du jour. Reviens demain !' : 'Tu as deja fait ton exercice du jour. Reviens demain !';
+    var d = document.createElement('div');
+    d.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(5,4,16,0.9);display:flex;align-items:center;justify-content:center;padding:8vw;';
+    var card = document.createElement('div');
+    card.style.cssText = 'background:#14123a;border:1px solid rgba(217,176,111,0.4);border-radius:22px;padding:30px 24px;max-width:340px;width:100%;text-align:center;';
+    var icon = document.createElement('div');
+    icon.style.cssText = 'font-size:1.8rem;margin-bottom:14px;color:#d9b06f;';
+    icon.textContent = String.fromCharCode(10022);
+    var txt = document.createElement('div');
+    txt.style.cssText = 'font-family:Georgia,serif;font-style:italic;font-size:1.1rem;color:#f7f2e9;margin-bottom:20px;line-height:1.55;';
+    txt.textContent = msg;
+    var btn = document.createElement('button');
+    btn.style.cssText = 'padding:12px 28px;border-radius:25px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:Georgia,serif;font-style:italic;font-size:0.92rem;cursor:pointer;';
+    btn.textContent = 'Retour';
+    btn.onclick = function(){ window.parent.postMessage({naeoraNav:'accueil'}, '*'); };
+    card.appendChild(icon); card.appendChild(txt); card.appendChild(btn);
+    d.appendChild(card); document.body.appendChild(d);
+  }
+})();
 </script>
 </body>
 </html>

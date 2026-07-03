@@ -159,7 +159,7 @@
         <svg class="arc-svg" viewBox="0 0 360 260">
           <path d="M 40 200 A 140 140 0 0 1 320 200" fill="none" stroke="rgba(217,176,111,0.3)" stroke-width="1.2" stroke-dasharray="1 7"/>
 
-          <g class="ritual-node node-glow" data-ritual="matin" transform="translate(40,200)" onclick="goMatin()" style="cursor:pointer;">
+          <g class="ritual-node node-glow" data-ritual="matin" transform="translate(40,200)" onclick="if(typeof naeoraIsDone!=='undefined'&&naeoraIsDone('matin')){naeoraShowNotif('Tu as d\u00e9j\u00e0 ouvert les possibles ce matin. Reviens demain.')}else{naeoraNav('matin')}" style="cursor:pointer;">
             <circle class="node-circle-outer" r="40"/>
             <circle class="node-circle" r="34"/>
             <g transform="translate(-13,-13)" class="icon-stroke" stroke-width="1.2" fill="none">
@@ -186,7 +186,7 @@
             <text class="node-label" y="58">Dans la journée</text>
           </g>
 
-          <g class="ritual-node node-glow" data-ritual="soir" transform="translate(320,200)" onclick="goSoir()" style="cursor:pointer;">
+          <g class="ritual-node node-glow" data-ritual="soir" transform="translate(320,200)" onclick="if(typeof naeoraIsDone!=='undefined'&&naeoraIsDone('soir')){naeoraShowNotif('Ton ciel s\u2019est d\u00e9j\u00e0 enrichi ce soir. Reviens demain.')}else{naeoraNav('soir')}" style="cursor:pointer;">
             <circle class="node-circle-outer" r="40"/>
             <circle class="node-circle" r="34"/>
             <g transform="translate(-12,-14)" class="icon-stroke" stroke-width="1.2" fill="none">
@@ -299,7 +299,7 @@
       var max = sub ? 2 : 1;
       if(count >= max){
         naeoraShowNotif(sub
-          ? 'Tu as fait tes 2 exercices du jour.<br>Reviens demain pour en découvrir d'autres.'
+          ? 'Tu as fait tes 2 exercices du jour.<br>Reviens demain pour en d\u00e9couvrir d\u2019autres.'
           : 'Tu as déjà fait ton exercice du jour.<br>Reviens demain pour continuer.');
         return;
       }
@@ -318,7 +318,7 @@
   function goSoir(){
     try {
       if(typeof naeoraIsDone !== 'undefined' && naeoraIsDone('soir')){
-        naeoraShowNotif('Ton ciel s'est enrichi pour ce soir.<br>Reviens demain pour ajouter de nouvelles étoiles.');
+        naeoraShowNotif('Ton ciel s\u2019est enrichi pour ce soir.<br>Reviens demain pour ajouter de nouvelles \u00e9toiles.');
       } else { naeoraNav('soir'); }
     } catch(e){ naeoraNav('soir'); }
   }
