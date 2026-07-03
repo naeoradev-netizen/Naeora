@@ -51,7 +51,7 @@ function naeoraJourneeCount(){
 }
 
 function naeoraPickJourneyExercise(){
-  var pool = ['hooponopono', 'envol', 'echo', 'dialogue', 'source', 'pendule_explain'];
+  var pool = ['lettre', 'hooponopono', 'envol', 'echo', 'dialogue', 'source', 'pendule_explain'];
   var state = naeoraGetState();
   var lastList = state.lastJourneeList || [];
   var choices = pool.filter(function(p){ return lastList.indexOf(p) === -1; });

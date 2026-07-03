@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Naéora — Lettre de libération</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;background:#14123a;overflow:hidden;font-family:'Jost',sans-serif;}
+  .stage{position:relative;width:100%;height:100vh;overflow:hidden;}
+  .bg{position:absolute;top:0;left:0;width:100%;height:42%;object-fit:cover;object-position:top;}
+  .overlay{position:absolute;top:0;left:0;width:100%;height:42%;background:linear-gradient(to bottom,transparent 55%,#14123a 100%);}
+
+  .view{position:absolute;inset:0;z-index:3;display:none;flex-direction:column;}
+  .view.active{display:flex;}
+
+  /* ---- Explication ---- */
+  #view-explain{padding-top:46%;padding-left:8vw;padding-right:8vw;padding-bottom:5vh;align-items:center;text-align:center;overflow-y:auto;}
+  .ex-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.6rem;color:#f7f2e9;margin-bottom:6px;}
+  .ex-divider{width:70px;height:1.5px;background:linear-gradient(to right,transparent,#d9b06f,transparent);margin:14px 0 18px;}
+  .ex-text{font-size:0.9rem;line-height:1.7;color:#e3ddf0;max-width:380px;margin-bottom:14px;}
+  .ex-btn{margin-top:3vh;padding:14px 38px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.1);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;font-family:inherit;}
+
+  /* ---- Écriture ---- */
+  #view-write{padding-top:46%;padding-left:8vw;padding-right:8vw;padding-bottom:4vh;align-items:center;justify-content:flex-start;}
+  .help-icon{position:absolute;top:6vh;right:7vw;width:30px;height:30px;border-radius:50%;border:1px solid rgba(217,176,111,0.4);display:flex;align-items:center;justify-content:center;color:#d9b06f;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;cursor:pointer;background:rgba(255,255,255,0.04);z-index:4;}
+  .write-label{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:#cfc9e6;margin-bottom:2.5vh;max-width:360px;text-align:center;}
+  .letter-card{
+    width:100%;max-width:400px;flex:1;border-radius:18px;
+    background:rgba(250,247,240,0.06);backdrop-filter:blur(4px);
+    border:1px solid rgba(217,176,111,0.25);padding:18px;margin-bottom:3vh;
+    display:flex;flex-direction:column;
+  }
+  .letter-card textarea{
+    flex:1;width:100%;background:transparent;border:none;outline:none;resize:none;
+    color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;line-height:1.65;
+    min-height:160px;
+  }
+  .letter-card textarea::placeholder{color:#7d76a0;font-size:0.92rem;}
+  .release-btn{padding:14px 36px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;font-family:inherit;}
+
+  /* ---- Combustion ---- */
+  #view-burn{align-items:center;justify-content:center;background:#0a0614;}
+  .paper-wrap{position:relative;width:280px;height:360px;}
+
+  /* La feuille de papier avec le texte */
+  .paper{
+    position:absolute;inset:0;border-radius:4px;
+    background:linear-gradient(135deg,#f5f0e8,#ede8dc);
+    box-shadow:0 4px 20px rgba(0,0,0,0.5);
+    overflow:hidden;
+    display:flex;flex-direction:column;justify-content:flex-start;padding:20px;
+  }
+  .paper-text{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.78rem;
+    color:#3a3020;line-height:1.55;overflow:hidden;
+    display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:14;
+  }
+
+  /* Masques de combustion : 4 coins/bords qui s'étendent */
+  .burn-mask{position:absolute;inset:0;pointer-events:none;}
+  .burn-mask canvas{position:absolute;inset:0;width:100%;height:100%;}
+
+  /* Braises flottantes */
+  .ember{
+    position:absolute;border-radius:50%;pointer-events:none;
+    animation:floatEmber linear forwards;
+    opacity:0;
+  }
+  @keyframes floatEmber{
+    0%{opacity:0.9;transform:translateY(0) scale(1);}
+    60%{opacity:0.6;}
+    100%{opacity:0;transform:translateY(-120px) scale(0.2);}
+  }
+
+  /* ---- Clôture ---- */
+  #view-done{align-items:center;justify-content:center;padding:8vw;text-align:center;}
+  .done-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.5rem;color:#f7f2e9;margin-bottom:3vh;max-width:360px;opacity:0;transition:opacity 2.5s ease,transform 2.5s ease;transform:translateY(10px);}
+  .done-sub{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:#cfc9e6;max-width:330px;line-height:1.65;opacity:0;transition:opacity 2.5s ease;transition-delay:0.8s;}
+  .done-btn{margin-top:6vh;padding:14px 34px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.98rem;cursor:pointer;opacity:0;transition:opacity 2.5s ease;transition-delay:2.2s;}
+  #view-done.show .done-title{opacity:1;transform:translateY(0);}
+  #view-done.show .done-sub{opacity:1;}
+  #view-done.show .done-btn{opacity:1;}
+</style>
+</head>
+<body>
+<div class="stage">
+  <img class="bg" src="echo.webp" alt="">
+  <div class="overlay"></div>
+
+  <!-- EXPLICATION -->
+  <div class="view active" id="view-explain">
+    <div class="ex-title">Lettre de libération</div>
+    <div class="ex-divider"></div>
+    <div class="ex-text">Il y a des mots qu'on retient. Des choses qu'on n'a jamais pu dire — à quelqu'un qui nous a blessé, à une situation qu'on n'arrive pas à lâcher, ou à une version de soi-même qu'on voudrait libérer.</div>
+    <div class="ex-text">Cette lettre est un espace rien qu'à toi. Écris ce qui te pèse, sans filtre, sans retenue. Personne ne la lira jamais.</div>
+    <div class="ex-text">Quand tu seras prête, tu la laisseras partir.</div>
+    <button class="ex-btn" onclick="showView('write')">J'ai compris</button>
+  </div>
+
+  <!-- ÉCRITURE -->
+  <div class="view" id="view-write">
+    <div class="help-icon" onclick="showView('explain')">?</div>
+    <div class="write-label">Écris ce qui te pèse, sans retenue.</div>
+    <div class="letter-card">
+      <textarea id="letterText" placeholder="Commence par ce qui te vient..."></textarea>
+    </div>
+    <button class="release-btn" onclick="startBurn()">Laisser partir</button>
+  </div>
+
+  <!-- COMBUSTION -->
+  <div class="view" id="view-burn">
+    <div class="paper-wrap" id="paperWrap">
+      <div class="paper" id="paper">
+        <div class="paper-text" id="paperText"></div>
+      </div>
+      <canvas id="burnCanvas" width="280" height="360" style="position:absolute;inset:0;pointer-events:none;"></canvas>
+    </div>
+  </div>
+
+  <!-- CLÔTURE -->
+  <div class="view" id="view-done">
+    <div class="done-title">Ces mots ont été libérés.</div>
+    <div class="done-sub">Ce qu'ils portaient ne t'appartient plus.</div>
+    <button class="done-btn" onclick="finish()">Je valide mon exercice</button>
+  </div>
+</div>
+
+<script>
+  function showView(name){
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById('view-'+name).classList.add('active');
+  }
+
+  function startBurn(){
+    const text = document.getElementById('letterText').value.trim();
+    if(!text){ document.getElementById('letterText').focus(); return; }
+    document.getElementById('paperText').textContent = text;
+    showView('burn');
+    setTimeout(runBurnAnimation, 300);
+  }
+
+  // ---- Animation de combustion ----
+  function runBurnAnimation(){
+    const canvas = document.getElementById('burnCanvas');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+
+    // Points de départ de la brûlure : les 4 coins et bords
+    // On va "consumer" le papier en faisant grandir des zones de brûlure depuis les bords
+    const emberColors = ['#ff9944','#ffbb44','#ff7722','#ffdd88','#ff5500'];
+    let progress = 0; // 0 → 1
+    const duration = 4500; // ms
+    let startTime = null;
+    let embersSpawned = 0;
+    const wrap = document.getElementById('paperWrap');
+
+    function spawnEmber(){
+      const e = document.createElement('div');
+      e.className = 'ember';
+      const size = 2 + Math.random()*5;
+      e.style.width = size+'px';
+      e.style.height = size+'px';
+      e.style.background = emberColors[Math.floor(Math.random()*emberColors.length)];
+      e.style.boxShadow = '0 0 '+(size+2)+'px '+emberColors[Math.floor(Math.random()*emberColors.length)];
+      e.style.left = (10+Math.random()*80)+'%';
+      e.style.top = (20+Math.random()*70)+'%';
+      const dur = 800+Math.random()*1200;
+      e.style.animationDuration = dur+'ms';
+      wrap.appendChild(e);
+      setTimeout(()=>e.remove(), dur);
+    }
+
+    function drawBurn(t){
+      // t = 0→1
+      ctx.clearRect(0,0,W,H);
+
+      // Créer un masque de combustion qui ronge la feuille depuis les bords
+      // On dessine des zones "transparentes" qui représentent la partie brûlée
+      const paper = document.getElementById('paper');
+
+      // Calculer les marges de combustion sur chaque bord
+      const maxInset = Math.max(W,H)*0.65;
+      const inset = t * maxInset;
+
+      // Peindre la feuille en entier d'abord (état initial)
+      // Puis effacer les coins/bords avec gradient de combustion
+
+      // Masque de brûlure : radial depuis les 4 coins + ondulations
+      ctx.globalCompositeOperation = 'source-over';
+
+      // Zone brûlée (transparente sur le canvas, révèle le fond sombre)
+      const corners = [
+        {x:0, y:0},
+        {x:W, y:0},
+        {x:0, y:H},
+        {x:W, y:H},
+        {x:W/2, y:0},
+        {x:W/2, y:H},
+        {x:0, y:H/2},
+        {x:W, y:H/2},
+      ];
+
+      // Fond noir pour les zones brûlées
+      ctx.globalCompositeOperation = 'source-over';
+
+      // Dessiner le front de combustion sur le canvas par-dessus le papier
+      // Le canvas est transparent là où le papier reste intact
+      // et montre les braises/bords roussis là où ça brûle
+
+      // --- Bord rougeoyant ---
+      const burnRadius = inset * 1.15;
+      corners.forEach(c => {
+        // Halo orangé (le bord qui rougeoie)
+        const gBraise = ctx.createRadialGradient(c.x, c.y, Math.max(0,burnRadius-18), c.x, c.y, burnRadius+8);
+        gBraise.addColorStop(0, 'rgba(0,0,0,0)');
+        gBraise.addColorStop(0.55, 'rgba(0,0,0,0)');
+        gBraise.addColorStop(0.72, 'rgba(120,40,0,0.7)');
+        gBraise.addColorStop(0.84, 'rgba(220,90,10,0.9)');
+        gBraise.addColorStop(0.93, 'rgba(255,160,30,0.8)');
+        gBraise.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = gBraise;
+        ctx.fillRect(0,0,W,H);
+
+        // Zone complètement consumée (opaque noire/transparente)
+        const gBrule = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, burnRadius);
+        gBrule.addColorStop(0, 'rgba(5,4,14,1)');
+        gBrule.addColorStop(0.7, 'rgba(5,4,14,1)');
+        gBrule.addColorStop(0.88, 'rgba(20,10,5,0.95)');
+        gBrule.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = gBrule;
+        ctx.fillRect(0,0,W,H);
+      });
+
+      // Masquer également le papier HTML sous les zones brûlées
+      // On réduit l'opacité du papier HTML au fur et à mesure
+      paper.style.opacity = Math.max(0, 1 - t*1.05);
+
+      // Petites ondulations aléatoires sur le front de brûlure (effet de dents)
+      if(t > 0.05){
+        ctx.globalCompositeOperation = 'source-over';
+        for(let i=0;i<6;i++){
+          const angle = (i/6)*Math.PI*2 + t*3;
+          const px = W/2 + Math.cos(angle)*(burnRadius*0.45 + Math.sin(t*8+i)*12);
+          const py = H/2 + Math.sin(angle)*(burnRadius*0.45 + Math.cos(t*6+i)*10);
+          const rg = ctx.createRadialGradient(px,py,0,px,py,22+Math.sin(t*10+i)*8);
+          rg.addColorStop(0,'rgba(255,120,10,0.6)');
+          rg.addColorStop(0.5,'rgba(200,60,0,0.3)');
+          rg.addColorStop(1,'rgba(0,0,0,0)');
+          ctx.fillStyle = rg;
+          ctx.fillRect(0,0,W,H);
+        }
+      }
+    }
+
+    function frame(ts){
+      if(!startTime) startTime = ts;
+      const elapsed = ts - startTime;
+      progress = Math.min(elapsed / duration, 1);
+
+      drawBurn(progress);
+
+      // Braises
+      if(progress > 0.05 && progress < 0.95){
+        embersSpawned++;
+        if(embersSpawned % 3 === 0) spawnEmber();
+        if(progress > 0.4 && embersSpawned % 2 === 0) spawnEmber();
+      }
+
+      if(progress < 1){
+        requestAnimationFrame(frame);
+      } else {
+        // Tout est consumé
+        setTimeout(()=>{
+          showView('done');
+          setTimeout(()=>document.getElementById('view-done').classList.add('show'), 80);
+        }, 800);
+      }
+    }
+
+    requestAnimationFrame(frame);
+  }
+
+  function finish(){
+    if(typeof naeoraMarkDone !== 'undefined') naeoraMarkDone('journee');
+    if(typeof naeoraNav !== 'undefined') naeoraNav('accueil');
+    else showView('explain');
+  }
+</script>
+<script src="naeora-data.js"></script>
+<script src="naeora-state.js"></script>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script>
+
+<script>
+  // Vérification déjà fait
+  (function(){
+    if(typeof naeoraIsDone === 'undefined') return;
+    var sub = (localStorage.getItem('naeora_subscriber') === 'true');
+    var count = typeof naeoraJourneeCount !== 'undefined' ? naeoraJourneeCount() : 0;
+    var max = sub ? 2 : 1;
+    if(count >= max){
+      var msg = sub ? 'Tu as fait tes 2 exercices du jour. Reviens demain !' : 'Tu as déjà fait ton exercice du jour. Reviens demain !';
+      document.body.insertAdjacentHTML('beforeend', '<div style="position:fixed;inset:0;z-index:9999;background:rgba(5,4,16,0.96);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8vw;text-align:center;"><div style=\"font-family:Georgia,serif;font-style:italic;font-size:1.2rem;color:#f7f2e9;margin-bottom:3vh;max-width:320px;line-height:1.6\">' + msg + '</div><button onclick=\"naeoraNav(\'accueil\')\" style=\"padding:13px 30px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:Georgia,serif;font-style:italic;font-size:0.92rem;cursor:pointer;\">Retour à l\'accueil</button></div>');
+    }
+  })();
+</script>
+</body>
+</html>
