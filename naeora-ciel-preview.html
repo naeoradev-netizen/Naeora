@@ -60,6 +60,7 @@
 </style>
 </head>
 <body>
+<script src="naeora-supabase.js"></script>
   <div class="stage">
     <div onclick="naeoraNav('accueil')" style="position:absolute;top:6vh;left:7vw;z-index:5;width:30px;height:30px;border-radius:50%;border:1px solid rgba(217,176,111,0.4);display:flex;align-items:center;justify-content:center;color:#d9b06f;cursor:pointer;background:rgba(255,255,255,0.04);">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#d9b06f" stroke-width="1.4"><path d="M15 18l-6-6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -157,8 +158,23 @@
       document.getElementById('modalOverlay').classList.remove('show');
     }
 
-    var savedStars = parseInt(localStorage.getItem('naeora_total_stars') || '0');
-    setStars(savedStars);
+    // Charger les étoiles depuis Supabase si connecté, sinon localStorage
+    if(typeof supabase !== 'undefined' && supabase.isLoggedIn()){
+      supabase.getGratitudes().then(function(g){
+        if(g){
+          if(g.positions && g.positions.length > 0){
+            localStorage.setItem('naeora_star_positions', JSON.stringify(g.positions));
+          }
+          setStars(g.total_stars || 0);
+        }
+      }).catch(function(){
+        var savedStars = parseInt(localStorage.getItem('naeora_total_stars') || '0');
+        setStars(savedStars);
+      });
+    } else {
+      var savedStars = parseInt(localStorage.getItem('naeora_total_stars') || '0');
+      setStars(savedStars);
+    }
   </script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script></body>
 </html>

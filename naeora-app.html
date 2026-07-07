@@ -61,7 +61,8 @@
   <audio id="bgSoir"     src="naeora-ambient-soir.mp3"    preload="auto"></audio>
   <audio id="bgSoir2"    src="naeora-ambient-soir.mp3"    preload="auto"></audio>
   <audio id="bgJournee"  src="naeora-ambient-journee.mp3" loop preload="auto"></audio>
-  <script>
+  <script src="naeora-supabase.js"></script>
+<script>
     var ROUTES = {
       splash:          'naeora-splash-final.html',
       avertissement:   'naeora-avertissement-preview.html',
@@ -88,6 +89,7 @@
       pendule_tuto:    'naeora-pendule-tuto-guide-preview.html',
       pendule_resume:  'naeora-pendule-tuto-resume-preview.html',
       pendule_exercice:'naeora-pendule-exercice-preview.html',
+      connexion:       'naeora-connexion-preview.html',
       lettre:          'naeora-lettre-liberation-preview.html'
     };
 
@@ -243,6 +245,11 @@
 
     function goTo(route){
       if(!ROUTES[route]){console.warn('Route inconnue:',route);return;}
+      // Vérifier si connecté pour les routes protégées
+      var publicRoutes = ['splash','avertissement','onb1','onb2','onb3','onb4','onb5','onb6','inscription','connexion'];
+      if(publicRoutes.indexOf(route) === -1 && !supabase.isLoggedIn()){
+        route = 'connexion';
+      }
       currentRoute=route;
       frame.src=ROUTES[route];
       switchTrack(trackForRoute(route));
@@ -264,13 +271,43 @@
     }
 
     updateIcon();
-    goTo('splash');
+    if(supabase.isLoggedIn()){
+      goTo('accueil');
+    } else {
+      goTo('splash');
+    }
   </script>
 
   <script>
     if('serviceWorker' in navigator){
       navigator.serviceWorker.register('sw.js').catch(function(){});
     }
+  </script>
+
+  <script>
+    // Détecter le retour de Stripe après paiement
+    (function(){
+      var params = new URLSearchParams(window.location.search);
+      if(params.get('activated') === 'horizon'){
+        // Activer l'abonnement dans Supabase et en cache
+        var updateSubscriber = async function(){
+          try {
+            if(typeof supabase !== 'undefined' && supabase.isLoggedIn()){
+              await supabase.updateProfile({ is_subscriber: true });
+              var cache = localStorage.getItem('naeora_profile');
+              if(cache){
+                var p = JSON.parse(cache);
+                p.is_subscriber = true;
+                localStorage.setItem('naeora_profile', JSON.stringify(p));
+              }
+            }
+          } catch(e){}
+        };
+        updateSubscriber();
+        // Nettoyer l'URL sans recharger
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+    })();
   </script>
 </body>
 </html>

@@ -129,6 +129,7 @@
 </style>
 </head>
 <body>
+<script src="naeora-supabase.js"></script>
   <div class="stage">
     <img class="bg" src="nuit.webp" alt="">
     <div class="vignette"></div>
@@ -184,7 +185,7 @@
         <div class="link-row" onclick="window.open('mailto:contact@naeora.fr')" style="cursor:pointer;"><span>Contacter le support</span><span class="chevron">›</span></div>
       </div>
 
-      <button class="logout-btn" onclick="localStorage.clear();naeoraNav('inscription')">Se déconnecter</button>
+      <button class="logout-btn" onclick="deconnexion()">Se déconnecter</button>
     </div>
 
     <div class="bottom-nav">
@@ -300,6 +301,46 @@
       var texte = d.getDate() + ' ' + moisNoms[d.getMonth()] + ' ' + d.getFullYear();
       document.getElementById('profileBirthdate').textContent = texte;
     }
+  })();
+</script>
+
+<script>
+  async function deconnexion(){
+    if(typeof supabase !== 'undefined'){
+      await supabase.signOut();
+    } else {
+      localStorage.clear();
+    }
+    naeoraNav('inscription');
+  }
+</script>
+
+<script>
+  // Charger les vraies données depuis Supabase si connecté
+  (function(){
+    if(typeof supabase === 'undefined' || !supabase.isLoggedIn()) return;
+    supabase.getProfile().then(function(profil){
+      if(!profil) return;
+      var nameEl = document.getElementById('profileName');
+      var emailEl = document.getElementById('profileEmail');
+      var birthEl = document.getElementById('profileBirthdate');
+      var badge = document.getElementById('planBadge');
+      var action = document.getElementById('planAction');
+      if(nameEl && profil.prenom) nameEl.textContent = profil.prenom;
+      if(emailEl && profil.email) emailEl.textContent = profil.email;
+      if(birthEl && profil.date_naissance){
+        var d = new Date(profil.date_naissance);
+        var mois = ['janvier','février','mars','avril','mai','juin','juillet','août','septembre','octobre','novembre','décembre'];
+        birthEl.textContent = d.getDate() + ' ' + mois[d.getMonth()] + ' ' + d.getFullYear();
+      }
+      if(profil.is_subscriber && badge){
+        badge.textContent = 'Horizon — Abonnée';
+        badge.classList.add('subscriber');
+        if(action) action.textContent = 'Gérer mon abonnement';
+      }
+      // Mettre à jour le cache
+      localStorage.setItem('naeora_profile', JSON.stringify(profil));
+    }).catch(function(){});
   })();
 </script>
 </body>

@@ -1,39 +1,45 @@
-// Naéora — état partagé du jour
+// Naéora — état partagé (hybride localStorage + Supabase)
+
+function naeoraIsSubscriber(){
+  var p = localStorage.getItem('naeora_profile');
+  if(p){ try{ return JSON.parse(p).is_subscriber === true; }catch(e){} }
+  return false;
+}
 
 function naeoraTodayStr(){
   var d = new Date();
-  return d.getFullYear() + '-' + (d.getMonth()+1) + '-' + d.getDate();
-}
-
-function naeoraIsSubscriber(){
-  return localStorage.getItem('naeora_subscriber') === 'true';
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
 }
 
 function naeoraGetState(){
-  var raw = localStorage.getItem('naeora_day_state');
-  var state = raw ? JSON.parse(raw) : null;
   var today = naeoraTodayStr();
-  if(!state || state.date !== today){
-    state = {
-      date: today,
-      matin: false,
-      journeeCount: 0,   // nb d'exercices journée faits aujourd'hui
-      soir: false,
-      lastJourneeList: state ? (state.lastJourneeList || []) : []
-    };
-    localStorage.setItem('naeora_day_state', JSON.stringify(state));
+  var cacheKey = 'naeora_day_' + today;
+  var raw = localStorage.getItem(cacheKey);
+  var state = raw ? JSON.parse(raw) : null;
+  if(!state){
+    state = { date:today, matin_done:false, journee_count:0, soir_done:false, matin_phrase:'', last_journee_list:[] };
+    localStorage.setItem(cacheKey, JSON.stringify(state));
   }
   return state;
 }
 
 function naeoraMarkDone(key){
   var state = naeoraGetState();
+  var today = naeoraTodayStr();
+  var cacheKey = 'naeora_day_' + today;
+  var fields = {};
   if(key === 'journee'){
-    state.journeeCount = (state.journeeCount || 0) + 1;
+    state.journee_count = (state.journee_count || 0) + 1;
+    fields.journee_count = state.journee_count;
   } else {
-    state[key] = true;
+    state[key + '_done'] = true;
+    fields[key + '_done'] = true;
   }
-  localStorage.setItem('naeora_day_state', JSON.stringify(state));
+  localStorage.setItem(cacheKey, JSON.stringify(state));
+  // Sync Supabase en arrière-plan si connecté
+  if(typeof supabase !== 'undefined' && supabase.isLoggedIn()){
+    supabase.updateDayState(fields).catch(function(){});
+  }
 }
 
 function naeoraIsDone(key){
@@ -41,25 +47,51 @@ function naeoraIsDone(key){
   var sub = naeoraIsSubscriber();
   if(key === 'journee'){
     var max = sub ? 2 : 1;
-    return (state.journeeCount || 0) >= max;
+    return (state.journee_count || 0) >= max;
   }
-  return !!state[key];
+  return !!state[key + '_done'];
 }
 
 function naeoraJourneeCount(){
-  return naeoraGetState().journeeCount || 0;
+  return naeoraGetState().journee_count || 0;
 }
 
 function naeoraPickJourneyExercise(){
   var pool = ['lettre', 'hooponopono', 'envol', 'echo', 'dialogue', 'source', 'pendule_explain'];
   var state = naeoraGetState();
-  var lastList = state.lastJourneeList || [];
+  var today = naeoraTodayStr();
+  var cacheKey = 'naeora_day_' + today;
+  var lastList = state.last_journee_list || [];
   var choices = pool.filter(function(p){ return lastList.indexOf(p) === -1; });
   if(choices.length === 0) choices = pool;
   var choice = choices[Math.floor(Math.random() * choices.length)];
   lastList.push(choice);
   if(lastList.length > 2) lastList.shift();
-  state.lastJourneeList = lastList;
-  localStorage.setItem('naeora_day_state', JSON.stringify(state));
+  state.last_journee_list = lastList;
+  localStorage.setItem(cacheKey, JSON.stringify(state));
+  if(typeof supabase !== 'undefined' && supabase.isLoggedIn()){
+    supabase.updateDayState({ last_journee_list: lastList }).catch(function(){});
+  }
   naeoraNav(choice);
 }
+
+// Chargement initial depuis Supabase si connecté (sync au démarrage)
+(function(){
+  if(typeof supabase === 'undefined' || !supabase.isLoggedIn()) return;
+  var today = naeoraTodayStr();
+  var cacheKey = 'naeora_day_' + today;
+  if(localStorage.getItem(cacheKey)) return; // déjà en cache
+  supabase.getDayState().then(function(data){
+    if(data){
+      var state = {
+        date: today,
+        matin_done: data.matin_done || false,
+        journee_count: data.journee_count || 0,
+        soir_done: data.soir_done || false,
+        matin_phrase: data.matin_phrase || '',
+        last_journee_list: data.last_journee_list || []
+      };
+      localStorage.setItem(cacheKey, JSON.stringify(state));
+    }
+  }).catch(function(){});
+})();

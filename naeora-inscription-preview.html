@@ -154,6 +154,7 @@
 </style>
 </head>
 <body>
+<script src="naeora-supabase.js"></script>
   <div class="stage">
     <div class="stars"></div>
 
@@ -201,7 +202,7 @@
         <label for="cgu">J'accepte les <a href="naeora-cgu.html" target="_blank">conditions d'utilisation</a> et la <a href="naeora-confidentialite.html" target="_blank">politique de confidentialité</a></label>
       </div>
 
-      <button type="submit" class="submit-btn">Créer mon compte</button>
+      <button type="submit" class="submit-btn" id="submitBtn">Créer mon compte</button>
     </form>
 
     <div class="login-link">Déjà un compte ? <a href="#">Se connecter</a></div>
@@ -216,24 +217,54 @@
     champ.max = limite.toISOString().split('T')[0];
   })();
 
-  function handleInscription(event){
+  async function handleInscription(event){
     event.preventDefault();
     var prenom = document.getElementById('prenom').value.trim();
     var naissance = document.getElementById('naissance').value;
     var email = document.getElementById('email').value.trim();
+    var password = document.getElementById('password').value;
 
     var limite = new Date();
     limite.setFullYear(limite.getFullYear() - 18);
     if(new Date(naissance) > limite){
-      alert("Il faut avoir au moins 18 ans pour créer un compte Naéora.");
+      showInscriptionError("Il faut avoir au moins 18 ans pour créer un compte Naéora.");
       return false;
     }
 
-    var profil = { prenom: prenom, email: email, naissance: naissance };
-    localStorage.setItem('naeora_profile', JSON.stringify(profil));
+    var btn = document.getElementById('submitBtn');
+    btn.textContent = 'Création en cours...';
+    btn.disabled = true;
 
-    naeoraNav('accueil');
+    try {
+      var result = await supabase.signUp(email, password, prenom, naissance);
+      if(result.error){
+        var msg = result.error.message || 'Une erreur est survenue.';
+        if(msg.includes('already registered')) msg = 'Cette adresse e-mail est déjà utilisée. Connecte-toi plutôt.';
+        showInscriptionError(msg);
+        btn.textContent = 'Créer mon compte';
+        btn.disabled = false;
+        return false;
+      }
+      // Sauvegarder le profil en cache
+      var profil = { prenom: prenom, email: email, date_naissance: naissance, is_subscriber: false };
+      localStorage.setItem('naeora_profile', JSON.stringify(profil));
+      naeoraNav('accueil');
+    } catch(e) {
+      showInscriptionError('Connexion impossible. Vérifiez votre connexion internet.');
+      btn.textContent = 'Créer mon compte';
+      btn.disabled = false;
+    }
     return false;
+  }
+
+  function showInscriptionError(msg){
+    var existing = document.getElementById('inscriptionError');
+    if(existing) existing.remove();
+    var div = document.createElement('div');
+    div.id = 'inscriptionError';
+    div.style.cssText = 'color:#e8a7a7;font-size:0.84rem;margin-top:12px;text-align:center;padding:10px;background:rgba(217,100,100,0.1);border-radius:8px;';
+    div.textContent = msg;
+    document.getElementById('submitBtn').after(div);
   }
 </script>
 </body>

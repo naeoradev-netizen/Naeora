@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Naéora — Connexion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;background:#0a0820;overflow-y:auto;font-family:'Jost',sans-serif;}
+  .stage{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8vh 8vw 5vh;}
+  .logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2rem;color:#f7f2e9;margin-bottom:0.4rem;text-align:center;}
+  .logo-sub{font-size:0.78rem;letter-spacing:0.12em;color:#a89fc4;text-align:center;margin-bottom:5vh;}
+  .form-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:#f7f2e9;margin-bottom:0.4rem;}
+  .form-sub{font-size:0.82rem;color:#a89fc4;margin-bottom:4vh;}
+  .field-group{margin-bottom:1.4rem;width:100%;max-width:380px;}
+  .field-label{display:block;font-size:0.72rem;letter-spacing:0.06em;color:#8b84ab;text-transform:uppercase;margin-bottom:8px;}
+  .field-input{width:100%;padding:13px 14px;border-radius:12px;border:1px solid rgba(217,176,111,0.3);background:rgba(255,255,255,0.04);color:#f7f2e9;font-family:inherit;font-size:0.92rem;}
+  .field-input:focus{outline:none;border-color:#d9b06f;}
+  .submit-btn{width:100%;max-width:380px;padding:14px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.14);color:#f7f2e9;font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:inherit;margin-top:0.5rem;}
+  .submit-btn:disabled{opacity:0.5;cursor:not-allowed;}
+  .login-link{margin-top:2rem;font-size:0.82rem;color:#7d76a0;text-align:center;}
+  .login-link a{color:#d9b06f;cursor:pointer;text-decoration:none;}
+  .error-msg{margin-top:1rem;padding:10px 14px;border-radius:10px;background:rgba(217,100,100,0.1);border:1px solid rgba(217,100,100,0.3);color:#e8a7a7;font-size:0.82rem;text-align:center;max-width:380px;display:none;}
+</style>
+</head>
+<body>
+<script src="naeora-supabase.js"></script>
+<div class="stage">
+  <div class="logo">Naéora</div>
+  <div class="logo-sub">Retrouve-toi, chaque jour.</div>
+
+  <div class="form-title">Bon retour</div>
+  <div class="form-sub">Connecte-toi pour retrouver ton espace</div>
+
+  <div class="field-group">
+    <label class="field-label">Adresse e-mail</label>
+    <input type="email" id="email" class="field-input" placeholder="ton@email.fr" required>
+  </div>
+  <div class="field-group">
+    <label class="field-label">Mot de passe</label>
+    <input type="password" id="password" class="field-input" placeholder="••••••••" required>
+  </div>
+  <button class="submit-btn" id="submitBtn" onclick="handleConnexion()">Se connecter</button>
+  <div class="error-msg" id="errorMsg"></div>
+  <div class="login-link">Pas encore de compte ? <a onclick="naeoraNav('inscription')">S'inscrire</a></div>
+</div>
+
+<script>
+  async function handleConnexion(){
+    var email = document.getElementById('email').value.trim();
+    var password = document.getElementById('password').value;
+    if(!email || !password){ showError('Remplis tous les champs.'); return; }
+    var btn = document.getElementById('submitBtn');
+    btn.textContent = 'Connexion...';
+    btn.disabled = true;
+    hideError();
+    try {
+      var result = await supabase.signIn(email, password);
+      if(result.error){
+        var msg = result.error.message || 'Email ou mot de passe incorrect.';
+        if(msg.includes('Invalid login') || msg.includes('invalid_credentials')) msg = 'Email ou mot de passe incorrect.';
+        showError(msg);
+        btn.textContent = 'Se connecter';
+        btn.disabled = false;
+        return;
+      }
+      naeoraNav('accueil');
+    } catch(e){
+      showError('Connexion impossible. Vérifiez votre connexion internet.');
+      btn.textContent = 'Se connecter';
+      btn.disabled = false;
+    }
+  }
+
+  function showError(msg){
+    var el = document.getElementById('errorMsg');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+  function hideError(){
+    document.getElementById('errorMsg').style.display = 'none';
+  }
+
+  // Permettre la touche Entrée
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Enter') handleConnexion();
+  });
+</script>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, '*'); }</script>
+</body>
+</html>

@@ -110,6 +110,7 @@
 </style>
 </head>
 <body>
+<script src="naeora-supabase.js"></script>
   <div class="stage">
     <img class="bg" id="bgDefault" src="crepuscule.webp" alt="">
     <img class="bg" id="bgWrite" src="ciel_silhouette.webp
@@ -248,6 +249,11 @@
           placeFixedStar(targetXPercent, targetYPercent, color);
           totalStars++;
           localStorage.setItem('naeora_total_stars', totalStars);
+          // Sync Supabase en arrière-plan
+          if(typeof supabase !== 'undefined' && supabase.isLoggedIn()){
+            var positions = JSON.parse(localStorage.getItem('naeora_star_positions') || '[]');
+            supabase.updateGratitudes(totalStars, positions).catch(function(){});
+          }
         }
       }
       requestAnimationFrame(animateLight);
