@@ -5,7 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Naéora — Retrouve-toi, chaque jour</title>
 <meta name="description" content="Naéora est une application de bien-être avec des exercices de développement personnel guidés, des rituels quotidiens et un accompagnement doux pour se reconnecter à soi-même.">
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Naéora">
+<meta name="theme-color" content="#05060f">
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Naéora">
+<meta name="theme-color" content="#05060f">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -341,13 +353,9 @@
   <div class="exercices-list">
     <div class="ex-row"><div class="ex-dot"></div><div class="ex-name">Lettre de libération</div><div class="ex-desc">Écrire, lâcher prise, laisser partir</div></div>
     <div class="ex-row"><div class="ex-dot"></div><div class="ex-name">Ho'oponopono</div><div class="ex-desc">Pardon et réconciliation intérieure</div></div>
-    <div class="ex-row"><div class="ex-dot"></div><div class="ex-name">L'écho</div><div class="ex-desc">La lettre qui te revient transformée</div></div>
-    <div class="ex-row"><div class="ex-dot"></div><div class="ex-name">L'envol</div><div class="ex-desc">Trier ce qui dépend de toi ou non</div></div>
-    <div class="ex-row"><div class="ex-dot"></div><div class="ex-name">Dialogue avec soi</div><div class="ex-desc">Écrire à ton passé ou ton futur</div></div>
-    <div class="ex-row"><div class="ex-dot"></div><div class="ex-name">La source</div><div class="ex-desc">Intention et mémoire de l'eau</div></div>
-    <div class="ex-row"><div class="ex-dot"></div><div class="ex-name">Le pendule</div><div class="ex-desc">Écouter la réponse de ton corps</div></div>
     <div class="ex-row"><div class="ex-dot"></div><div class="ex-name">Cohérence cardiaque</div><div class="ex-desc">Calme immédiat, à tout moment</div></div>
   </div>
+  <p style="margin-top:2rem;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--texte-discret);">Et bien d'autres à découvrir dans l'application…</p>
 </section>
 
 <!-- ═══ SCREENS ═══ -->
@@ -372,6 +380,28 @@
   <div class="citation-divider"></div>
   <p class="citation-text">« Ce que tu cherches à l'extérieur existe déjà en toi. Naéora t'aide juste à l'entendre. »</p>
   <div class="citation-divider"></div>
+</section>
+
+
+<!-- ═══ COFFRET ═══ -->
+<section style="background:var(--violet-profond);" id="coffret">
+  <div class="section-eyebrow">Le coffret physique</div>
+  <h2 class="section-title">Le Coffret Naéora —<br><em style="font-style:italic;background:linear-gradient(135deg,var(--or-clair),var(--or));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">bientôt disponible.</em></h2>
+  <p class="section-lead" style="margin-bottom:3rem;">Un coffret d'objets pensés pour prolonger les rituels de l'application dans ton quotidien — quelque chose à tenir entre les mains, à sentir, à porter.</p>
+
+  <div style="display:flex;flex-direction:column;align-items:center;gap:2rem;max-width:520px;">
+    <div style="width:100%;border-radius:20px;border:1px dashed rgba(217,176,111,0.35);padding:48px 32px;text-align:center;background:rgba(217,176,111,0.04);">
+      <div style="font-size:2rem;margin-bottom:16px;opacity:0.6;">🌿</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--texte-discret);line-height:1.6;">Photos du coffret à venir —<br>une expérience sensorielle pour compléter ton chemin.</div>
+    </div>
+
+    <div style="background:rgba(217,176,111,0.06);border:1px solid rgba(217,176,111,0.25);border-radius:16px;padding:22px 28px;width:100%;">
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:var(--or-clair);margin-bottom:8px;">79 € · 6 mois d'Horizon offerts</div>
+      <div style="font-size:0.84rem;color:var(--texte-discret);line-height:1.6;">Offre limitée à 50 coffrets. Bracelet en amazonite, pendule, palo santo, carnet, ruban de satin et plus encore.</div>
+    </div>
+
+    <a href="https://naeora.fr/coffret" style="display:inline-block;padding:14px 36px;border-radius:30px;border:1px solid rgba(217,176,111,0.35);color:var(--texte-discret);font-family:'Jost',sans-serif;font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:all 0.3s ease;" onmouseover="this.style.borderColor='var(--or)';this.style.color='var(--blanc-doux)';" onmouseout="this.style.borderColor='rgba(217,176,111,0.35)';this.style.color='var(--texte-discret)';">Être notifiée à l'ouverture</a>
+  </div>
 </section>
 
 <!-- ═══ TARIFS ═══ -->
@@ -418,6 +448,12 @@
 </footer>
 
 <script>
+
+  // PWA Service Worker
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('sw.js').catch(function(){});
+  }
+
   // Génération des étoiles décoratives
   const container = document.getElementById('stars');
   for(let i=0;i<60;i++){
