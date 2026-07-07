@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Naéora</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Naéora">
+  <meta name="theme-color" content="#14123a">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{width:100%;height:100%;overflow:hidden;background:#05060f;}
+  #app-frame{width:100%;height:100%;border:none;display:block;}
+  #sound-toggle{
+    position:fixed;top:max(14px,env(safe-area-inset-top));right:14px;z-index:1000;
+    width:34px;height:34px;border-radius:50%;
+    background:rgba(8,6,24,0.55);border:1px solid rgba(217,176,111,0.35);
+    display:flex;align-items:center;justify-content:center;cursor:pointer;
+    backdrop-filter:blur(6px);
+  }
+  #sound-toggle svg{width:16px;height:16px;}
+
+  #tap-overlay{
+    position:fixed;inset:0;z-index:9999;
+    background:rgba(5,6,15,0.97);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    cursor:pointer;
+  }
+  #tap-overlay svg{width:54px;height:54px;margin-bottom:22px;opacity:0.85;}
+  #tap-overlay .tap-title{
+    font-family:'Georgia',serif;font-style:italic;font-size:1.4rem;color:#f7f2e9;margin-bottom:12px;
+  }
+  #tap-overlay .tap-sub{font-size:0.8rem;color:#a89fc4;letter-spacing:0.05em;}
+</style>
+</head>
+<body>
+  
+  <div id="tap-overlay" onclick="startApp()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#d9b06f" stroke-width="1.2">
+      <path d="M12 3a9 9 0 1 1 0 18A9 9 0 0 1 12 3Z"/>
+      <path d="M9 9.5l3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <div class="tap-title">Naéora</div>
+    <div class="tap-sub">Touche l'écran pour commencer</div>
+  </div>
+
+  <iframe id="app-frame" src="naeora-splash-final.html" title="Naéora"></iframe>
+  <div id="sound-toggle" onclick="toggleSound()" title="Activer/couper la musique">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#d9b06f" stroke-width="1.4">
+      <path d="M4 9v6h4l5 4V5L8 9H4Z" stroke-linejoin="round"/>
+      <path id="soundWave1" d="M16.5 9a4.5 4.5 0 0 1 0 6" stroke-linecap="round"/>
+      <path id="soundWave2" d="M19 6.5a8 8 0 0 1 0 11" stroke-linecap="round" opacity="0.6"/>
+    </svg>
+  </div>
+  <audio id="bgGeneral"  src="naeora-ambient.mp3"         loop preload="auto"></audio>
+  <audio id="bgMatin"    src="naeora-ambient-matin.mp3"   preload="auto"></audio>
+  <audio id="bgMatin2"   src="naeora-ambient-matin.mp3"   preload="auto"></audio>
+  <audio id="bgSoir"     src="naeora-ambient-soir.mp3"    preload="auto"></audio>
+  <audio id="bgSoir2"    src="naeora-ambient-soir.mp3"    preload="auto"></audio>
+  <audio id="bgJournee"  src="naeora-ambient-journee.mp3" loop preload="auto"></audio>
+  <script>
+    var ROUTES = {
+      splash:          'naeora-splash-final.html',
+      avertissement:   'naeora-avertissement-preview.html',
+      onb1:            'naeora-onboarding-slide1-preview.html',
+      onb2:            'naeora-onboarding-slide2-preview.html',
+      onb3:            'naeora-onboarding-slide3-preview.html',
+      onb4:            'naeora-onboarding-slide4-preview.html',
+      onb5:            'naeora-onboarding-slide5-preview.html',
+      onb6:            'naeora-onboarding-slide6-preview.html',
+      inscription:     'naeora-inscription-preview.html',
+      accueil:         'naeora-accueil-preview.html',
+      ciel:            'naeora-ciel-preview.html',
+      boutique:        'naeora-boutique-preview.html',
+      profil:          'naeora-profil-preview.html',
+      matin:           'naeora-matin-preview.html',
+      soir:            'naeora-soir-preview.html',
+      coherence:       'naeora-coherence-preview.html',
+      hooponopono:     'naeora-hooponopono-preview.html',
+      envol:           'naeora-envol-preview.html',
+      echo:            'naeora-echo-preview.html',
+      dialogue:        'naeora-dialogue-preview.html',
+      source:          'naeora-source-preview.html',
+      pendule_explain: 'naeora-pendule-explication-preview.html',
+      pendule_tuto:    'naeora-pendule-tuto-guide-preview.html',
+      pendule_resume:  'naeora-pendule-tuto-resume-preview.html',
+      pendule_exercice:'naeora-pendule-exercice-preview.html',
+      lettre:          'naeora-lettre-liberation-preview.html'
+    };
+
+    var frame = document.getElementById('app-frame');
+    var BASE_VOL = 0.35;
+    var FADE_MS  = 800;
+    var tracks = {
+      general: document.getElementById('bgGeneral'),
+      matin:   document.getElementById('bgMatin'),
+      soir:    document.getElementById('bgSoir'),
+      journee: document.getElementById('bgJournee')
+    };
+    // Paires seamless pour matin et soir
+    var seamless = {
+      matin: [document.getElementById('bgMatin'), document.getElementById('bgMatin2')],
+      soir:  [document.getElementById('bgSoir'),  document.getElementById('bgSoir2')]
+    };
+    var seamlessIdx = {matin: 0, soir: 0};
+    var seamlessTimers = {matin: null, soir: null};
+
+    function startSeamless(key){
+      stopSeamless(key);
+      var pair = seamless[key];
+      seamlessIdx[key] = 0;
+      function scheduleNext(){
+        var cur = pair[seamlessIdx[key] % 2];
+        var nxt = pair[(seamlessIdx[key]+1) % 2];
+        cur.currentTime = 0;
+        cur.volume = BASE_VOL;
+        cur.play().catch(function(){});
+        if(cur.duration){
+          var wait = (cur.duration - 0.05) * 1000;
+          seamlessTimers[key] = setTimeout(function(){
+            nxt.currentTime = 0;
+            nxt.volume = BASE_VOL;
+            nxt.play().catch(function(){});
+            seamlessIdx[key]++;
+            var wait2 = (nxt.duration - 0.05) * 1000;
+            seamlessTimers[key] = setTimeout(function(){
+              cur.pause(); scheduleNext2(key, cur, nxt);
+            }, wait2);
+            cur.pause();
+          }, wait);
+        } else {
+          cur.addEventListener('loadedmetadata', function onMeta(){
+            cur.removeEventListener('loadedmetadata', onMeta);
+            scheduleNext();
+          });
+        }
+      }
+      function scheduleNext2(k, cur, nxt){
+        var newNxt = cur;
+        newNxt.currentTime = 0;
+        newNxt.volume = BASE_VOL;
+        newNxt.play().catch(function(){});
+        seamlessTimers[k] = setTimeout(function(){
+          nxt.pause();
+          scheduleNext2(k, nxt, newNxt);
+        }, (newNxt.duration - 0.05)*1000);
+      }
+      scheduleNext();
+    }
+
+    function stopSeamless(key){
+      if(seamlessTimers[key]){ clearTimeout(seamlessTimers[key]); seamlessTimers[key]=null; }
+      seamless[key].forEach(function(t){ t.pause(); t.currentTime=0; });
+    }
+    var currentTrackKey = null;
+    var currentRoute    = 'splash';
+    var soundOn = (localStorage.getItem('naeora_sound') !== 'off');
+    var unlocked = false;
+
+    function trackForRoute(r){
+      if(r==='matin') return 'matin';
+      var j=['coherence','hooponopono','envol','echo','dialogue','source',
+             'pendule_explain','pendule_tuto','pendule_resume','pendule_exercice'];
+      if(j.indexOf(r)>=0) return 'journee';
+      if(r==='soir') return 'soir';
+      return 'general';
+    }
+
+    function fadeOut(t, cb){
+      var steps=20, i=steps, vol=t.volume;
+      var id=setInterval(function(){
+        i--;
+        t.volume=Math.max(vol*(i/steps),0);
+        if(i<=0){clearInterval(id);t.pause();t.volume=vol;if(cb)cb();}
+      }, FADE_MS/steps);
+    }
+    function fadeIn(t){
+      t.volume=0;
+      t.play().catch(function(){});
+      var steps=20,i=0;
+      var id=setInterval(function(){
+        i++;
+        t.volume=Math.min(BASE_VOL*(i/steps),BASE_VOL);
+        if(i>=steps)clearInterval(id);
+      }, FADE_MS/steps);
+    }
+
+    function stopAllTracks(){
+      Object.values(tracks).forEach(function(t){t.pause();});
+      stopSeamless('matin');
+      stopSeamless('soir');
+    }
+
+    function switchTrack(key){
+      if(!soundOn||!unlocked){
+        stopAllTracks();
+        currentTrackKey=key; return;
+      }
+      if(key===currentTrackKey){
+        if(key==='matin'||key==='soir'){
+          if(seamless[key][0].paused && seamless[key][1].paused) startSeamless(key);
+        } else {
+          if(tracks[key].paused){tracks[key].volume=BASE_VOL;tracks[key].play().catch(function(){});}
+        }
+        return;
+      }
+      var prev=currentTrackKey;
+      currentTrackKey=key;
+      // Arrêt de l'ancienne piste
+      if(prev){
+        if(prev==='matin'||prev==='soir'){
+          stopSeamless(prev);
+        } else if(!tracks[prev].paused){
+          fadeOut(tracks[prev], null);
+        }
+      }
+      // Démarrage de la nouvelle
+      if(key==='matin'||key==='soir'){
+        setTimeout(function(){ startSeamless(key); }, prev ? FADE_MS : 0);
+      } else {
+        if(prev){
+          setTimeout(function(){ fadeIn(tracks[key]); }, FADE_MS);
+        } else {
+          fadeIn(tracks[key]);
+        }
+      }
+    }
+
+    function updateIcon(){
+      document.getElementById('soundWave1').style.opacity=soundOn?'1':'0';
+      document.getElementById('soundWave2').style.opacity=soundOn?'0.6':'0';
+    }
+    function toggleSound(){
+      soundOn=!soundOn;
+      localStorage.setItem('naeora_sound',soundOn?'on':'off');
+      updateIcon();
+      if(!soundOn){Object.values(tracks).forEach(function(t){t.pause();});}
+      else{switchTrack(currentTrackKey||trackForRoute(currentRoute));}
+    }
+
+    function goTo(route){
+      if(!ROUTES[route]){console.warn('Route inconnue:',route);return;}
+      currentRoute=route;
+      frame.src=ROUTES[route];
+      switchTrack(trackForRoute(route));
+    }
+
+    window.addEventListener('message',function(e){
+      if(e.data&&e.data.naeoraNav) goTo(e.data.naeoraNav);
+    });
+
+    function unlock(){
+      if(unlocked)return;
+      unlocked=true;
+      switchTrack(trackForRoute(currentRoute));
+    }
+    function startApp(){
+      var overlay = document.getElementById('tap-overlay');
+      if(overlay){ overlay.style.display='none'; }
+      unlock();
+    }
+
+    updateIcon();
+    goTo('splash');
+  </script>
+
+  <script>
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.register('sw.js').catch(function(){});
+    }
+  </script>
+</body>
+</html>

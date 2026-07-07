@@ -2,7 +2,7 @@
   "name": "Naéora",
   "short_name": "Naéora",
   "description": "Ton espace pour te reconnecter à toi-même, chaque jour.",
-  "start_url": "/Naeora/",
+  "start_url": "https://naeora.fr/",
   "display": "standalone",
   "background_color": "#05060f",
   "theme_color": "#14123a",
@@ -14,5 +14,6 @@
       "type": "image/webp",
       "purpose": "any maskable"
     }
-  ]
+  ],
+  "scope": "https://naeora.fr/"
 }
