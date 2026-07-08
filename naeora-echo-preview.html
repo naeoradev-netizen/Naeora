@@ -17,7 +17,7 @@
   .view.active{display:flex;}
 
   /* ---------- Explication ---------- */
-  #view-explain{padding-top:50%;padding-left:8vw;padding-right:8vw;padding-bottom:5vh;align-items:center;text-align:center;overflow-y:auto;}
+  #view-explain{padding-top:54%;padding-left:8vw;padding-right:8vw;padding-bottom:5vh;align-items:center;text-align:center;overflow-y:auto;}
   .ex-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.6rem;color:#f7f2e9;margin-bottom:6px;flex-shrink:0;}
   .ex-divider{width:70px;height:1.5px;background:linear-gradient(to right, transparent, #d9b06f, transparent);margin:14px 0 18px;flex-shrink:0;}
   .ex-text{font-size:0.9rem;line-height:1.65;color:#e3ddf0;max-width:380px;margin-bottom:12px;}
@@ -74,7 +74,7 @@
   }
 
   /* ---------- Courrier reçu (avant ouverture) ---------- */
-  #view-mail{align-items:center;justify-content:flex-start;padding-top:50%;padding-left:8vw;padding-right:8vw;text-align:center;}
+  #view-mail{align-items:center;justify-content:flex-start;padding-top:54%;padding-left:8vw;padding-right:8vw;text-align:center;}
   .mail-icon{
     width:120px;height:90px;cursor:pointer;
     animation:mailArrive 0.8s ease-out;
@@ -116,7 +116,7 @@
   .letter-paper-text.show{opacity:1;}
 
   /* ---------- Lettre reçue (texte plein écran) ---------- */
-  #view-received{align-items:center;justify-content:flex-start;padding:46% 8vw 5vh;text-align:center;overflow-y:auto;}
+  #view-received{align-items:center;justify-content:flex-start;padding:52% 8vw 5vh;text-align:center;overflow-y:auto;}
   .received-intro{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.95rem;color:#d9b06f;margin-bottom:2vh;}
   .received-text{
     font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;line-height:1.7;color:#f7f2e9;
@@ -309,7 +309,7 @@
 
 <script>
 (function(){
-  var sub = localStorage.getItem('naeora_subscriber') === 'true';
+  var sub = naeoraIsSubscriber();
   var count = 0;
   try { 
     var raw = localStorage.getItem('naeora_day_state');
