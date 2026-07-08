@@ -298,7 +298,7 @@
   // Vérification déjà fait
   (function(){
     if(typeof naeoraIsDone === 'undefined') return;
-    var sub = (localStorage.getItem('naeora_subscriber') === 'true');
+    var sub = (naeoraIsSubscriber());
     var count = typeof naeoraJourneeCount !== 'undefined' ? naeoraJourneeCount() : 0;
     var max = sub ? 2 : 1;
     if(count >= max){
@@ -310,7 +310,7 @@
 
 <script>
 (function(){
-  var sub = localStorage.getItem('naeora_subscriber') === 'true';
+  var sub = naeoraIsSubscriber();
   var count = 0;
   try { 
     var raw = localStorage.getItem('naeora_day_state');
