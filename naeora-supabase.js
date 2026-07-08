@@ -2,7 +2,7 @@
 // Ce fichier gère toute la communication avec la base de données
 
 const SUPABASE_URL = 'https://psclvsiunfuqngrsepty.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_ULL0teuDUMECZbv4vSvbNA_vWS1FayE';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBzY2x2c2l1bmZ1cW5ncnNlcHR5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODM0MzA0OTksImV4cCI6MjA5OTAwNjQ5OX0.1tNXzAMJ_gAQVEM2xH25LX2B_z6rtiS6Qo_8IR_jlhE';
 
 // Client Supabase léger (sans SDK complet, via fetch direct)
 const supabase = {
