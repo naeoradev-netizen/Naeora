@@ -152,8 +152,8 @@
       <div class="greeting">Bonjour Floriane</div>
 
       <div class="quote-card">
-        <div class="quote-text"><span class="quote-mark">“</span>Chaque petit pas compte, même quand tu ne le vois pas encore.<span class="quote-mark">”</span></div>
-        <div class="quote-author">— Anonyme</div>
+        <div class="quote-text" id="quoteText"><span class="quote-mark">“</span>Chaque petit pas compte, même quand tu ne le vois pas encore.<span class="quote-mark">”</span></div>
+        <div class="quote-author" id="quoteAuthor">— Anonyme</div>
       </div>
 
       <div class="arc-wrap">
@@ -348,8 +348,10 @@
     var dayOfYear = Math.floor(diff / (1000*60*60*24));
     var idx = (dayOfYear - 1) % NAEORA_CITATIONS.length;
     var cit = NAEORA_CITATIONS[idx];
-    document.getElementById('quoteText').textContent = cit.phrase;
-    document.getElementById('quoteAuthor').textContent = '— ' + cit.auteur;
+    var quoteTextEl = document.getElementById('quoteText');
+    var quoteAuthorEl = document.getElementById('quoteAuthor');
+    if(quoteTextEl) quoteTextEl.innerHTML = '<span class="quote-mark">\u201c</span>' + cit.phrase + '<span class="quote-mark">\u201d</span>';
+    if(quoteAuthorEl) quoteAuthorEl.textContent = '— ' + cit.auteur;
   })();
 </script>
 
