@@ -295,7 +295,7 @@
 
   function pickJourneyExercise(){
     try {
-      var sub = (localStorage.getItem('naeora_subscriber') === 'true');
+      var sub = (naeoraIsSubscriber());
       var count = (typeof naeoraJourneeCount !== 'undefined') ? naeoraJourneeCount() : 0;
       var max = sub ? 2 : 1;
       if(count >= max){
@@ -309,11 +309,7 @@
   }
 
   function goMatin(){
-    try {
-      if(typeof naeoraIsDone !== 'undefined' && naeoraIsDone('matin')){
-        naeoraShowNotif('Tu as déjà ouvert les possibles ce matin.<br>Reviens demain.');
-      } else { naeoraNav('matin'); }
-    } catch(e){ naeoraNav('matin'); }
+    naeoraNav('matin');
   }
 
   function goSoir(){
