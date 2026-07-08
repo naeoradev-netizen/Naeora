@@ -112,6 +112,10 @@
   </div>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script>
 <script>
+  // Marque l'onboarding comme vu : il ne se réaffichera plus aux prochaines visites
+  try { localStorage.setItem('naeora_onboarding_seen', 'true'); } catch(e){}
+</script>
+<script>
   (function(){
     var startX = 0, startY = 0;
     document.addEventListener('touchstart', function(e){

@@ -273,6 +273,8 @@
     updateIcon();
     if(supabase.isLoggedIn()){
       goTo('accueil');
+    } else if(localStorage.getItem('naeora_onboarding_seen') === 'true'){
+      goTo('connexion');
     } else {
       goTo('splash');
     }
