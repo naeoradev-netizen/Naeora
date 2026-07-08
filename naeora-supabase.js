@@ -76,9 +76,9 @@ const supabase = {
 
   // ── MOT DE PASSE OUBLIÉ ──
   async resetPasswordForEmail(email, redirectTo){
-    const r = await fetch(this.url + '/auth/v1/recover', {
+    const r = await fetch(this.url + '/auth/v1/recover?redirect_to=' + encodeURIComponent(redirectTo), {
       method:'POST', headers:{'Content-Type':'application/json','apikey':this.key},
-      body: JSON.stringify({ email, redirect_to: redirectTo })
+      body: JSON.stringify({ email })
     });
     if(r.ok) return { error: null };
     const data = await r.json().catch(function(){ return {}; });
