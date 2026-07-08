@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>Naéora — Écran d'ouverture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{width:100%;height:100%;background:#05060f;overflow:hidden;}
@@ -12,12 +15,40 @@
   .glow-pulse{position:absolute;inset:0;background:radial-gradient(circle at 50% 78%, rgba(255,210,140,0.10) 0%, transparent 35%);animation:pulse 7s ease-in-out infinite;pointer-events:none;}
   @keyframes pulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
   @media (prefers-reduced-motion: reduce){.splash-img{animation:none;opacity:1;transform:none;}.glow-pulse{animation:none;}}
+
+  .splash-actions{
+    position:absolute;bottom:6vh;left:0;right:0;z-index:2;
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+    opacity:0;animation:fadeInActions 1.1s ease forwards;animation-delay:2.6s;
+  }
+  @keyframes fadeInActions{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  .splash-btn{
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.92rem;
+    color:#f7f2e9;text-decoration:none;
+    padding:9px 26px;border-radius:20px;
+    background:rgba(255,255,255,0.05);
+    -webkit-backdrop-filter:blur(4px);backdrop-filter:blur(4px);
+    cursor:pointer;transition:background 0.25s ease;
+  }
+  .splash-btn.primary{border:1px solid rgba(217,176,111,0.45);}
+  .splash-btn.secondary{border:1px solid rgba(255,255,255,0.18);color:#cfc9e6;}
+  .splash-btn:active{background:rgba(255,255,255,0.12);}
 </style>
 </head>
 <body>
   <div class="stage">
     <img class="splash-img" src="splash.webp" alt="Naéora — Ouvrir un nouveau champ des possibles">
     <div class="glow-pulse"></div>
+    <div class="splash-actions">
+      <a class="splash-btn primary" onclick="goConnexion(); return false;" href="#">J'ai déjà un compte</a>
+      <a class="splash-btn secondary" onclick="goDecouverte(); return false;" href="#">Je découvre l'application</a>
+    </div>
   </div>
-<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script><script>setTimeout(function(){ naeoraNav('avertissement'); }, 4800);</script></body>
+<script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script>
+<script>
+  var autoTimer = setTimeout(function(){ naeoraNav('avertissement'); }, 8000);
+  function goConnexion(){ clearTimeout(autoTimer); naeoraNav('connexion'); }
+  function goDecouverte(){ clearTimeout(autoTimer); naeoraNav('avertissement'); }
+</script>
+</body>
 </html>
