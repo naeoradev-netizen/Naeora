@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Naéora — Connexion</title>
+<title>Naéora — Mot de passe oublié</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
@@ -12,8 +12,8 @@
   .stage{min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8vh 8vw 5vh;}
   .logo{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2rem;color:#f7f2e9;margin-bottom:0.4rem;text-align:center;}
   .logo-sub{font-size:0.78rem;letter-spacing:0.12em;color:#a89fc4;text-align:center;margin-bottom:5vh;}
-  .form-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:#f7f2e9;margin-bottom:0.4rem;}
-  .form-sub{font-size:0.82rem;color:#a89fc4;margin-bottom:4vh;}
+  .form-title{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.4rem;color:#f7f2e9;margin-bottom:0.4rem;text-align:center;}
+  .form-sub{font-size:0.82rem;color:#a89fc4;margin-bottom:4vh;text-align:center;max-width:340px;line-height:1.6;}
   .field-group{margin-bottom:1.4rem;width:100%;max-width:380px;}
   .field-label{display:block;font-size:0.72rem;letter-spacing:0.06em;color:#8b84ab;text-transform:uppercase;margin-bottom:8px;}
   .field-input{width:100%;padding:13px 14px;border-radius:12px;border:1px solid rgba(217,176,111,0.3);background:rgba(255,255,255,0.04);color:#f7f2e9;font-family:inherit;font-size:0.92rem;}
@@ -23,6 +23,9 @@
   .login-link{margin-top:2rem;font-size:0.82rem;color:#7d76a0;text-align:center;}
   .login-link a{color:#d9b06f;cursor:pointer;text-decoration:none;}
   .error-msg{margin-top:1rem;padding:10px 14px;border-radius:10px;background:rgba(217,100,100,0.1);border:1px solid rgba(217,100,100,0.3);color:#e8a7a7;font-size:0.82rem;text-align:center;max-width:380px;display:none;}
+  .success-block{display:none;flex-direction:column;align-items:center;text-align:center;max-width:380px;}
+  .success-icon{font-size:1.8rem;color:#d9b06f;margin-bottom:1.4rem;}
+  .success-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;color:#f7f2e9;line-height:1.7;margin-bottom:2.5rem;}
 </style>
 </head>
 <body>
@@ -31,46 +34,48 @@
   <div class="logo">Naéora</div>
   <div class="logo-sub">Retrouve-toi, chaque jour.</div>
 
-  <div class="form-title">Bon retour</div>
-  <div class="form-sub">Connecte-toi pour retrouver ton espace</div>
+  <div id="formBlock">
+    <div class="form-title">Mot de passe oublié</div>
+    <div class="form-sub">Indique ton adresse e-mail, nous t'enverrons un lien pour choisir un nouveau mot de passe.</div>
 
-  <div class="field-group">
-    <label class="field-label">Adresse e-mail</label>
-    <input type="email" id="email" class="field-input" placeholder="ton@email.fr" required>
+    <div class="field-group">
+      <label class="field-label">Adresse e-mail</label>
+      <input type="email" id="email" class="field-input" placeholder="ton@email.fr" required>
+    </div>
+    <button class="submit-btn" id="submitBtn" onclick="handleReset()">Envoyer le lien</button>
+    <div class="error-msg" id="errorMsg"></div>
   </div>
-  <div class="field-group">
-    <label class="field-label">Mot de passe</label>
-    <input type="password" id="password" class="field-input" placeholder="••••••••" required>
+
+  <div class="success-block" id="successBlock">
+    <div class="success-icon">✦</div>
+    <div class="success-text">Si un compte existe avec cette adresse, un e-mail vient de t'être envoyé.<br>Clique sur le lien qu'il contient pour choisir un nouveau mot de passe.</div>
   </div>
-  <button class="submit-btn" id="submitBtn" onclick="handleConnexion()">Se connecter</button>
-  <div class="error-msg" id="errorMsg"></div>
-  <div class="login-link"><a onclick="naeoraNav('mot-de-passe-oublie')">Mot de passe oublié ?</a></div>
-  <div class="login-link">Pas encore de compte ? <a onclick="naeoraNav('inscription')">S'inscrire</a></div>
+
+  <div class="login-link"><a onclick="naeoraNav('connexion')">← Retour à la connexion</a></div>
 </div>
 
 <script>
-  async function handleConnexion(){
+  async function handleReset(){
     var email = document.getElementById('email').value.trim();
-    var password = document.getElementById('password').value;
-    if(!email || !password){ showError('Remplis tous les champs.'); return; }
+    if(!email){ showError('Indique ton adresse e-mail.'); return; }
     var btn = document.getElementById('submitBtn');
-    btn.textContent = 'Connexion...';
+    btn.textContent = 'Envoi...';
     btn.disabled = true;
     hideError();
     try {
-      var result = await supabase.signIn(email, password);
+      var redirectTo = window.location.origin + '/naeora-reset-password.html';
+      var result = await supabase.resetPasswordForEmail(email, redirectTo);
       if(result.error){
-        var msg = result.error.message || 'Email ou mot de passe incorrect.';
-        if(msg.includes('Invalid login') || msg.includes('invalid_credentials')) msg = 'Email ou mot de passe incorrect.';
-        showError(msg);
-        btn.textContent = 'Se connecter';
+        showError('Impossible d\u2019envoyer l\u2019e-mail. Vérifie ton adresse.');
+        btn.textContent = 'Envoyer le lien';
         btn.disabled = false;
         return;
       }
-      naeoraNav('accueil');
+      document.getElementById('formBlock').style.display = 'none';
+      document.getElementById('successBlock').style.display = 'flex';
     } catch(e){
       showError('Connexion impossible. Vérifiez votre connexion internet.');
-      btn.textContent = 'Se connecter';
+      btn.textContent = 'Envoyer le lien';
       btn.disabled = false;
     }
   }
@@ -84,9 +89,8 @@
     document.getElementById('errorMsg').style.display = 'none';
   }
 
-  // Permettre la touche Entrée
   document.addEventListener('keydown', function(e){
-    if(e.key === 'Enter') handleConnexion();
+    if(e.key === 'Enter') handleReset();
   });
 </script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, '*'); }</script>

@@ -90,6 +90,7 @@
       pendule_resume:  'naeora-pendule-tuto-resume-preview.html',
       pendule_exercice:'naeora-pendule-exercice-preview.html',
       connexion:       'naeora-connexion-preview.html',
+      'mot-de-passe-oublie': 'naeora-mot-de-passe-oublie-preview.html',
       lettre:          'naeora-lettre-liberation-preview.html'
     };
 
@@ -246,7 +247,7 @@
     function goTo(route){
       if(!ROUTES[route]){console.warn('Route inconnue:',route);return;}
       // Vérifier si connecté pour les routes protégées
-      var publicRoutes = ['splash','avertissement','onb1','onb2','onb3','onb4','onb5','onb6','inscription','connexion'];
+      var publicRoutes = ['splash','avertissement','onb1','onb2','onb3','onb4','onb5','onb6','inscription','connexion','mot-de-passe-oublie'];
       if(publicRoutes.indexOf(route) === -1 && !supabase.isLoggedIn()){
         route = 'connexion';
       }

@@ -74,6 +74,28 @@ const supabase = {
   isLoggedIn(){ return !!localStorage.getItem('naeora_access_token'); },
   getUserId(){ return localStorage.getItem('naeora_user_id'); },
 
+  // ── MOT DE PASSE OUBLIÉ ──
+  async resetPasswordForEmail(email, redirectTo){
+    const r = await fetch(this.url + '/auth/v1/recover', {
+      method:'POST', headers:{'Content-Type':'application/json','apikey':this.key},
+      body: JSON.stringify({ email, redirect_to: redirectTo })
+    });
+    if(r.ok) return { error: null };
+    const data = await r.json().catch(function(){ return {}; });
+    return { error: data.error_description || data.msg || 'Erreur inconnue' };
+  },
+
+  async updatePasswordWithToken(accessToken, newPassword){
+    const r = await fetch(this.url + '/auth/v1/user', {
+      method:'PUT',
+      headers:{'Content-Type':'application/json','apikey':this.key,'Authorization':'Bearer ' + accessToken},
+      body: JSON.stringify({ password: newPassword })
+    });
+    const data = await r.json().catch(function(){ return {}; });
+    if(!r.ok){ return { error: data.error_description || data.msg || 'Erreur inconnue' }; }
+    return { error: null, user: data };
+  },
+
   // ── PROFIL ──
   async getProfile(){
     const cache = localStorage.getItem('naeora_profile');
