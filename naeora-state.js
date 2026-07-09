@@ -57,6 +57,12 @@ function naeoraJourneeCount(){
 }
 
 function naeoraPickJourneyExercise(){
+  // Offre gratuite : un seul exercice de journée disponible, toujours le même.
+  if(typeof naeoraIsSubscriber !== 'undefined' && !naeoraIsSubscriber()){
+    naeoraNav('lettre');
+    return;
+  }
+  // Abonnées Horizon : tirage aléatoire parmi le pool complet, avec anti-répétition.
   var pool = ['lettre', 'hooponopono', 'envol', 'echo', 'dialogue', 'source', 'pendule_explain'];
   var state = naeoraGetState();
   var today = naeoraTodayStr();
