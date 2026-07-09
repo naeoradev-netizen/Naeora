@@ -130,7 +130,7 @@
       <div class="ex-text">Répéter une phrase d'ouverture, à voix haute ou en pleine conscience, c'est une façon d'<b>interrompre cette boucle automatique</b>. Pendant ces quelques secondes, tu ne cherches pas à analyser, comprendre ou juger ta phrase — tu la laisses simplement exister.</div>
       <div class="ex-text">Cette absence d'analyse <b>désarme le mental</b>, celui qui veut toujours tout contrôler et tout expliquer. Et dans cet espace qu'il libère, quelque chose de nouveau peut enfin trouver sa place.</div>
       <div class="ex-tip">💡 Pour plus d'intensité, récite ta phrase devant un miroir, en te regardant droit dans les yeux.</div>
-      <button class="ex-btn" onclick="showView('active')">J'ai compris</button>
+      <button class="ex-btn" onclick="afterExplain()">J'ai compris</button>
     </div>
 
     <div class="view" id="view-active">
@@ -305,6 +305,15 @@ setTimeout(() => showView('done'), 1600);
       btn.onclick = function(){ startMatin(d); };
       container.appendChild(btn);
     });
+  }
+
+  function afterExplain(){
+    if(IS_SUBSCRIBER){
+      buildDomainView();
+      showView('domain');
+    } else {
+      startMatin('Gratuit');
+    }
   }
 
   function initMatin(){

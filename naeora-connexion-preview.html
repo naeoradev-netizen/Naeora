@@ -67,6 +67,12 @@
         btn.disabled = false;
         return;
       }
+      // Récupère le vrai statut d'abonnement à jour dès la connexion,
+      // pour que les exercices (choix de domaine, gratitudes illimitées...) le reconnaissent immédiatement.
+      try {
+        var profil = await supabase.getProfile();
+        if(profil) localStorage.setItem('naeora_profile', JSON.stringify(profil));
+      } catch(e){}
       naeoraNav('accueil');
     } catch(e){
       showError('Connexion impossible. Vérifiez votre connexion internet.');

@@ -274,6 +274,14 @@
     updateIcon();
     if(supabase.isLoggedIn()){
       goTo('accueil');
+      // Rafraîchit le vrai statut d'abonnement en tâche de fond à chaque ouverture de l'app,
+      // pour que les exercices reflètent toujours l'état réel de Supabase (et pas une copie périmée).
+      (async function(){
+        try {
+          var profil = await supabase.getProfile();
+          if(profil) localStorage.setItem('naeora_profile', JSON.stringify(profil));
+        } catch(e){}
+      })();
     } else if(localStorage.getItem('naeora_onboarding_seen') === 'true'){
       goTo('connexion');
     } else {
