@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Naéora — Retrouve-toi, chaque jour</title>
-<meta name="description" content="Naéora est une application de bien-être avec des exercices de développement personnel guidés, des rituels quotidiens et un accompagnement doux pour se reconnecter à soi-même.">
+<meta name="description" content="Naéora est une application de bien-être avec des exercices de développement personnel guidés, des moments quotidiens et un accompagnement doux pour se reconnecter à soi-même.">
 <link rel="manifest" href="manifest.json">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -31,6 +31,13 @@
     --texte-clair:#e3ddf0;
     --texte-discret:#a89fc4;
     --violet-card:rgba(30,26,74,0.7);
+    --violet-clair:#4b4478;
+    --lavande-moyenne:#8880ae;
+    --creme-lavande:#f6f2fa;
+    --creme-lavande-carte:#ffffff;
+    --texte-sombre:#2e2a52;
+    --texte-sombre-discret:#726b95;
+    --or-fonce:#b8874a;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
@@ -131,7 +138,7 @@
   }
 
   /* ─── RITUELS ─── */
-  .rituels{background:var(--violet-profond);}
+  .rituels{background:linear-gradient(180deg,var(--noir) 0%,var(--violet-profond) 100%);}
   .rituels-grid{
     display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
     gap:24px;margin-top:4rem;
@@ -180,7 +187,7 @@
 
   /* ─── SCREENS (mockup) ─── */
   .screens{
-    background:linear-gradient(180deg,var(--noir) 0%,var(--violet-profond) 50%,var(--noir) 100%);
+    background:linear-gradient(180deg,var(--violet-moyen) 0%,var(--violet-clair) 100%);
     text-align:center;
   }
   .screens-wrap{
@@ -203,7 +210,7 @@
   .screen-placeholder{opacity:0.4;font-size:0.75rem;text-align:center;padding:12px;}
 
   /* ─── TARIFS ─── */
-  .tarifs{background:var(--noir);}
+  .tarifs{background:linear-gradient(180deg, var(--creme-lavande) 0%, var(--noir) 18%, var(--noir) 100%);}
   .tarifs-grid{
     display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
     gap:24px;margin-top:3.5rem;max-width:800px;
@@ -262,7 +269,7 @@
   /* ─── CITATION ─── */
   .citation-section{
     text-align:center;padding:10vh 7vw;
-    background:var(--violet-profond);
+    background:linear-gradient(180deg,var(--violet-clair) 0%,var(--lavande-moyenne) 100%);
   }
   .citation-text{
     font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:300;
@@ -313,7 +320,7 @@
   <div class="hero-content">
     <div class="hero-eyebrow">Bien-être & Développement personnel</div>
     <h1 class="hero-title">Retrouve-toi,<br><em>chaque jour.</em></h1>
-    <p class="hero-sub">Naéora t'accompagne avec des exercices de développement personnel concrets et des rituels guidés — 10 minutes par jour, à ton rythme, pour te reconnecter à toi-même.</p>
+    <p class="hero-sub">Naéora t'accompagne avec des exercices de développement personnel concrets et des moments guidés — 10 minutes par jour, à ton rythme, pour te reconnecter à toi-même.</p>
     <div class="hero-ctas">
       <a href="naeora-app.html" class="btn-primary">Accéder à l'application</a>
       <a href="#decouvrir" class="btn-secondary">En savoir plus</a>
@@ -324,7 +331,7 @@
 <!-- ═══ RITUELS ═══ -->
 <section class="rituels" id="decouvrir">
   <div class="section-eyebrow">Comment ça fonctionne</div>
-  <h2 class="section-title">Trois rituels,<br>une journée entière.</h2>
+  <h2 class="section-title">Trois moments,<br>une journée entière.</h2>
   <p class="section-lead">Chaque jour, Naéora t'accompagne en trois temps — un fil rouge doux qui structure ta journée sans jamais la contraindre.</p>
   <div class="rituels-grid">
     <div class="rituel-card">
@@ -346,7 +353,7 @@
 </section>
 
 <!-- ═══ EXERCICES ═══ -->
-<section style="background:var(--noir);">
+<section style="background:linear-gradient(180deg,var(--violet-profond) 0%,var(--violet-moyen) 100%);">
   <div class="section-eyebrow">Les exercices</div>
   <h2 class="section-title">Des pratiques qui<br>transforment vraiment.</h2>
   <p class="section-lead">Pas de la théorie — des exercices guidés, pas à pas, que tu vis réellement.</p>
@@ -384,28 +391,31 @@
 
 
 <!-- ═══ COFFRET ═══ -->
-<section style="background:var(--violet-profond);" id="coffret">
-  <div class="section-eyebrow">Le coffret physique</div>
-  <h2 class="section-title">Le Coffret Naéora —<br><em style="font-style:italic;background:linear-gradient(135deg,var(--or-clair),var(--or));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">bientôt disponible.</em></h2>
-  <p class="section-lead" style="margin-bottom:3rem;">Un coffret d'objets pensés pour prolonger les rituels de l'application dans ton quotidien — quelque chose à tenir entre les mains, à sentir, à porter.</p>
+<section style="background:linear-gradient(180deg, var(--lavande-moyenne) 0%, var(--creme-lavande) 45%, var(--creme-lavande) 100%); padding-top:14vh;" id="coffret">
+  <div class="section-eyebrow" style="color:var(--or-fonce);">Le coffret physique</div>
+  <h2 class="section-title" style="color:var(--texte-sombre);">Le Coffret Naéora —<br><em style="font-style:italic;background:linear-gradient(135deg,var(--or),var(--or-fonce));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">à emporter dans ton quotidien.</em></h2>
+  <p class="section-lead" style="margin-bottom:3rem;color:var(--texte-sombre-discret);">Un coffret d'objets pensés pour prolonger les moments de l'application dans ton quotidien — quelque chose à tenir entre les mains, à sentir, à porter. L'application t'accompagne le soir ; le coffret, lui, te suit le jour.</p>
 
-  <div style="display:flex;flex-direction:column;align-items:center;gap:2rem;max-width:520px;">
-    <div style="width:100%;border-radius:20px;border:1px dashed rgba(217,176,111,0.35);padding:48px 32px;text-align:center;background:rgba(217,176,111,0.04);">
-      <div style="font-size:2rem;margin-bottom:16px;opacity:0.6;">🌿</div>
-      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.1rem;color:var(--texte-discret);line-height:1.6;">Photos du coffret à venir —<br>une expérience sensorielle pour compléter ton chemin.</div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.2rem;max-width:900px;margin:0 auto 3rem;">
+    <img src="coffret-1.jpg" alt="Coffret Naéora — sac, carnet et bougie" style="width:100%;height:280px;object-fit:cover;border-radius:16px;box-shadow:0 12px 32px rgba(46,42,82,0.12);grid-column:span 2;">
+    <img src="coffret-2.jpg" alt="Coffret Naéora — bracelet en amazonite" style="width:100%;height:280px;object-fit:cover;border-radius:16px;box-shadow:0 12px 32px rgba(46,42,82,0.12);">
+    <img src="coffret-3.jpg" alt="Coffret Naéora — pochettes et pendule" style="width:100%;height:280px;object-fit:cover;border-radius:16px;box-shadow:0 12px 32px rgba(46,42,82,0.12);">
+    <img src="coffret-4.jpg" alt="Coffret Naéora — Mon Carnet Cocon" style="width:100%;height:280px;object-fit:cover;border-radius:16px;box-shadow:0 12px 32px rgba(46,42,82,0.12);grid-column:span 2;">
+  </div>
+
+  <div style="display:flex;flex-direction:column;align-items:center;gap:2rem;max-width:520px;margin:0 auto;">
+    <div style="background:var(--creme-lavande-carte);border:1px solid rgba(184,135,74,0.25);border-radius:16px;padding:22px 28px;width:100%;box-shadow:0 8px 24px rgba(46,42,82,0.06);">
+      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:var(--or-fonce);margin-bottom:8px;">79 € · 6 mois d'Horizon offerts</div>
+      <div style="font-size:0.84rem;color:var(--texte-sombre-discret);line-height:1.6;">Offre limitée à 50 coffrets. Bracelet en amazonite, pendule, palo santo, carnet, ruban de satin et plus encore.</div>
     </div>
 
-    <div style="background:rgba(217,176,111,0.06);border:1px solid rgba(217,176,111,0.25);border-radius:16px;padding:22px 28px;width:100%;">
-      <div style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.15rem;color:var(--or-clair);margin-bottom:8px;">79 € · 6 mois d'Horizon offerts</div>
-      <div style="font-size:0.84rem;color:var(--texte-discret);line-height:1.6;">Offre limitée à 50 coffrets. Bracelet en amazonite, pendule, palo santo, carnet, ruban de satin et plus encore.</div>
-    </div>
-
-    <a href="https://naeora.fr/coffret" style="display:inline-block;padding:14px 36px;border-radius:30px;border:1px solid rgba(217,176,111,0.35);color:var(--texte-discret);font-family:'Jost',sans-serif;font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:all 0.3s ease;" onmouseover="this.style.borderColor='var(--or)';this.style.color='var(--blanc-doux)';" onmouseout="this.style.borderColor='rgba(217,176,111,0.35)';this.style.color='var(--texte-discret)';">Être notifiée à l'ouverture</a>
+    <a href="https://naeora.fr/coffret" style="display:inline-block;padding:14px 36px;border-radius:30px;border:1px solid rgba(184,135,74,0.4);color:var(--texte-sombre);font-family:'Jost',sans-serif;font-size:0.82rem;letter-spacing:0.08em;text-transform:uppercase;text-decoration:none;transition:all 0.3s ease;" onmouseover="this.style.borderColor='var(--or-fonce)';this.style.background='rgba(184,135,74,0.08)';" onmouseout="this.style.borderColor='rgba(184,135,74,0.4)';this.style.background='transparent';">Être notifiée à l'ouverture</a>
   </div>
 </section>
 
 <!-- ═══ TARIFS ═══ -->
-<section class="tarifs" id="tarifs">
+<section class="tarifs" id="tarifs" style="position:relative;overflow:hidden;">
+  <div class="hero-stars" id="stars2" style="top:55%;bottom:0;"></div>
   <div class="section-eyebrow">Tarifs</div>
   <h2 class="section-title">Commence gratuitement,<br>va plus loin avec Horizon.</h2>
   <div class="tarifs-grid">
@@ -413,7 +423,7 @@
       <div class="tarif-name">Gratuit</div>
       <div class="tarif-price">0 € <span></span></div>
       <ul class="tarif-features">
-        <li>Rituel du matin quotidien</li>
+        <li>Moment du matin quotidien</li>
         <li>Lettre de libération</li>
         <li>1 gratitude par soir</li>
         <li>Cohérence cardiaque en accès libre</li>
@@ -455,14 +465,19 @@
   }
 
   // Génération des étoiles décoratives
-  const container = document.getElementById('stars');
-  for(let i=0;i<60;i++){
-    const s = document.createElement('div');
-    s.className = 'star';
-    const size = 1+Math.random()*2.5;
-    s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s;`;
-    container.appendChild(s);
+  function generateStars(id, count){
+    const container = document.getElementById(id);
+    if(!container) return;
+    for(let i=0;i<count;i++){
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = 1+Math.random()*2.5;
+      s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;animation-delay:${Math.random()*4}s;`;
+      container.appendChild(s);
+    }
   }
+  generateStars('stars', 60);
+  generateStars('stars2', 35);
 
   // Scroll reveal léger
   const observer = new IntersectionObserver(entries=>{
