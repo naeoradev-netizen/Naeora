@@ -1,12 +1,16 @@
 // Service Worker Naéora — cache pour installation PWA
-const CACHE_NAME = 'naeora-v2';
+const CACHE_NAME = 'naeora-v4';
 const ASSETS = [
   '/',
   '/index.html',
   '/naeora-app.html',
   '/manifest.json',
   '/naeora-ambient.mp3',
-  '/splash.webp'
+  '/splash.webp',
+  '/icon-192.png',
+  '/icon-512.png',
+  '/icon-maskable-512.png',
+  '/apple-touch-icon.png'
 ];
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS).catch(() => {})));
@@ -19,5 +23,14 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 self.addEventListener('fetch', e => {
-  e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+  e.respondWith(
+    fetch(e.request)
+      .then(r => {
+        // Met à jour le cache avec la dernière version reçue du serveur
+        var copy = r.clone();
+        caches.open(CACHE_NAME).then(c => c.put(e.request, copy)).catch(() => {});
+        return r;
+      })
+      .catch(() => caches.match(e.request))
+  );
 });
