@@ -130,11 +130,11 @@ const supabase = {
     return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   },
 
-  async getDayState(){
+  async getDayState(force){
     const today = this._todayStr();
     const cacheKey = 'naeora_day_' + today;
     const cache = localStorage.getItem(cacheKey);
-    if(cache) return JSON.parse(cache);
+    if(cache && !force) return JSON.parse(cache);
 
     const r = await fetch(this.url + '/rest/v1/day_state?user_id=eq.' + this.getUserId() + '&date=eq.' + today + '&limit=1', {
       headers: this.headers()
@@ -144,6 +144,7 @@ const supabase = {
       localStorage.setItem(cacheKey, JSON.stringify(data[0]));
       return data[0];
     }
+    if(cache) return JSON.parse(cache);
     // Créer l'état du jour
     const newState = { user_id: this.getUserId(), date: today, matin_done:false, journee_count:0, soir_done:false, matin_phrase:'', last_journee_list:[] };
     await fetch(this.url + '/rest/v1/day_state', {

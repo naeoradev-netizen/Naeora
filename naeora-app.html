@@ -282,6 +282,11 @@
           if(profil) localStorage.setItem('naeora_profile', JSON.stringify(profil));
         } catch(e){}
       })();
+      // Rafraîchit aussi l'état du jour (exercices déjà validés, phrase du matin...) depuis Supabase,
+      // pour que le rappel de la phrase et les compteurs survivent à un cache local vidé.
+      (async function(){
+        try { await supabase.getDayState(true); } catch(e){}
+      })();
     } else if(localStorage.getItem('naeora_onboarding_seen') === 'true'){
       goTo('connexion');
     } else {
