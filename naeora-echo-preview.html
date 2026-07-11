@@ -211,7 +211,16 @@
   </div>
 
   <script>
-    const USER_FIRST_NAME = "Floriane"; // viendra du profil utilisateur dans la vraie app
+    var USER_FIRST_NAME = (function(){
+      try {
+        var cache = localStorage.getItem('naeora_profile');
+        if(cache){
+          var profil = JSON.parse(cache);
+          if(profil.prenom) return profil.prenom;
+        }
+      } catch(e){}
+      return 'toi';
+    })();
 
     function showView(name){
       document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));

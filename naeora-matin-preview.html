@@ -153,7 +153,7 @@
     </div>
 
     <div class="view" id="view-done">
-      <div class="done-phrase">« Je suis pleinement ouverte à tout ce que la vie a de meilleur pour moi. »</div>
+      <div class="done-phrase" id="donePhraseText">« Je suis pleinement ouverte à tout ce que la vie a de meilleur pour moi. »</div>
       <div class="done-msg">Ta phrase infuse déjà en toi pour aujourd'hui.<br>Tu peux revenir la relire et la répéter quand tu le souhaites.</div>
       <button onclick="naeoraNav('accueil')" style="margin-top:5vh;padding:13px 30px;border-radius:30px;border:1px solid #d9b06f;background:rgba(217,176,111,0.12);color:#f7f2e9;font-family:'Cormorant Garamond',serif;font-style:italic;font-size:0.92rem;cursor:pointer;">Retour à l'accueil</button>
     </div>
@@ -277,7 +277,7 @@ setTimeout(() => showView('done'), 1600);
 
   function setPhrase(phrase){
     document.getElementById('phrase-text').textContent = phrase;
-    var donePhrase = document.querySelector('.done-phrase');
+    var donePhrase = document.getElementById('donePhraseText');
     if(donePhrase) donePhrase.textContent = phrase;
     localStorage.setItem('naeora_matin_phrase_du_jour', phrase);
   }
