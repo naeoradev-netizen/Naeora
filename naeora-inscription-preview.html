@@ -245,6 +245,10 @@
         btn.disabled = false;
         return false;
       }
+      // Enregistrer le vrai prénom dans Supabase (pas seulement en local)
+      try {
+        await supabase.updateProfile({ prenom: prenom, date_naissance: naissance });
+      } catch(e){}
       // Sauvegarder le profil en cache
       var profil = { prenom: prenom, email: email, date_naissance: naissance, is_subscriber: false };
       localStorage.setItem('naeora_profile', JSON.stringify(profil));

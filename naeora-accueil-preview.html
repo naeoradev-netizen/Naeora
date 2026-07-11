@@ -149,7 +149,7 @@
     </div>
 
     <div class="content">
-      <div class="greeting">Bonjour Floriane</div>
+      <div class="greeting" id="greetingText">Bonjour</div>
 
       <div class="quote-card">
         <div class="quote-text" id="quoteText"><span class="quote-mark">“</span>Chaque petit pas compte, même quand tu ne le vois pas encore.<span class="quote-mark">”</span></div>
@@ -333,6 +333,20 @@
   }
   document.addEventListener('DOMContentLoaded', applyDoneStates);
   if(document.readyState !== 'loading'){ applyDoneStates(); }
+
+  // Afficher le vrai prénom de l'utilisatrice connectée
+  (function(){
+    try {
+      var cache = localStorage.getItem('naeora_profile');
+      var el = document.getElementById('greetingText');
+      if(cache && el){
+        var profil = JSON.parse(cache);
+        if(profil.prenom){
+          el.textContent = 'Bonjour ' + profil.prenom;
+        }
+      }
+    } catch(e){}
+  })();
 
   // Message de bienvenue après activation d'un coffret via QR code
   (function(){
