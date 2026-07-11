@@ -185,10 +185,18 @@ const supabase = {
   },
 
   async updateGratitudes(total_stars, positions){
-    await fetch(this.url + '/rest/v1/gratitudes?user_id=eq.' + this.getUserId(), {
-      method:'PATCH', headers:{...this.headers(),'Prefer':'return=minimal'},
+    const r = await fetch(this.url + '/rest/v1/gratitudes?user_id=eq.' + this.getUserId(), {
+      method:'PATCH', headers:{...this.headers(),'Prefer':'return=representation'},
       body: JSON.stringify({ total_stars, positions, updated_at: new Date().toISOString() })
     });
+    const data = await r.json().catch(function(){ return []; });
+    if(!data || data.length === 0){
+      // Aucune ligne existante à mettre à jour : on la crée.
+      await fetch(this.url + '/rest/v1/gratitudes', {
+        method:'POST', headers:{...this.headers(),'Prefer':'return=minimal'},
+        body: JSON.stringify({ user_id: this.getUserId(), total_stars, positions, updated_at: new Date().toISOString() })
+      });
+    }
     localStorage.setItem('naeora_gratitudes', JSON.stringify({ total_stars, positions }));
   }
 };
