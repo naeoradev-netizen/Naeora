@@ -169,9 +169,9 @@ const supabase = {
   },
 
   // ── GRATITUDES ──
-  async getGratitudes(){
+  async getGratitudes(force){
     const cache = localStorage.getItem('naeora_gratitudes');
-    if(cache) return JSON.parse(cache);
+    if(cache && !force) return JSON.parse(cache);
     const r = await fetch(this.url + '/rest/v1/gratitudes?user_id=eq.' + this.getUserId() + '&limit=1', {
       headers: this.headers()
     });
@@ -180,6 +180,7 @@ const supabase = {
       localStorage.setItem('naeora_gratitudes', JSON.stringify(data[0]));
       return data[0];
     }
+    if(cache) return JSON.parse(cache);
     return { total_stars:0, positions:[] };
   },
 

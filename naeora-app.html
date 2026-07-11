@@ -289,6 +289,17 @@
       (async function(){
         try { await supabase.getDayState(true); } catch(e){}
       })();
+      // Rafraîchit le total d'étoiles/gratitudes depuis Supabase, pour que le ciel affiche
+      // toujours le vrai nombre d'étoiles même après un cache local vidé.
+      (async function(){
+        try {
+          var g = await supabase.getGratitudes(true);
+          if(g){
+            localStorage.setItem('naeora_total_stars', String(g.total_stars || 0));
+            localStorage.setItem('naeora_star_positions', JSON.stringify(g.positions || []));
+          }
+        } catch(e){}
+      })();
     } else if(localStorage.getItem('naeora_onboarding_seen') === 'true'){
       goTo('connexion');
     } else {
