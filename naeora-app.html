@@ -246,6 +246,12 @@
       else{switchTrack(currentTrackKey||trackForRoute(currentRoute));}
     }
 
+    function naeoraComputeSubscriberUntil(months){
+      var d = new Date();
+      d.setMonth(d.getMonth() + months);
+      return d.toISOString();
+    }
+
     function goTo(route){
       if(!ROUTES[route]){console.warn('Route inconnue:',route);return;}
       // Vérifier si connecté pour les routes protégées
@@ -256,11 +262,13 @@
       // Appliquer une activation de coffret restée en attente (QR code scanné avant connexion)
       var coffretJustActivated = false;
       if(route === 'accueil' && supabase.isLoggedIn() && localStorage.getItem('naeora_pending_coffret') === 'true'){
+        var pendingMonths = parseInt(localStorage.getItem('naeora_pending_coffret_months'), 10) || 6;
         localStorage.removeItem('naeora_pending_coffret');
+        localStorage.removeItem('naeora_pending_coffret_months');
         coffretJustActivated = true;
         (async function(){
           try {
-            await supabase.updateProfile({ is_subscriber: true, coffret_active: true });
+            await supabase.updateProfile({ is_subscriber: true, coffret_active: true, subscriber_until: naeoraComputeSubscriberUntil(pendingMonths) });
             await supabase.getProfile(true);
           } catch(e){}
         })();
@@ -356,18 +364,21 @@
     (function(){
       var params = new URLSearchParams(window.location.search);
       if(params.get('activate') === 'coffret'){
+        var months = parseInt(params.get('months'), 10);
+        if(!months || months < 1) months = 6; // durée par défaut si absente du lien
         if(typeof supabase !== 'undefined' && supabase.isLoggedIn()){
           (async function(){
             try {
-              await supabase.updateProfile({ is_subscriber: true, coffret_active: true });
+              await supabase.updateProfile({ is_subscriber: true, coffret_active: true, subscriber_until: naeoraComputeSubscriberUntil(months) });
               await supabase.getProfile(true);
               goTo('accueil');
               frame.src = ROUTES['accueil'] + '?coffret=activated';
             } catch(e){}
           })();
         } else {
-          // Pas encore connectée : on retient l'intention, elle sera appliquée après connexion/inscription.
+          // Pas encore connectée : on retient l'intention (et la durée), elle sera appliquée après connexion/inscription.
           localStorage.setItem('naeora_pending_coffret', 'true');
+          localStorage.setItem('naeora_pending_coffret_months', String(months));
         }
         window.history.replaceState({}, '', window.location.pathname);
       }

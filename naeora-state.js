@@ -2,7 +2,17 @@
 
 function naeoraIsSubscriber(){
   var p = localStorage.getItem('naeora_profile');
-  if(p){ try{ return JSON.parse(p).is_subscriber === true; }catch(e){} }
+  if(p){
+    try{
+      var profil = JSON.parse(p);
+      if(profil.is_subscriber !== true) return false;
+      if(profil.subscriber_until){
+        var until = new Date(profil.subscriber_until);
+        if(!isNaN(until.getTime()) && until.getTime() < Date.now()) return false;
+      }
+      return true;
+    }catch(e){}
+  }
   return false;
 }
 
