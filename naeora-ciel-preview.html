@@ -132,7 +132,7 @@
         star.style.height = size+'px';
         star.style.left = (10 + Math.random()*78) + '%';
         star.style.top = (4 + Math.random()*44) + '%';
-        const color = subscriber ? STAR_COLORS[Math.floor(Math.random()*STAR_COLORS.length)] : '#ffffff';
+        const color = pos.subscriber ? STAR_COLORS[Math.floor(Math.random()*STAR_COLORS.length)] : '#ffffff';
         star.style.background = color;
         star.style.color = color;
         sky.appendChild(star);
@@ -160,7 +160,7 @@
 
     // Charger les étoiles depuis Supabase si connecté, sinon localStorage
     if(typeof supabase !== 'undefined' && supabase.isLoggedIn()){
-      supabase.getGratitudes().then(function(g){
+      supabase.getGratitudes(true).then(function(g){
         if(g){
           if(g.positions && g.positions.length > 0){
             localStorage.setItem('naeora_star_positions', JSON.stringify(g.positions));
