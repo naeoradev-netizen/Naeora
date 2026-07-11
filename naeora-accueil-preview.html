@@ -341,6 +341,10 @@
       setTimeout(function(){
         naeoraShowNotif('Ton coffret est activé.<br>Bienvenue dans Horizon — profite de tous les exercices dès maintenant.');
       }, 400);
+    } else if(params.get('coffret') === 'already'){
+      setTimeout(function(){
+        naeoraShowNotif('Ce coffret a déjà été activé sur ton compte.<br>Retrouve ton statut d\u2019abonnement dans ton profil.');
+      }, 400);
     }
   })();
 </script>

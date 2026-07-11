@@ -260,21 +260,25 @@
         route = 'connexion';
       }
       // Appliquer une activation de coffret restée en attente (QR code scanné avant connexion)
-      var coffretJustActivated = false;
       if(route === 'accueil' && supabase.isLoggedIn() && localStorage.getItem('naeora_pending_coffret') === 'true'){
         var pendingMonths = parseInt(localStorage.getItem('naeora_pending_coffret_months'), 10) || 6;
         localStorage.removeItem('naeora_pending_coffret');
         localStorage.removeItem('naeora_pending_coffret_months');
-        coffretJustActivated = true;
         (async function(){
           try {
+            var profilActuel = await supabase.getProfile(true);
+            if(profilActuel && profilActuel.coffret_active === true){
+              frame.src = ROUTES['accueil'] + '?coffret=already';
+              return;
+            }
             await supabase.updateProfile({ is_subscriber: true, coffret_active: true, subscriber_until: naeoraComputeSubscriberUntil(pendingMonths) });
             await supabase.getProfile(true);
+            frame.src = ROUTES['accueil'] + '?coffret=activated';
           } catch(e){}
         })();
       }
       currentRoute=route;
-      frame.src = ROUTES[route] + (coffretJustActivated ? '?coffret=activated' : '');
+      frame.src = ROUTES[route];
       switchTrack(trackForRoute(route));
     }
 
@@ -369,6 +373,12 @@
         if(typeof supabase !== 'undefined' && supabase.isLoggedIn()){
           (async function(){
             try {
+              var profilActuel = await supabase.getProfile(true);
+              if(profilActuel && profilActuel.coffret_active === true){
+                goTo('accueil');
+                frame.src = ROUTES['accueil'] + '?coffret=already';
+                return;
+              }
               await supabase.updateProfile({ is_subscriber: true, coffret_active: true, subscriber_until: naeoraComputeSubscriberUntil(months) });
               await supabase.getProfile(true);
               goTo('accueil');
