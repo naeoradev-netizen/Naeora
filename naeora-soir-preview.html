@@ -111,6 +111,7 @@
 </head>
 <body>
 <script src="naeora-supabase.js"></script>
+<script src="naeora-state.js"></script>
   <div class="stage">
     <img class="bg" id="bgDefault" src="crepuscule.webp" alt="">
     <img class="bg" id="bgWrite" src="ciel_silhouette.webp
@@ -154,7 +155,7 @@
   </div>
 
   <script>
-    const isSubscriber = (localStorage.getItem('naeora_subscriber') === 'true');
+    const isSubscriber = (naeoraIsSubscriber());
     let gratitudeCount = 0;
     let maxGratitudes = isSubscriber ? 5 : 1;
     let totalStars = parseInt(localStorage.getItem('naeora_total_stars') || '0');
@@ -275,7 +276,6 @@
     renderCounter();
     showView('explain');
   </script>
-<script src="naeora-state.js"></script>
 <script>function naeoraNav(route){ window.parent.postMessage({naeoraNav:route}, "*"); }</script>
 <script>
   (function(){
