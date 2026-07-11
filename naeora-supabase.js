@@ -97,9 +97,9 @@ const supabase = {
   },
 
   // ── PROFIL ──
-  async getProfile(){
+  async getProfile(force){
     const cache = localStorage.getItem('naeora_profile');
-    if(cache) return JSON.parse(cache);
+    if(cache && !force) return JSON.parse(cache);
     const r = await fetch(this.url + '/rest/v1/profiles?id=eq.' + this.getUserId() + '&limit=1', {
       headers: this.headers()
     });
@@ -108,6 +108,7 @@ const supabase = {
       localStorage.setItem('naeora_profile', JSON.stringify(data[0]));
       return data[0];
     }
+    if(cache) return JSON.parse(cache);
     return null;
   },
 

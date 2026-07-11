@@ -333,6 +333,16 @@
   }
   document.addEventListener('DOMContentLoaded', applyDoneStates);
   if(document.readyState !== 'loading'){ applyDoneStates(); }
+
+  // Message de bienvenue après activation d'un coffret via QR code
+  (function(){
+    var params = new URLSearchParams(window.location.search);
+    if(params.get('coffret') === 'activated'){
+      setTimeout(function(){
+        naeoraShowNotif('Ton coffret est activé.<br>Bienvenue dans Horizon — profite de tous les exercices dès maintenant.');
+      }, 400);
+    }
+  })();
 </script>
 
 <script>

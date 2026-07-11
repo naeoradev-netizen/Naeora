@@ -70,7 +70,7 @@
       // Récupère le vrai statut d'abonnement à jour dès la connexion,
       // pour que les exercices (choix de domaine, gratitudes illimitées...) le reconnaissent immédiatement.
       try {
-        var profil = await supabase.getProfile();
+        var profil = await supabase.getProfile(true);
         if(profil) localStorage.setItem('naeora_profile', JSON.stringify(profil));
       } catch(e){}
       naeoraNav('accueil');

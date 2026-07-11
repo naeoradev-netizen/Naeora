@@ -319,7 +319,7 @@
   // Charger les vraies données depuis Supabase si connecté
   (function(){
     if(typeof supabase === 'undefined' || !supabase.isLoggedIn()) return;
-    supabase.getProfile().then(function(profil){
+    supabase.getProfile(true).then(function(profil){
       if(!profil) return;
       var nameEl = document.getElementById('profileName');
       var emailEl = document.getElementById('profileEmail');

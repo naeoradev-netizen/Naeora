@@ -253,8 +253,20 @@
       if(publicRoutes.indexOf(route) === -1 && !supabase.isLoggedIn()){
         route = 'connexion';
       }
+      // Appliquer une activation de coffret restée en attente (QR code scanné avant connexion)
+      var coffretJustActivated = false;
+      if(route === 'accueil' && supabase.isLoggedIn() && localStorage.getItem('naeora_pending_coffret') === 'true'){
+        localStorage.removeItem('naeora_pending_coffret');
+        coffretJustActivated = true;
+        (async function(){
+          try {
+            await supabase.updateProfile({ is_subscriber: true, coffret_active: true });
+            await supabase.getProfile(true);
+          } catch(e){}
+        })();
+      }
       currentRoute=route;
-      frame.src=ROUTES[route];
+      frame.src = ROUTES[route] + (coffretJustActivated ? '?coffret=activated' : '');
       switchTrack(trackForRoute(route));
     }
 
@@ -280,7 +292,7 @@
       // pour que les exercices reflètent toujours l'état réel de Supabase (et pas une copie périmée).
       (async function(){
         try {
-          var profil = await supabase.getProfile();
+          var profil = await supabase.getProfile(true);
           if(profil) localStorage.setItem('naeora_profile', JSON.stringify(profil));
         } catch(e){}
       })();
@@ -334,6 +346,29 @@
         };
         updateSubscriber();
         // Nettoyer l'URL sans recharger
+        window.history.replaceState({}, '', window.location.pathname);
+      }
+    })();
+  </script>
+
+  <script>
+    // Détecter un lien d'activation de coffret (QR code sur le ruban)
+    (function(){
+      var params = new URLSearchParams(window.location.search);
+      if(params.get('activate') === 'coffret'){
+        if(typeof supabase !== 'undefined' && supabase.isLoggedIn()){
+          (async function(){
+            try {
+              await supabase.updateProfile({ is_subscriber: true, coffret_active: true });
+              await supabase.getProfile(true);
+              goTo('accueil');
+              frame.src = ROUTES['accueil'] + '?coffret=activated';
+            } catch(e){}
+          })();
+        } else {
+          // Pas encore connectée : on retient l'intention, elle sera appliquée après connexion/inscription.
+          localStorage.setItem('naeora_pending_coffret', 'true');
+        }
         window.history.replaceState({}, '', window.location.pathname);
       }
     })();
