@@ -113,10 +113,14 @@ const supabase = {
   },
 
   async updateProfile(fields){
-    await fetch(this.url + '/rest/v1/profiles?id=eq.' + this.getUserId(), {
+    const r = await fetch(this.url + '/rest/v1/profiles?id=eq.' + this.getUserId(), {
       method:'PATCH', headers:{...this.headers(),'Prefer':'return=minimal'},
       body: JSON.stringify(fields)
     });
+    if(!r.ok){
+      const errText = await r.text().catch(function(){ return ''; });
+      throw new Error('updateProfile a échoué (' + r.status + '): ' + errText);
+    }
     // Invalider le cache
     const cache = localStorage.getItem('naeora_profile');
     if(cache){

@@ -345,6 +345,10 @@
       setTimeout(function(){
         naeoraShowNotif('Ce coffret a déjà été activé sur ton compte.<br>Retrouve ton statut d\u2019abonnement dans ton profil.');
       }, 400);
+    } else if(params.get('coffret') === 'error'){
+      setTimeout(function(){
+        naeoraShowNotif('Un souci technique a empêché l\u2019activation de ton coffret.<br>Contacte le support, on va régler ça.');
+      }, 400);
     }
   })();
 </script>

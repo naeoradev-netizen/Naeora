@@ -274,7 +274,10 @@
             await supabase.updateProfile({ is_subscriber: true, coffret_active: true, coffret_activated_at: new Date().toISOString(), subscriber_until: naeoraComputeSubscriberUntil(pendingMonths) });
             await supabase.getProfile(true);
             frame.src = ROUTES['accueil'] + '?coffret=activated';
-          } catch(e){}
+          } catch(e){
+            console.error('Erreur activation coffret:', e);
+            frame.src = ROUTES['accueil'] + '?coffret=error';
+          }
         })();
       }
       currentRoute=route;
@@ -383,7 +386,11 @@
               await supabase.getProfile(true);
               goTo('accueil');
               frame.src = ROUTES['accueil'] + '?coffret=activated';
-            } catch(e){}
+            } catch(e){
+              console.error('Erreur activation coffret:', e);
+              goTo('accueil');
+              frame.src = ROUTES['accueil'] + '?coffret=error';
+            }
           })();
         } else {
           // Pas encore connectée : on retient l'intention (et la durée), elle sera appliquée après connexion/inscription.
