@@ -251,10 +251,8 @@
           totalStars++;
           localStorage.setItem('naeora_total_stars', totalStars);
           // Sync Supabase en arrière-plan
-          var positions = JSON.parse(localStorage.getItem('naeora_star_positions') || '[]');
-          positions.push({ x: targetXPercent, y: targetYPercent, size: 2.5 + Math.random()*3, subscriber: isSubscriber });
-          localStorage.setItem('naeora_star_positions', JSON.stringify(positions));
           if(typeof supabase !== 'undefined' && supabase.isLoggedIn()){
+            var positions = JSON.parse(localStorage.getItem('naeora_star_positions') || '[]');
             supabase.updateGratitudes(totalStars, positions).catch(function(){});
           }
         }
