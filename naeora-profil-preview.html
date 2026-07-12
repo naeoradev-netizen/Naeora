@@ -293,7 +293,7 @@
     var raw = localStorage.getItem('naeora_profile');
     if(!raw) return;
     var profil = JSON.parse(raw);
-    if(profil.prenom){ document.getElementById('profileName').textContent = profil.prenom; }
+    document.getElementById('profileName').textContent = profil.prenom || 'Toi';
     if(profil.email){ document.getElementById('profileEmail').textContent = profil.email; }
     if(profil.naissance){
       var d = new Date(profil.naissance);
@@ -326,7 +326,7 @@
       var birthEl = document.getElementById('profileBirthdate');
       var badge = document.getElementById('planBadge');
       var action = document.getElementById('planAction');
-      if(nameEl && profil.prenom) nameEl.textContent = profil.prenom;
+      if(nameEl) nameEl.textContent = profil.prenom || 'Toi';
       if(emailEl && profil.email) emailEl.textContent = profil.email;
       if(birthEl && profil.date_naissance){
         var d = new Date(profil.date_naissance);

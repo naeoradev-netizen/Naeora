@@ -341,9 +341,7 @@
       var el = document.getElementById('greetingText');
       if(cache && el){
         var profil = JSON.parse(cache);
-        if(profil.prenom){
-          el.textContent = 'Bonjour ' + profil.prenom;
-        }
+        el.textContent = 'Bonjour ' + (profil.prenom || 'toi');
       }
     } catch(e){}
   })();
