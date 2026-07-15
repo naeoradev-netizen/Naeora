@@ -336,7 +336,13 @@
       if(profil.is_subscriber && badge){
         badge.textContent = 'Horizon — Abonnée';
         badge.classList.add('subscriber');
-        if(action) action.textContent = 'Gérer mon abonnement';
+        if(action){
+          action.textContent = 'Gérer mon abonnement';
+          action.setAttribute('onclick', '');
+          action.onclick = function(){
+            window.open('https://billing.stripe.com/p/login/00w7sMffdbyk4xK6Eabo400', '_blank');
+          };
+        }
       }
       // Mettre à jour le cache
       localStorage.setItem('naeora_profile', JSON.stringify(profil));
